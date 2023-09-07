@@ -61,7 +61,7 @@ export const register = async (req, res) => {
         res.status(500).json({ message: error.message});
     }
 }
-// Hola
+
 
 export const loginCompany = async (req, res) => {
     const { email, password } = req.body;
