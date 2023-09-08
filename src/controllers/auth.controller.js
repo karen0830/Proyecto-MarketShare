@@ -39,6 +39,12 @@ export const registerCompany =  async (req, res) => {
 export const register = async (req, res) => {
     const { email, username, password} = req.body;
     try {
+
+        const userFound = await User.findOne({email})
+        if(userFound) return res.status(400).json(
+            ['The email is already in use']
+        )
+
         const hash = await bcrypt.hash(password, 10)
         const newUser = new User({
             username,

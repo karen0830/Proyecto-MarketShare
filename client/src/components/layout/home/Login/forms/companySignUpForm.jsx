@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { registerCompanyReques } from "../../../../../api/auth";
+// import { registerCompanyReques } from "../../../../../api/auth";
 export const CompanySignUpForm = () => {
   const { register, handleSubmit } = useForm()
   return (
