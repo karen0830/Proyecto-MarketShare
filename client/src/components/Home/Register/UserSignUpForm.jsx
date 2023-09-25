@@ -1,6 +1,6 @@
-import { React, useEffect, useState} from "react";
+import { React, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../../../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 export const UserSignUpForm = () => {
   const [className, setClassName] = useState("hidden")
@@ -11,16 +11,16 @@ export const UserSignUpForm = () => {
   const { signup, isAuthenticated, errors: registerErrors } = useAuth()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (isAuthenticated) navigate("/profile")
-  }, [])
+  // useEffect(() => {
+  //   if (isAuthenticated) navigate("/profile")
+  // }, [])
 
   const onSubmit = handleSubmit(async (values) => {
     signup(values)
   })
   return (
     <>
-    {
+      {
         registerErrors.map((error, i) => (
           <div key={i} className="bg-red-500 text-white">
             {error}
@@ -76,7 +76,7 @@ export const UserSignUpForm = () => {
           Sign Up
         </button>
       </form>
-      
+
     </>
   );
 };

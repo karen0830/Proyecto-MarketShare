@@ -11,4 +11,9 @@ app.use(express.json()); // Middleware para analizar el cuerpo de las solicitude
 app.use(cookieParser());
 app.use("/api", Router);
 
+// Redirigir desde la raíz '/' a '/login'
+app.get('/', (req, res) => {
+    res.redirect('/api/login'); // Cambia '/api/login' por la ruta correcta de inicio de sesión
+});
+
 export default app;

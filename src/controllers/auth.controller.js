@@ -1,11 +1,36 @@
 import CompanyModel from '../models/company.models.js'
 import User from '../models/user.models.js'
 import bcrypt from 'bcryptjs'
-import  {createAcccessToken} from '../libs/jwt.js'
+import { createAcccessToken } from '../libs/jwt.js'
 
-export const registerCompany =  async (req, res) => {
-    const { companyName, legalEntity, companyAddress, activityDescription, phoneNumber, email, taxIdentity, password} = req.body;
-    try{
+export const registerCompany = async (req, res) => {
+    const { companyName, legalEntity, companyAddress, activityDescription, phoneNumber, email, taxIdentity, password } = req.body;
+
+    const queries = [];
+    if (email) queries.push({ email });
+    if (companyName) queries.push({ companyName });
+    if (legalEntity) queries.push({ legalEntity });
+    if (phoneNumber) queries.push({ phoneNumber });
+    if (taxIdentity) queries.push({ taxIdentity });
+
+    if (queries.length === 0) {
+        // Ningún campo válido proporcionado en la solicitud
+        return res.status(400).json(['No valid fields provided']);
+    }
+
+    console.log(queries);
+    // Realiza las consultas solo para los campos válidos
+    const results = await Promise.all(queries.map(query => CompanyModel.findOne(query)));
+
+    // Verifica los resultados y envía una respuesta apropiada
+    if (results.some(result => result)) {
+        return res.status(400).json(['One or more fields are already in use']);
+    }
+
+    // Si no se encontraron coincidencias, continúa con la lógica deseada
+    // ...
+
+    try {
         const hash = await bcrypt.hash(password, 10);
         const newCompany = new CompanyModel({
             companyName,
@@ -19,7 +44,7 @@ export const registerCompany =  async (req, res) => {
         })
 
         const companySaved = await newCompany.save()
-        const tokenCompany = await createAcccessToken({id: companySaved._id})
+        const tokenCompany = await createAcccessToken({ id: companySaved._id })
         res.cookie("tokenCompany", tokenCompany)
         res.json({
             id: companySaved._id,
@@ -33,15 +58,15 @@ export const registerCompany =  async (req, res) => {
             password: companySaved.password
         })
     } catch (error) {
-        res.status(500).json({ message: error.message});
+        res.status(500).json({ message: error.message });
     }
 }
 export const register = async (req, res) => {
-    const { email, username, password} = req.body;
+    const { email, username, password } = req.body;
     try {
 
-        const userFound = await User.findOne({email})
-        if(userFound) return res.status(400).json(
+        const userFound = await User.findOne({ email })
+        if (userFound) return res.status(400).json(
             ['The email is already in use']
         )
 
@@ -53,7 +78,7 @@ export const register = async (req, res) => {
         })
 
         const userSaved = await newUser.save();
-        const token = await createAcccessToken({id: userSaved._id})
+        const token = await createAcccessToken({ id: userSaved._id })
 
         res.cookie("token", token)
         res.json({
@@ -64,7 +89,7 @@ export const register = async (req, res) => {
             updatedAt: userSaved.updatedAt
         });
     } catch (error) {
-        res.status(500).json({ message: error.message});
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -76,7 +101,7 @@ export const loginCompany = async (req, res) => {
 
         if (!companyFound) {
             return res.status(400).json({ message: "User not found" });
-        } 
+        }
 
         const isMatch = await bcrypt.compare(password, companyFound.password);
         if (!isMatch) {
@@ -129,23 +154,23 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-    res.cookie('token', "",{
+    res.cookie('token', "", {
         expires: new Date(0)
     })
     return res.sendStatus(200);
 }
 
 export const logoutC = (req, res) => {
-    res.cookie('tokenCompany', "",{
+    res.cookie('tokenCompany', "", {
         expires: new Date(0)
     })
     return res.sendStatus(200);
 }
 
-export const profile  = async (req, res) => {
-    const userFound =  await User.findById(req.user.id)
-    
-    if(!userFound) return res.status(400).json({
+export const profile = async (req, res) => {
+    const userFound = await User.findById(req.user.id)
+
+    if (!userFound) return res.status(400).json({
         message: "User not found"
     })
 
@@ -158,10 +183,10 @@ export const profile  = async (req, res) => {
     })
 }
 
-export const profileCompany  = async (req, res) => {
+export const profileCompany = async (req, res) => {
     const companyFound = await CompanyModel.findById(req.company.id);
-    
-    if(!companyFound) return res.status(400).json({
+
+    if (!companyFound) return res.status(400).json({
         message: "User not found"
     })
 
