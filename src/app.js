@@ -5,7 +5,14 @@ import cookieParser from 'cookie-parser';
 import cors from "cors";
 const app = express();
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173', // reemplaza 'http://localhost:3000' con la URL de tu aplicación frontend
+    credentials: true
+}));
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+//     next();
+// });
 app.use(morgan('dev'));
 app.use(express.json()); // Middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(cookieParser());

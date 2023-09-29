@@ -1,6 +1,8 @@
 import CompanyModel from '../models/company.models.js'
 import User from '../models/user.models.js'
 import bcrypt from 'bcryptjs'
+import Jwt from 'jsonwebtoken'
+import { TOKEN_SECRET } from '../config.js'
 import { createAcccessToken } from '../libs/jwt.js'
 
 export const registerCompany = async (req, res) => {
@@ -199,3 +201,20 @@ export const profileCompany = async (req, res) => {
     })
 }
 
+export const verifyToken = async (req, res) => {
+    const {token} = req.cookies
+    if (!token) return res.status(401).json({message: "Unauthorized"})
+    
+    Jwt.verify(token, TOKEN_SECRET, async (err, user)=> {
+        if (err) return res.status(401).json({message: "Unauthorized"})
+
+        const userFound = await User.findById(user.id)
+        if(!userFound) return res.status(401).json({message: "Unauthorized"})
+
+        return res.json({
+            id: userFound._id,
+            username: userFound.username,
+            email: userFound.email
+        })
+    })
+}
