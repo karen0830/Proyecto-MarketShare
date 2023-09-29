@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [errors, setErrors] = useState([])
-    
+
     const signup = async (user) => {
         try {
             console.log(user);
@@ -70,32 +70,39 @@ export const AuthProvider = ({ children }) => {
         }
     }, [errors])
 
+    useEffect(()=> {
+        console.log(user);
+        console.log(isAuthenticated);
+    },[user, isAuthenticated])
+
     useEffect(() => {
         async function checkLogin() {
             const cookies = Cookies.get()
             console.log(cookies);
             if (!cookies.token) {
                 setIsAuthenticated(false)
-                setLoading(false);
+                setLoading(false)
                 return setUser(null);
-            }
-            try {
-                const res = await verityTokenRequest(cookies.token)
-                console.log(res);
-                if (!res.data) {
-                    setIsAuthenticated(false);
+            } else {
+                try {
+                    const res = await verityTokenRequest(cookies.token)
+                    console.log(res.data);
+                    if (!res.data) {
+                        setIsAuthenticated(false);
+                        setLoading(false);
+                        console.log("se metio aca");
+                        return;
+                    } else {
+                        setIsAuthenticated(true)
+                        setUser(res.data)
+                        setLoading(false)
+                    }
+                } catch (error) {
+                    console.log(error);
+                    setIsAuthenticated(false)
+                    setUser(null)
                     setLoading(false);
-                    return ;
                 }
-
-                setIsAuthenticated(true)
-                setUser(res.data)
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-                setIsAuthenticated(false)
-                setUser(null)
-                setLoading(false);
             }
         }
         checkLogin()
