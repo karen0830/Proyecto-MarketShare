@@ -6,46 +6,46 @@ const SideBar = () => {
       <div className="sidebar-vetical-line"></div>
       <div className="sidebar-logo__div">
         <img src="/images/MarketLogoWhite.png" alt="" />
-        <div class="sidebar-menu">
-          <a href="#" class="Inicio">
-            <span class="icon">
-              <i class="ri-home-8-line"></i>
+        <div className="sidebar-menu">
+          <a href="#" className="Inicio">
+            <span className="icon">
+              <i className="ri-home-8-line"></i>
             </span>
             Start
           </a>
-          <a href="index.html" class="active">
-            <span class="icon">
-              <i class="ri-function-line"></i>
+          <a href="index.html" className="active">
+            <span className="icon">
+              <i className="ri-function-line"></i>
             </span>
             Feed
           </a>
           <a href="#">
-            <span class="icon">
-              <i class="ri-search-line"></i>
+            <span className="icon">
+              <i className="ri-search-line"></i>
             </span>
             Search
           </a>
           <a href="#">
-            <span class="icon">
-              <i class="ri-align-justify"></i>
+            <span className="icon">
+              <i className="ri-align-justify"></i>
             </span>
             Categories
           </a>
           <a href="#">
-            <span class="icon">
-              <i class="ri-settings-5-line"></i>
+            <span className="icon">
+              <i className="ri-settings-5-line"></i>
             </span>
             Settings
           </a>
           <a href="nosotros.html">
-            <span class="icon">
-              <i class="ri-profile-line"></i>
+            <span className="icon">
+              <i className="ri-profile-line"></i>
             </span>
             Nosotros
           </a>
           <a href="">
             <span>
-              <i class="ri-profile-fill"></i>
+              <i className="ri-profile-fill"></i>
             </span>
             Profile
           </a>

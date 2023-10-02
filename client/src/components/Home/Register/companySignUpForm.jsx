@@ -41,7 +41,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="companyName">Nombre de la compañía</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="text"
           {...register('companyName', { required: true })}
         />
@@ -52,7 +52,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="legalEntity">Entidad Legal</label>
         <textarea
-          class="form-styling"
+          className="form-styling"
           type="text"
           {...register('legalEntity', { required: true })}
         />
@@ -63,7 +63,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="companyAddress">Dirección</label>
         <textarea
-          class="form-styling"
+          className="form-styling"
           type="text"
           {...register('companyAddress', { required: true })}
         />
@@ -74,7 +74,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="activityDescription">Activity description</label>
         <textarea
-          class="form-styling"
+          className="form-styling"
           type="text"
           {...register('activityDescription', { required: true })}
         />
@@ -85,7 +85,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="phoneNumber">Phone number</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="number"
           {...register('phoneNumber', { required: true })}
         />
@@ -96,7 +96,7 @@ export const CompanySignUpForm = () => {
           )
         }
         <label for="email">Email</label>
-        <input class="form-styling" type="email" {...register('email', { required: true })} />
+        <input className="form-styling" type="email" {...register('email', { required: true })} />
 
         {
           errors.taxIdentity && (
@@ -105,7 +105,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="taxIdentity">Identidad fiscal</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="number"
           {...register('taxIdentity', { required: true })}
         />
@@ -117,7 +117,7 @@ export const CompanySignUpForm = () => {
         }
         <label for="password">Contraseña</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="text"
           {...register('password', { required: true })}
         />
@@ -129,11 +129,11 @@ export const CompanySignUpForm = () => {
         }
         <label for="confirmpassword">Confirmar contraseña</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="text"
           {...register('confirmpassword', { required: true })}
         />
-        <button onClick={ButtonOpenModal} ng-click="checked = !checked" class="btn-signup" type="submit">
+        <button onClick={ButtonOpenModal} ng-click="checked = !checked" className="btn-signup" type="submit">
           Registrarse
         </button>
 

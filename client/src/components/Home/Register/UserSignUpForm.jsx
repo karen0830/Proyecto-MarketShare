@@ -30,7 +30,7 @@ export const UserSignUpForm = () => {
       <form className="form-signup" onSubmit={onSubmit}>
         <label for="fullname">Full name</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="text"
           onChange={className}
           {...register('username', { required: true })}
@@ -41,7 +41,7 @@ export const UserSignUpForm = () => {
           )
         }
         <label for="email">Email</label>
-        <input class="form-styling" type="email"
+        <input className="form-styling" type="email"
           {...register('email', { required: true })} />
         {
           errors.email && (
@@ -50,7 +50,7 @@ export const UserSignUpForm = () => {
         }
         <label for="password">Password</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="password"
           {...register('password', { required: true })}
         />
@@ -62,7 +62,7 @@ export const UserSignUpForm = () => {
 
         <label for="confirmpassword">Confirm password</label>
         <input
-          class="form-styling"
+          className="form-styling"
           type="password"
           {...register('confirmpassword', { required: true })}
         />
@@ -72,7 +72,7 @@ export const UserSignUpForm = () => {
           )
         }
 
-        <button type="submit" ng-click="checked = !checked" class="btn-signup">
+        <button type="submit" ng-click="checked = !checked" className="btn-signup">
           Sign Up
         </button>
       </form>

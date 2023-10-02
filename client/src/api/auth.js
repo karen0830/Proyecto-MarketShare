@@ -2,8 +2,10 @@ import instance from "./axios";
 
 export const registerRequest = async user => {
   try {
+    console.log(user);
     const response = await instance.post(`/register`, user);
-    console.log("http response = " + response.data);
+    console.log("http response = " + response);
+    return response;
   } catch (ex) {
     console.log("error.status:", ex);
   }
