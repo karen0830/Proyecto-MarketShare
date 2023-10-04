@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest } from "../api/auth";
+import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, handleUpload } from "../api/auth";
 import Cookies from "js-cookie";
 export const AuthContext = createContext()
 export const useAuth = () => {
@@ -70,15 +70,13 @@ export const AuthProvider = ({ children }) => {
         }
     }, [errors])
 
-    useEffect(()=> {
-        console.log(user);
-        console.log(isAuthenticated);
-    },[user, isAuthenticated])
+    // useEffect(()=> {
+        
+    // },[user, isAuthenticated])
 
     useEffect(() => {
         async function checkLogin() {
             const cookies = Cookies.get()
-            console.log(cookies);
             if (!cookies.token) {
                 setIsAuthenticated(false)
                 setLoading(false)
@@ -86,11 +84,9 @@ export const AuthProvider = ({ children }) => {
             } else {
                 try {
                     const res = await verityTokenRequest(cookies.token)
-                    console.log(res.data);
                     if (!res.data) {
                         setIsAuthenticated(false);
                         setLoading(false);
-                        console.log("se metio aca");
                         return;
                     } else {
                         setIsAuthenticated(true)
