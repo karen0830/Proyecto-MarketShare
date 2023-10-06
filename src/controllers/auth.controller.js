@@ -5,10 +5,11 @@ import Jwt from 'jsonwebtoken'
 import { TOKEN_SECRET } from '../config.js'
 import { createAcccessToken } from '../libs/jwt.js'
 import path from 'path';
-import { fetchSignInMethodsForEmail } from 'firebase/auth';
 import { auth, db } from '../firebase.js';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
+import { doc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
+import emailjs from 'emailjs-com';
+
 
 // Función para registrar un nuevo usuario
 export const registerUser = async (req, res) => {
@@ -231,14 +232,14 @@ export const loginUser = async (req, res) => {
 //     }
 // };
 
-export const logout = (req, res) => {
+export const logoutUser = (req, res) => {
     res.cookie('token', "", {
         expires: new Date(0)
     })
     return res.sendStatus(200);
 }
 
-export const logoutC = (req, res) => {
+export const logoutCompany = (req, res) => {
     res.cookie('tokenCompany', "", {
         expires: new Date(0)
     })
@@ -388,3 +389,52 @@ export const profileUpload = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized" });
     }
 };
+
+export const contact = async (req, res) => {
+    // Accede a los datos del formulario en req.body
+    const { email, message, telefono } = req.body
+
+    // Configura tus credenciales de emailJS
+
+    const serviceId = "service_3d2rfjj";
+    const templateId = "template_2ifv9tg";
+    const apiKey = "xbUgVwfSeoI2bFMkW";
+
+    emailjs.sendForm(serviceId, templateId, "pending", apiKey).then(resu)
+
+    try {
+        // Define los parámetros de la plantilla de correo electrónico
+        const templateParams = {
+            to_email: email, // Utiliza el correo electrónico proporcionado por el usuario
+            message: message, // Utiliza el mensaje proporcionado por el usuario
+        };
+
+        // Envía el correo electrónico utilizando emailJS
+        const emailResponse = await emailjs.send('service_3d2rfjj', 'template_2ifv9tg', templateParams);
+        console.log('Correo electrónico enviado con éxito!', emailResponse);
+
+        // Mensaje automático de respuesta al cliente
+        const autoResponseMessage = `
+          Gracias por ponerte en contacto con nosotros. Hemos recibido tu mensaje y te responderemos lo antes posible.
+    
+          Detalles del mensaje:
+          - Correo electrónico: ${email}
+          - Mensaje:
+          ${mensaje}
+    
+          Si tienes alguna otra pregunta o necesitas asistencia adicional, no dudes en contactarnos nuevamente.
+    
+          Atentamente,
+          [Tu Nombre o Nombre de tu Empresa]
+          [Tu Información de Contacto]
+        `;
+
+        // Envía una respuesta al cliente con el mensaje automático
+        res.status(200).json({ message: 'Formulario recibido y correo electrónico enviado con éxito', autoResponse: autoResponseMessage });
+    } catch (error) {
+        console.error('Error al enviar el correo electrónico:', error);
+
+        // En caso de error, envía una respuesta de error al cliente
+        res.status(500).json({ error: 'Error al procesar el formulario y enviar el correo electrónico' });
+    }
+}
