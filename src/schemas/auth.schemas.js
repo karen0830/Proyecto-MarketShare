@@ -2,7 +2,7 @@ import {z} from "zod";
 
 export const CompanyShema = z.object({
     companyName: z.string({
-        required_error: 'companyName is reqquired'
+        required_error: 'companyName is required'
     }),
     legalEntity: z.string({
         required_error: 'Legal entity is required'

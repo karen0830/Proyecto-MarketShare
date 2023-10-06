@@ -1,18 +1,18 @@
 import { Router } from 'express';
 const router = Router();
-import { login, register, logout, profile, registerCompany, loginCompany, profileCompany, logoutC, verifyToken, upload, profileUpload } from '../controllers/auth.controller.js';
+import { loginUser, registerUser, logout, profileUser, registerCompany, loginCompany, profileCompany, logoutC, verifyToken, upload, profileUpload } from '../controllers/auth.controller.js';
 import { authRequired, authRequiredCompany } from '../middlewares/validateToken.js';
 import { validateSchema } from "../middlewares/validator.js";
 import { registerSchema, loginSchema, CompanyShema, loginCompanyShema } from "../schemas/auth.schemas.js";
 
-router.post('/registerC', validateSchema(CompanyShema), registerCompany)
-router.post('/register', validateSchema(registerSchema), register);
-router.post('/loginC', validateSchema(loginCompanyShema), loginCompany)
-router.post('/login', validateSchema(loginSchema), login);
-router.post('/logout', logout);
-router.post('/logoutC', logoutC);
-router.get('/profile', authRequired, profile)
-router.get('/profileC', authRequiredCompany, profileCompany)
+router.post('/registerCompany', validateSchema(CompanyShema), registerCompany)
+router.post('/registerUser', validateSchema(registerSchema), registerUser);
+router.post('/loginCompany', validateSchema(loginCompanyShema), loginCompany)
+router.post('/loginUser', validateSchema(loginSchema), loginUser);
+router.post('/logoutUser', logout);
+router.post('/logoutCompany', logoutC);
+router.get('/profileUser', authRequired, profileUser)
+router.get('/profileCompany', authRequiredCompany, profileCompany)
 router.get('/verify', verifyToken)
 router.post('/profileImage', upload.single('file'), profileUpload);
 export default router;
