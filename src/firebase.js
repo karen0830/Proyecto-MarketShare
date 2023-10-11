@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
+import admin from "firebase-admin";
+import firebaseConfigservice from './firebase_service_account/marketshare-c5720-firebase-adminsdk-ajunu-baec284c29.json' assert { type: 'json' };
 // Tu configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAOE5hJzTA5O4jvAKHvaCNi8YfbdUvODIs",
@@ -13,29 +14,36 @@ const firebaseConfig = {
   measurementId: "G-QTSM1YVLWR"
 };
 // Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-
+export const app = initializeApp(firebaseConfig);
 // Obtiene una instancia del servicio de autenticación de Firebase
 export const auth = getAuth(app);
 // Obtiene una instancia de Firestore
 export const db = getFirestore(app);
-
 // Función para conectar con Firebase
 const connectFirebase = async () => {
   try {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // El usuario está autenticado
         console.log('Conexión exitosa con Firebase');
-      } else {
-        // El usuario no está autenticado
-        console.log('Usuario no autenticado');
-      }
     });
   } catch (error) {
     console.log(error);
     console.error('Error al conectar con Firebase:', error);
   }
+};
+
+if (admin.apps.length === 0) {
+  admin.initializeApp({
+    credential: admin.credential.cert(firebaseConfigservice),
+  });
+}
+
+export const VerifyIdToken = async (token) => {
+  return admin
+    .auth()
+    .verifyIdToken(token)
+    .catch((error) => {
+      throw error;
+    });
 };
 
 export default connectFirebase;

@@ -6,7 +6,7 @@ import { UserorCompany } from './Register/UserOrCompany'
 import "./LoginRegister.css"
 const LoginRegister = () => {
     const location = useLocation();
-    const  registerLocation = location.pathname === "/register" || location.pathname === "/registerCompany"
+    const  registerLocation = location.pathname === "/registerUser" || location.pathname === "/registerCompany"
     console.log(registerLocation);
     return (
         <>
@@ -16,21 +16,21 @@ const LoginRegister = () => {
                     <div className="nav">
                         <ul className="links">
                             <li className={registerLocation ? "signup-inactive" : "signup-active"}>
-                                <NavLink to="/login">
+                                <NavLink to="/loginUser">
                                     <a  className="btn">Sign in</a>
                                 </NavLink>
                             </li>
                             <li className={registerLocation ? "signup-active" : "signup-inactive"}>
-                                <NavLink to="/register">
+                                <NavLink to="/registerUser">
                                     <a  className="btn">Sign up </a>
                                 </NavLink>
                             </li>
                         </ul>
                     </div>
                     <div ng-app ng-init="checked = false">
-                        {location.pathname === '/register' && <UserorCompany />}
+                        {location.pathname === '/registerUser' && <UserorCompany />}
                         {location.pathname === '/registerCompany' && <UserorCompany />}
-                        {location.pathname === '/login' && < SignInForm/>}
+                        {location.pathname === '/loginUser' && < SignInForm/>}
                         {location.pathname === '/' && < SignInForm/>}
                     </div>
                 </div>

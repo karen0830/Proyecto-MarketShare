@@ -3,7 +3,7 @@ import instance from "./axios";
 export const registerRequest = async user => {
   try {
     console.log(user);
-    const response = await instance.post(`/register`, user);
+    const response = await instance.post(`/registerUser`, user);
     console.log(response);
     console.log("http response = " + response);
     return response;
@@ -23,7 +23,7 @@ export const registerCompanyRequest = async company => {
 
 export const loginRequest = async user => {
   try {
-    const response = await instance.post(`/login`, user);
+    const response = await instance.post(`/loginUser`, user);
     return response
   } catch (ex) {
     console.log("error.status:", ex);
@@ -34,6 +34,15 @@ export const loginRequest = async user => {
 export const verityTokenRequest = async user => {
     try {
       const response = await instance.get(`/verify`, user);
+      return response
+    } catch (ex) {
+      console.log("error.status:", ex);
+    }
+  }
+
+  export const logoutUser= async user => {
+    try {
+      const response = await instance.post(`/logoutUser`, user);
       return response
     } catch (ex) {
       console.log("error.status:", ex);

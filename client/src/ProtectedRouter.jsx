@@ -6,7 +6,7 @@ const ProtectedRouter = () => {
     const { loading, user, isAuthenticated } = useAuth()
     console.log(loading, user, isAuthenticated);
     if (loading) return <h1>Loading...</h1>
-    if(!loading && !isAuthenticated) return (<Navigate to="/login"/>)
+    if(!loading && !isAuthenticated) return (<Navigate to="/loginUser"/>)
 
     return <Outlet/>
 }

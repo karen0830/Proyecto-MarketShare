@@ -23,7 +23,7 @@ app.use("/api", Router);
 
 // Redirigir desde la raíz '/' a '/login'
 app.get('/', (req, res) => {
-    res.redirect('/api/login'); // Cambia '/api/login' por la ruta correcta de inicio de sesión
+    res.redirect('/api/loginUser'); // Cambia '/api/login' por la ruta correcta de inicio de sesión
 });
 
 export default app;

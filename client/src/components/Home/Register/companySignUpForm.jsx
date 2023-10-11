@@ -136,11 +136,6 @@ export const CompanySignUpForm = () => {
         <button onClick={ButtonOpenModal} ng-click="checked = !checked" className="btn-signup" type="submit">
           Registrarse
         </button>
-
-        <div className={`modal-container ${classNameModal}`}>
-          <p>Usted ya se encuentra registrado</p>
-        </div>
-
       </form>
     </>
   );

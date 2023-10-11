@@ -3,18 +3,18 @@ import Home from "./pages/home/home";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRouter from "./ProtectedRouter";
-
+import { PerfilUsuario } from "./pages/PerfilUsuario/PerfilUsuario";
 const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/login" element={<Home />}></Route>
-          <Route path="/register" element={<Home />}></Route>
+          <Route path="/loginUser" element={<Home />}></Route>
+          <Route path="/registerUser" element={<Home />}></Route>
           <Route path="/registerCompany" element={<Home />}></Route>
           <Route element={<ProtectedRouter/>}>
-            <Route path="/profile" element={<h1> Profile </h1>}></Route>
+            <Route path="/profileUser" element={<PerfilUsuario/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

@@ -33,7 +33,7 @@ export const CompanyShema = z.object({
 
 export const registerSchema = z.object({
     username: z.string({
-        required_error: 'Usename is required',
+        required_error: 'Username is required',
     }),
     email: z.string({
         required_error: 'Email is required',
@@ -43,9 +43,20 @@ export const registerSchema = z.object({
     password: z.string({
         required_error: 'Password is required',
     }).min(8, {
-        message: 'Password must be at least 8 characteres',
-    })
-})
+        message: 'Password must be at least 8 characters',
+    }).refine((value) => {
+        // Agregar aquí la lógica de validación de contraseña
+        // Por ejemplo, verifica si contiene una mayúscula, una minúscula y caracteres especiales
+        const hasUppercase = /[A-Z]/.test(value);
+        const hasLowercase = /[a-z]/.test(value);
+        const hasSpecialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(value);
+        
+        return hasUppercase && hasLowercase && hasSpecialCharacters;
+    }, {
+        message: 'Password must contain at least one uppercase letter, one lowercase letter, and special characters',
+    }),
+});
+
 
 export const loginSchema = z.object({
     email: z.string({

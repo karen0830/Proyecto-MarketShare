@@ -1,19 +1,14 @@
 import { React, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { useNavigate } from "react-router-dom";
+
 export const UserSignUpForm = () => {
   const [className, setClassName] = useState("hidden")
 
   const { register, handleSubmit, formState: {
     errors
   } } = useForm()
-  const { signup, isAuthenticated, errors: registerErrors } = useAuth()
-  const navigate = useNavigate()
-
-  // useEffect(() => {
-  //   if (isAuthenticated) navigate("/profile")
-  // }, [])
+  const { signup, errors: registerErrors } = useAuth()
 
   const onSubmit = handleSubmit(async (values) => {
     signup(values)

@@ -42,6 +42,7 @@
 }
 
 .sidebar-menu a {
+    text-decoration: none;
     width: 100%;
     font-size: 1.15rem;
     color: #fff;

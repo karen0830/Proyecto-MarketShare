@@ -21,6 +21,7 @@
     "emailjs-com": "^3.2.0",
     "express": "^4.18.2",
     "firebase": "^10.4.0",
+    "firebase-admin": "^11.11.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",

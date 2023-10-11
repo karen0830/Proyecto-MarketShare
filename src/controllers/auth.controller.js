@@ -1,14 +1,9 @@
-import CompanyModel from '../models/company.models.js'
 import bcrypt from 'bcryptjs'
-import multer from 'multer'
-import Jwt from 'jsonwebtoken'
-import { TOKEN_SECRET } from '../config.js'
 import { createAcccessToken } from '../libs/jwt.js'
-import path from 'path';
 import { auth, db } from '../firebase.js';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
-import emailjs from 'emailjs-com';
+import admin from "firebase-admin";
 
 
 // Función para registrar un nuevo usuario
@@ -121,6 +116,8 @@ export const loginCompany = async (req, res) => {
             if (isMatch) {
                 // Contraseña válida
                 // Enviar el token en una cookie
+
+
                 const tokenCompany = await createAcccessToken({ email: company.email });
                 console.log(tokenCompany);
                 res.cookie("tokenCompany", tokenCompany);
@@ -160,14 +157,12 @@ export const loginUser = async (req, res) => {
 
             if (isMatch) {
                 // Contraseña válida
-
-                // Generar un token JWT
-                const token = Jwt.sign({ email: user.email }, TOKEN_SECRET, { expiresIn: '1h' });
-
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const token = await userCredential.user.getIdToken();
+                console.log(token);
                 // Enviar el token en una cookie
-                res.cookie("token", token, { httpOnly: true, maxAge: 3600000 }); // MaxAge de 1 hora
+                res.cookie("token", token); // MaxAge de 1 hora
                 console.log("Contraseña válida");
-                console.log(querySnapshot.docs)
                 return res.json({
                     id: user.id,
                     username: user.username,
@@ -187,56 +182,15 @@ export const loginUser = async (req, res) => {
     }
 };
 
-
-
-// export const login = async (req, res) => {
-//     console.log(req.body);
-//     const { email, password } = req.body;
-//     try {
-//        fetchSignInMethodsForEmail(auth, email)
-//   .then((signInMethods) => {
-//     // Si signInMethods.length > 0, entonces el correo electrónico ya está en uso
-//     if (signInMethods.length > 0) {
-//       console.log(`El correo electrónico ${email} ya está en uso`);
-//     } else {
-//       console.log(`El correo electrónico ${email} no está en uso`);
-//     }
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
-//         // const userFound = await User.findOne({ email });
-
-//         // if (!userFound) {
-//         //     return res.status(400).json({ message: "User not found" });
-//         // }
-
-//         // const isMatch = await bcrypt.compare(password, userFound.password);
-//         // if (!isMatch) {
-//         //     return res.status(400).json({ message: "User or password incorrect" });
-//         // }
-
-//         // const token = await createAcccessToken({ id: userFound._id });
-
-//         // res.cookie("token", token);
-//         // console.log(token);
-//         // res.json({
-//         //     id: userFound._id,
-//         //     username: userFound.username,
-//         //     email: userFound.email,
-//         //     createdAt: userFound.createdAt,
-//         //     updatedAt: userFound.updatedAt
-//         // });
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
-
 export const logoutUser = (req, res) => {
-    res.cookie('token', "", {
-        expires: new Date(0)
-    })
-    return res.sendStatus(200);
+    try {
+        res.cookie('token', "", {
+            expires: new Date(0)
+        })
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const logoutCompany = (req, res) => {
@@ -247,8 +201,8 @@ export const logoutCompany = (req, res) => {
 }
 
 export const profileUser = async (req, res) => {
-    console.log(req.user);
-    const q = query(collection(db, "users"), where("email", "==", req.user.email));
+    console.log(req.body);
+    const q = query(collection(db, "users"), where("email", "==", req.body.email));
     try {
         const querySnapshot = await getDocs(q);
         if (querySnapshot.size > 0) {
@@ -295,146 +249,19 @@ export const profileCompany = async (req, res) => {
 }
 
 export const verifyToken = async (req, res) => {
-    const { token } = req.cookies
-    if (!token) return res.status(401).json({ message: "Unauthorized" })
-
-    Jwt.verify(token, TOKEN_SECRET, async (err, user) => {
-        if (err) return res.status(401).json({ message: "Unauthorized" })
-
-        const userFound = await User.findById(user.id)
-        if (!userFound) return res.status(401).json({ message: "Unauthorized" })
-
-        return res.json({
-            id: userFound._id,
-            username: userFound.username,
-            email: userFound.email
-        })
-    })
-}
-
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'src/uploads/'); // Directorio donde se guardarán los archivos
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const extension = path.extname(file.originalname); // Obtiene la extensión del archivo original
-        const fileName = 'profile-' + uniqueSuffix + extension;
-        cb(null, fileName);
-    },
-});
-
-export const upload = multer({ storage: storage });
-
-// export const profileUpload = async (req, res) => {
-//     // const userFound = await User.findById(req.user.id)
-//     console.log(req.body);
-//     // if (!userFound) return res.status(400).json({
-//     //     message: "User not found"
-//     // })
-
-//     // try {
-//     //     console.log(req.body);
-//     //     const userFound = await User.findById(req.body.id)
-//     //     console.log(userFound);
-//     //     if (!userFound) {
-//     //         return res.status(400).json({
-//     //             message: "User not found"
-//     //         });
-//     //     }
-
-//     //     // Verifica si se ha enviado un archivo
-//     //     if (!req.file) {
-//     //         return res.status(400).json({
-//     //             message: "No file uploaded"
-//     //         });
-//     //     }
-
-//     //     // Actualiza el campo profileImage con la URL del archivo cargado
-//     //     userFound.profileImage = req.file.path;
-
-//     //     // Guarda el usuario actualizado en la base de datos
-//     //     await userFound.save();
-
-//     //     // Responde con un mensaje de éxito
-//     //     res.json({ message: 'Archivo subido con éxito' });
-//     // } catch (error) {
-//     //     console.log(error);
-//     //     res.status(500).json({ message: error.message });
-//     // }
-// };
-
-// Función profileUpload para obtener el ID del usuario
-export const profileUpload = async (req, res) => {
-    const { token } = req.cookies;
+    const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {
-        const decoded = Jwt.verify(token, TOKEN_SECRET);
-        const userFound = await User.findById(decoded.id);
-        console.log(decoded);
-        if (!userFound) return res.status(401).json({ message: "Unauthorized" });
-        // Accede a los datos enviados en el cuerpo de la solicitud
-        const imagePath = req.file.path;
-        console.log(imagePath);
-        // Si llegamos aquí, la autenticación fue exitosa y tenemos los datos del usuario.
+        // Decodifica el token para obtener la información del usuario
+        const decodedToken = await admin.auth().verifyIdToken(token);
         return res.json({
-            id: userFound._id, // Devuelve el ID del usuario junto con otros datos.
-            username: userFound.username,
-            email: userFound.email,
+            id: decodedToken.uid,
+            email: decodedToken.email,
+            tokens: token
         });
-    } catch (err) {
-        // Si hay un error en la verificación del token, devolvemos una respuesta de Unauthorized.
-        return res.status(401).json({ message: "Unauthorized" });
-    }
-};
-
-export const contact = async (req, res) => {
-    // Accede a los datos del formulario en req.body
-    const { email, message, telefono } = req.body
-
-    // Configura tus credenciales de emailJS
-
-    const serviceId = "service_3d2rfjj";
-    const templateId = "template_2ifv9tg";
-    const apiKey = "xbUgVwfSeoI2bFMkW";
-
-    emailjs.sendForm(serviceId, templateId, "pending", apiKey).then(resu)
-
-    try {
-        // Define los parámetros de la plantilla de correo electrónico
-        const templateParams = {
-            to_email: email, // Utiliza el correo electrónico proporcionado por el usuario
-            message: message, // Utiliza el mensaje proporcionado por el usuario
-        };
-
-        // Envía el correo electrónico utilizando emailJS
-        const emailResponse = await emailjs.send('service_3d2rfjj', 'template_2ifv9tg', templateParams);
-        console.log('Correo electrónico enviado con éxito!', emailResponse);
-
-        // Mensaje automático de respuesta al cliente
-        const autoResponseMessage = `
-          Gracias por ponerte en contacto con nosotros. Hemos recibido tu mensaje y te responderemos lo antes posible.
-    
-          Detalles del mensaje:
-          - Correo electrónico: ${email}
-          - Mensaje:
-          ${mensaje}
-    
-          Si tienes alguna otra pregunta o necesitas asistencia adicional, no dudes en contactarnos nuevamente.
-    
-          Atentamente,
-          [Tu Nombre o Nombre de tu Empresa]
-          [Tu Información de Contacto]
-        `;
-
-        // Envía una respuesta al cliente con el mensaje automático
-        res.status(200).json({ message: 'Formulario recibido y correo electrónico enviado con éxito', autoResponse: autoResponseMessage });
     } catch (error) {
-        console.error('Error al enviar el correo electrónico:', error);
-
-        // En caso de error, envía una respuesta de error al cliente
-        res.status(500).json({ error: 'Error al procesar el formulario y enviar el correo electrónico' });
+        console.error("Error al verificar el token:", error);
+        return res.status(403).json({ message: "Invalid token" });
     }
 }

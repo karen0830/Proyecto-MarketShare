@@ -2,27 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom'
 import { UserSignUpForm } from './UserSignUpForm.jsx'
 import { CompanySignUpForm } from './companySignUpForm.jsx';
-
+import "./Registro.css"
 export const UserorCompany = () => {
     const location = useLocation()
-    
-    const locationRegister = location.pathname === "/register"
+
+    const locationRegister = location.pathname === "/registerUser"
 
     return (
-        <div className="ml-2 flex flex-wrap gap-6">
-            <NavLink to="/registerCompany">
-                <button className={locationRegister === false ? 'signUpUserCompany-active' : 'signupUserCompany-inactive'}>
+        <div className="companyorUser">
+            <div className='options'>
+                <NavLink className={locationRegister === false ? 'signUpUserCompany-active' : 'signupUserCompany-inactive'} to="/registerCompany">
                     Company
-                </button>
-            </NavLink>
-            <p>or</p>
-            <NavLink to="/register">
-                <button className={locationRegister ? 'signUpUserCompany-active' : 'signupUserCompany-inactive'}>
-                    User
-                </button>
-            </NavLink>
+                </NavLink>
+                <p>or</p>
+                <NavLink className={locationRegister ? 'signUpUserCompany-active' : 'signupUserCompany-inactive'} to="/registerUser">
+                        User
+                </NavLink>
+            </div>
             {location.pathname === "/registerCompany" && <CompanySignUpForm />}
-            {location.pathname === "/register" && <UserSignUpForm />}
+            {location.pathname === "/registerUser" && <UserSignUpForm />}
         </div>
     );
 };

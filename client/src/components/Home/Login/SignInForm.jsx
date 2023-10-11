@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+
 export const SignInForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm()
-  const { signIn, errors: signinErrors } = useAuth()
+  const { signIn, isAuthenticated, errors: signinErrors } = useAuth()
+  const navigate = useNavigate()
 
   const onSubmit = handleSubmit(data => {
     signIn(data);
   })
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/profileUser")
+  }, [isAuthenticated])
 
   return (
     <>
