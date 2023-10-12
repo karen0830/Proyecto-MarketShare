@@ -20,19 +20,27 @@ export const CompanySignUpForm = () => {
     if (isAuthenticated) {
       if (classNameModal == "hidden") {
         setClassNameModal("visible")
-      }else setClassNameModal("hidden")
+      } else setClassNameModal("hidden")
     }
   }
-  
+
   return (
     <>
       {
         registerErrors.map((error, i) => (
-          <div key={i} className="bg-red-500 text-white">
-            {error}
+          <div key={i} className="errors">
+            {Array.isArray(error) ? (
+              error.map((line, j) => (
+                <p key={j}>{line}</p>
+              ))
+            ) : (
+              <p key={i}>{error}</p>
+            )}
           </div>
         ))
       }
+
+
       <form className="form-signup" onSubmit={onSubmit}>
         {
           errors.companyName && (

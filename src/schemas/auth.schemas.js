@@ -45,15 +45,20 @@ export const registerSchema = z.object({
     }).min(8, {
         message: 'Password must be at least 8 characters',
     }).refine((value) => {
-        // Agregar aquí la lógica de validación de contraseña
-        // Por ejemplo, verifica si contiene una mayúscula, una minúscula y caracteres especiales
         const hasUppercase = /[A-Z]/.test(value);
-        const hasLowercase = /[a-z]/.test(value);
-        const hasSpecialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(value);
-        
-        return hasUppercase && hasLowercase && hasSpecialCharacters;
+        return hasUppercase 
     }, {
-        message: 'Password must contain at least one uppercase letter, one lowercase letter, and special characters',
+        message: 'Password must contain uppercase letter',
+    }).refine((value) => {
+        const hasLowercase = /[a-z]/.test(value);
+        return hasLowercase
+    }, {
+        message: 'Password must contain lowercase letter'
+    }).refine((value) => {
+        const hasSpecialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(value);
+        return hasSpecialCharacters
+    }, {
+       message: 'Password must contain special characters' 
     }),
 });
 

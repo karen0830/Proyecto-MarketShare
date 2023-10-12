@@ -17,11 +17,17 @@ export const UserSignUpForm = () => {
     <>
       {
         registerErrors.map((error, i) => (
-          <div key={i} className="bg-red-500 text-white">
-            {error}
+          <div key={i} className="errors">
+            {error.map((line, j) => (
+              <p key={j}>
+                <p class="bullet"></p>
+                {line}
+              </p>
+            ))}
           </div>
         ))
       }
+
       <form className="form-signup" onSubmit={onSubmit}>
         <label for="fullname">Full name</label>
         <input
@@ -32,7 +38,7 @@ export const UserSignUpForm = () => {
         />
         {
           errors.username && (
-            <p className="text-red-500">Username is required</p>
+            <p className="bg-black">Username is required</p>
           )
         }
         <label for="email">Email</label>

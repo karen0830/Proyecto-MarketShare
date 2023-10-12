@@ -17,15 +17,17 @@ export const AuthProvider = ({ children }) => {
     const [errors, setErrors] = useState([])
 
     const signup = async (user) => {
-        try {
-            console.log(user);
-            const res = await registerRequest(user)
+        console.log(user);
+        const res = await registerRequest(user)
+        if (res.data) {
             console.log(res.data);
             setUser(res.data)
             setIsAuthenticated(false)
-        } catch (error) {
-            console.log(error);
-            setErrors(error.response.data)
+        } else {
+            if (res.response.data.message) {
+                setErrors([[res.response.data.message]])
+                console.log(res.response.data.message);
+            }else setErrors([res.response.data])
         }
 
     }
@@ -46,19 +48,14 @@ export const AuthProvider = ({ children }) => {
 
 
     const signIn = async (user) => {
-        try {
-            const res = await loginRequest(user)
-            if (res.data) {
-                console.log(res);
-                setIsAuthenticated(true)
-                setUser(res.data)
-            }
-        } catch (error) {
-            if (Array.isArray(error.response.data)) {
-                setErrors(error.response.data)
-                console.log(error.response.data);
-            }
-            setErrors([error.response.data.message])
+        const res = await loginRequest(user)
+        console.log(res);
+        if (res.data) {
+            console.log(res);
+            setIsAuthenticated(true)
+            setUser(res.data)
+        } else {
+            setErrors([[res.response.data]])
         }
 
     }
@@ -80,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
+        console.log(errors);
         if (errors.length > 0) {
             const timer = setTimeout(() => {
                 setErrors([])

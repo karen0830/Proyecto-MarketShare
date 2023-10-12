@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { createAcccessToken } from '../libs/jwt.js'
-import { auth, db } from '../firebase.js';
+import { auth, db} from '../firebase.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
 import admin from "firebase-admin";
@@ -9,8 +9,8 @@ import admin from "firebase-admin";
 // Función para registrar un nuevo usuario
 export const registerUser = async (req, res) => {
     const { email, username, password } = req.body;
+       
     try {
-        // Hashea la contraseña
         const hash = await bcrypt.hash(password, 10);
 
         // Crea un nuevo usuario con correo electrónico y contraseña
@@ -38,7 +38,7 @@ export const registerUser = async (req, res) => {
             // createdAt y updatedAt no son propiedades que se generen automáticamente
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Email is in use" });
     }
 };
 
@@ -169,12 +169,12 @@ export const loginUser = async (req, res) => {
                     email: user.email
                 })
             } else {
-                res.status(400).send("Contraseña o email incorrecto");
+                res.status(400).send("Incorrect password or gmail");
             }
         } else {
             // El documento no existe
             console.log("El documento no existe");
-            res.status(404).send("Documento no encontrado");
+            res.status(404).send("Incorrect password or gmail");
         }
     } catch (error) {
         console.error("Error al consultar:", error);

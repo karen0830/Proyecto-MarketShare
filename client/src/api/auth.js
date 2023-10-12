@@ -9,6 +9,7 @@ export const registerRequest = async user => {
     return response;
   } catch (ex) {
     console.log("error.status:", ex);
+    return ex
   }
 }
 
@@ -18,6 +19,7 @@ export const registerCompanyRequest = async company => {
     console.log("http response = " + response.data);
   } catch (ex) {
     console.log("error.status:", ex);
+    return ex
   }
 }
 
@@ -27,6 +29,7 @@ export const loginRequest = async user => {
     return response
   } catch (ex) {
     console.log("error.status:", ex);
+    return ex
   }
 }
 
