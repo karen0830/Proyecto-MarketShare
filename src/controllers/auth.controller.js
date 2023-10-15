@@ -1,15 +1,15 @@
 import bcrypt from 'bcryptjs'
 import { createAcccessToken } from '../libs/jwt.js'
-import { auth, db} from '../firebase.js';
+import { auth, db, adminApp } from '../firebase.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
-import admin from "firebase-admin";
-
+import { doc, setDoc, query, collection, where, getDocs, updateDoc } from "firebase/firestore";
+import { IncomingForm } from 'formidable';;
+import fs from "fs"
 
 // Función para registrar un nuevo usuario
 export const registerUser = async (req, res) => {
     const { email, username, password } = req.body;
-       
+
     try {
         const hash = await bcrypt.hash(password, 10);
 
@@ -158,6 +158,15 @@ export const loginUser = async (req, res) => {
             if (isMatch) {
                 // Contraseña válida
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                auth.onAuthStateChanged(function(user) {
+                    if (user) {
+                      console.log("Inicio sesion");
+                    } else {
+                      // No hay ningún usuario autenticado.
+                      console.log("no Inicio sesion");
+                      // Aquí puedes manejar el caso cuando no hay ningún usuario autenticado.
+                    }
+                  });
                 const token = await userCredential.user.getIdToken();
                 console.log(token);
                 // Enviar el token en una cookie
@@ -254,7 +263,7 @@ export const verifyToken = async (req, res) => {
 
     try {
         // Decodifica el token para obtener la información del usuario
-        const decodedToken = await admin.auth().verifyIdToken(token);
+        const decodedToken = await adminApp.auth().verifyIdToken(token);
         return res.json({
             id: decodedToken.uid,
             email: decodedToken.email,
@@ -265,3 +274,90 @@ export const verifyToken = async (req, res) => {
         return res.status(403).json({ message: "Invalid token" });
     }
 }
+
+export const imagen = async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    const decodedToken = await adminApp.auth().verifyIdToken(token);
+
+    const form = new IncomingForm(); // Changed this line
+    form.parse(req, (err, fields, files) => {
+        const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');
+        if (err) {
+            console.error('Error al procesar el formulario:', err);
+            res.status(500).send('Error al procesar el formulario');
+            return;
+        }
+
+        const archivo = files.miArchivo; // Asegúrate de que el nombre coincida con el campo de tu formulario
+        console.log("archivo: ", archivo);
+        if (!archivo) {
+            res.status(400).send('No se ha subido ningún archivo');
+            return;
+        }
+
+        const storagePath = 'images/' + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
+        const file = bucket.file(storagePath);
+        console.log("file: ", file);
+        const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
+
+
+
+        const stream = file.createWriteStream({
+            metadata: {
+                contentType: archivo.type
+            }
+        });
+
+        stream.on('error', (err) => {
+            console.error('Error al subir el archivo a Firebase Storage:', err);
+            res.status(500).send('Error al subir el archivo a Firebase Storage');
+        });
+
+        stream.on('finish', () => {
+            console.log('Archivo subido exitosamente a Firebase Storage');
+            const config = {
+                action: 'read',
+                expires: '03-01-2500'
+            };
+            file.getSignedUrl(config, (err, url) => {
+                if (err) {
+                    console.error('Error al obtener el enlace de la imagen:', err);
+                    res.status(500).send('Error al obtener el enlace de la imagen');
+                } else {
+                    const user = auth.currentUser;
+                    console.log(user);
+                    if (user) {
+                        // El usuario está autenticado
+                        // Puedes realizar operaciones que requieran autenticación aquí
+                        console.log('El usuario está autenticado. UID:', user.uid);
+
+                        // Continúa con el proceso de actualización del documento de usuario
+                        const userDocRef = doc(db, 'users', decodedToken.uid);
+
+                        const actualizar = async () => {
+                            await updateDoc(userDocRef, {
+                                profileImage: url
+                            });
+                        }
+
+                        actualizar();
+
+                        res.json({
+                            user: decodedToken.email,
+                            imagen: url
+                        });
+                    } else {
+                        // El usuario no está autenticado
+                        // Puedes redirigirlo a la página de inicio de sesión u tomar otras medidas
+                        console.log('El usuario no está autenticado. Redirige a la página de inicio de sesión.');
+                        res.status(401).json({ message: "Unauthorized" });
+                    }
+                }
+            });
+        });
+
+
+        localReadStream.pipe(stream);
+    });
+};

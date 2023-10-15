@@ -20,7 +20,7 @@ export const auth = getAuth(app);
 // Obtiene una instancia de Firestore
 export const db = getFirestore(app);
 // Función para conectar con Firebase
-const connectFirebase = async () => {
+export const connectFirebase = async () => {
   try {
     onAuthStateChanged(auth, (user) => {
         console.log('Conexión exitosa con Firebase');
@@ -34,6 +34,7 @@ const connectFirebase = async () => {
 if (admin.apps.length === 0) {
   admin.initializeApp({
     credential: admin.credential.cert(firebaseConfigservice),
+    storageBucket: 'gs://marketshare-c5720.appspot.com',
   });
 }
 
@@ -46,6 +47,9 @@ export const VerifyIdToken = async (token) => {
     });
 };
 
+
+export const adminApp = admin;
 export default connectFirebase;
+
 
 
