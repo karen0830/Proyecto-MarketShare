@@ -9,36 +9,40 @@ import fs from "fs"
 // Función para registrar un nuevo usuario
 export const registerUser = async (req, res) => {
     const { email, username, password } = req.body;
-
+    const q = query(collection(db, "users"), where("email", "==", email));
     try {
-        const hash = await bcrypt.hash(password, 10);
 
-        // Crea un nuevo usuario con correo electrónico y contraseña
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.size <= 0) {
+            const hash = await bcrypt.hash(password, 10);
 
-        // Crea un "documento" para el usuario en Firestore
-        await setDoc(doc(db, 'users', user.uid), {
-            id: user.uid,
-            username: username,
-            email: email,
-            profileImage: '/default-profile-image.jpg',
-            password: hash
-            // puedes agregar más campos aquí...
-        });
+            // Crea un nuevo usuario con correo electrónico y contraseña
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-        console.log('Usuario registrado con éxito');
+            // Crea un "documento" para el usuario en Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                id: user.uid,
+                username: username,
+                email: email,
+                profileImage: '/default-profile-image.jpg',
+                password: hash
+                // puedes agregar más campos aquí...
+            });
 
-        console.log(user);
+            console.log('Usuario registrado con éxito');
 
-        res.json({
-            id: user.uid, // Utiliza el UID proporcionado por Firebase
-            username: username, // Utiliza el nombre de usuario proporcionado
-            email: email, // Utiliza el correo electrónico proporcionado
-            // createdAt y updatedAt no son propiedades que se generen automáticamente
-        });
+            console.log(user);
+
+            return res.json({
+                id: user.uid, // Utiliza el UID proporcionado por Firebase
+                username: username, // Utiliza el nombre de usuario proporcionado
+                email: email, // Utiliza el correo electrónico proporcionado
+                // createdAt y updatedAt no son propiedades que se generen automáticamente
+            });
+        }else return res.status(409).json({ message: "Email is in use" });
     } catch (error) {
-        res.status(500).json({ message: "Email is in use" });
+        res.status(500).json({ message: error });
     }
 };
 
@@ -158,15 +162,15 @@ export const loginUser = async (req, res) => {
             if (isMatch) {
                 // Contraseña válida
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                auth.onAuthStateChanged(function(user) {
+                auth.onAuthStateChanged(function (user) {
                     if (user) {
-                      console.log("Inicio sesion");
+                        console.log("Inicio sesion");
                     } else {
-                      // No hay ningún usuario autenticado.
-                      console.log("no Inicio sesion");
-                      // Aquí puedes manejar el caso cuando no hay ningún usuario autenticado.
+                        // No hay ningún usuario autenticado.
+                        console.log("no Inicio sesion");
+                        // Aquí puedes manejar el caso cuando no hay ningún usuario autenticado.
                     }
-                  });
+                });
                 const token = await userCredential.user.getIdToken();
                 console.log(token);
                 // Enviar el token en una cookie
@@ -279,7 +283,7 @@ export const imagen = async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
     const decodedToken = await adminApp.auth().verifyIdToken(token);
-
+    console.log(req.body);
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {
         const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');

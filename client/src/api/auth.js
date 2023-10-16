@@ -35,20 +35,32 @@ export const loginRequest = async user => {
 
 
 export const verityTokenRequest = async user => {
-    try {
-      const response = await instance.get(`/verify`, user);
-      return response
-    } catch (ex) {
-      console.log("error.status:", ex);
-    }
+  try {
+    const response = await instance.get(`/verify`, user);
+    return response
+  } catch (ex) {
+    console.log("error.status:", ex);
   }
+}
 
-  export const logoutUser= async user => {
-    try {
-      const response = await instance.post(`/logoutUser`, user);
-      return response
-    } catch (ex) {
-      console.log("error.status:", ex);
-    }
+export const logoutUser = async user => {
+  try {
+    const response = await instance.post(`/logoutUser`, user);
+    return response
+  } catch (ex) {
+    console.log("error.status:", ex);
   }
+}
 
+export const getImage = async file => {
+  try {
+    const formData = new FormData();
+    formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
+    console.log(formData.get('miArchivo'));
+    const response = await instance.post(`/imagen`, formData);
+    console.log(file);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}

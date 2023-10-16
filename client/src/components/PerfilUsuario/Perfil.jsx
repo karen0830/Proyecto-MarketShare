@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Perfil.css";
+import { getImage } from "../../api/auth";
 
 const Perfil = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [file, setFile] = useState(null);
+  const [image, setImage] = useState('')
+
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
+    setFile(e.target.files[0]);
+    console.log(file);
   };
 
-  const handleUpload = () => {};
+  useEffect(() => {
+    const handleUpload = async () => {
+      try {
+        const response = await getImage(file);
+        if (response) {
+          console.log(response);
+          setImage(response.data.imagen)
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    handleUpload();
+  },[file])
 
   return (
     <div className="general-container">
@@ -22,9 +39,12 @@ const Perfil = () => {
           ></form>
           <input type="file" name="avatar" className="input-button" />
           <div>
-            <button className="button-avatar" onClick={handleFileChange}>
+            <h2>Subir Archivo</h2>
+            <input name="miArchivo" type="file" onChange={handleFileChange} />
+            <button className="button-avatar">
               Cambiar Imagen de perfil
             </button>
+            <img src={image} alt="" />
           </div>
         </div>
         <h2>Descripcion del usuario</h2>
