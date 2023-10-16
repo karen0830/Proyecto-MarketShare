@@ -48,6 +48,7 @@ const Perfil = () => {
           </div>
         </div>
         <h2>Descripcion del usuario</h2>
+        <h2>pivle vys</h2>
         <div className="popularidad">
           <div>
             <h3>100</h3>
