@@ -54,3 +54,9 @@
     box-shadow: 0px 0px 29px -5px #302a30;
     margin-top: 15px;
 }
+
+.profileImage{
+    border-radius: 100px;
+    width: 200px;
+    height: 200px;
+}

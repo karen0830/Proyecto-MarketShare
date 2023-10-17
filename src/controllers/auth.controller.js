@@ -25,7 +25,7 @@ export const registerUser = async (req, res) => {
                 id: user.uid,
                 username: username,
                 email: email,
-                profileImage: '/default-profile-image.jpg',
+                profileImage: 'https://firebasestorage.googleapis.com/v0/b/marketshare-c5720.appspot.com/o/images%2FImagenDefecto.jpg?alt=media&token=ab01c88e-3c26-416c-bc7c-4fd4ea0641dc&_gl=1*bt1yd2*_ga*MTM4NjQ4NjMxMC4xNjk3NTY2OTc5*_ga_CW55HF8NVT*MTY5NzU2Njk4MC4xLjEuMTY5NzU2Nzc3Ni41MC4wLjA.',
                 password: hash
                 // puedes agregar más campos aquí...
             });
@@ -38,9 +38,10 @@ export const registerUser = async (req, res) => {
                 id: user.uid, // Utiliza el UID proporcionado por Firebase
                 username: username, // Utiliza el nombre de usuario proporcionado
                 email: email, // Utiliza el correo electrónico proporcionado
+                imagen: user.profileImage
                 // createdAt y updatedAt no son propiedades que se generen automáticamente
             });
-        }else return res.status(409).json({ message: "Email is in use" });
+        } else return res.status(409).json({ message: "Email is in use" });
     } catch (error) {
         res.status(500).json({ message: error });
     }
@@ -179,7 +180,8 @@ export const loginUser = async (req, res) => {
                 return res.json({
                     id: user.id,
                     username: user.username,
-                    email: user.email
+                    email: user.email,
+                    imagen: user.profileImage
                 })
             } else {
                 res.status(400).send("Incorrect password or gmail");
@@ -268,10 +270,15 @@ export const verifyToken = async (req, res) => {
     try {
         // Decodifica el token para obtener la información del usuario
         const decodedToken = await adminApp.auth().verifyIdToken(token);
+        const q = query(collection(db, "users"), where("email", "==", decodedToken.email));
+        const querySnapshot = await getDocs(q);
+        const user = querySnapshot.docs[0].data();
         return res.json({
             id: decodedToken.uid,
             email: decodedToken.email,
-            tokens: token
+            tokens: token,
+            imagen: user.profileImage,
+            username: user.username
         });
     } catch (error) {
         console.error("Error al verificar el token:", error);
@@ -284,6 +291,9 @@ export const imagen = async (req, res) => {
     if (!token) return res.status(401).json({ message: "Unauthorized" });
     const decodedToken = await adminApp.auth().verifyIdToken(token);
     console.log(req.body);
+    const q = query(collection(db, "users"), where("email", "==", decodedToken.email));
+    const querySnapshot = await getDocs(q);
+    const userDate = querySnapshot.docs[0].data();
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {
         const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');
@@ -349,7 +359,8 @@ export const imagen = async (req, res) => {
 
                         res.json({
                             user: decodedToken.email,
-                            imagen: url
+                            imagen: url,
+                            username: userDate.username
                         });
                     } else {
                         // El usuario no está autenticado

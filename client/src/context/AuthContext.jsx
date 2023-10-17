@@ -32,22 +32,6 @@ export const AuthProvider = ({ children }) => {
 
     }
 
-    const getImage = async (user) => {
-        console.log(user);
-        const res = await registerRequest(user)
-        if (res.data) {
-            console.log(res.data);
-            setUser(res.data)
-            setIsAuthenticated(false)
-        } else {
-            if (res.response.data.message) {
-                setErrors([[res.response.data.message]])
-                console.log(res.response.data.message);
-            }else setErrors([res.response.data])
-        }
-
-    }
-
     const signupCompany = async (company) => {
         try {
             console.log(company);
@@ -65,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
     const signIn = async (user) => {
         const res = await loginRequest(user)
-        console.log(res);
+        console.log(res.data);
         if (res.data) {
             console.log(res);
             setIsAuthenticated(true)
@@ -117,7 +101,6 @@ export const AuthProvider = ({ children }) => {
                     if (!res.data) {
                         setIsAuthenticated(false);
                         setLoading(false);
-                        console.log("se metio aca");
                         return;
                     } else {
                         setIsAuthenticated(true)
@@ -135,7 +118,7 @@ export const AuthProvider = ({ children }) => {
         checkLogin()
     }, [])
     return (
-        <AuthContext.Provider value={{ signup, user, isAuthenticated, errors, signIn, signupCompany, loading, logoutUsers }}>
+        <AuthContext.Provider value={{ signup, user, isAuthenticated, errors, signIn, signupCompany, loading, logoutUsers, setUser }}>
             {children}
         </AuthContext.Provider>
     )

@@ -1,9 +1,8 @@
 import React from "react";
 import "./PerfilUsuario.css";
 import SideBar from "../../components/sidebar/sidebar.jsx";
-import Center from "../../components/center/Center";
-import Perfil from "../../components/PerfilUsuario/Perfil";
 import UserList from "../../components/UserList/UserList.jsx";
+import { Perfil } from "../../components/PerfilUsuario/Perfil";
 
 export const PerfilUsuario = () => {
   return (
