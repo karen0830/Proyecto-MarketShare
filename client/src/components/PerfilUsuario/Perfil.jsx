@@ -47,6 +47,7 @@ const Perfil = () => {
             <img src={image} alt="" />
           </div>
         </div>
+        {/* Karennnnn */}
         <h2>Descripcion del usuario</h2>
         <h2>pivle vys</h2>
         <div className="popularidad">
