@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
             setUser(res.data)
             setIsAuthenticated(false)
         } else {
+            console.log(res.response);
             if (res.response.data.message) {
                 setErrors([[res.response.data.message]])
                 console.log(res.response.data.message);
@@ -68,6 +69,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(false)
             setUser(null)
         } catch (error) {
+            console.log(error);
             if (Array.isArray(error.response.data)) {
                 setErrors(error.response.data)
                 console.log(error.response.data);

@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String, // Puedes usar String para almacenar la URL de la imagen
         default: '/default-profile-image.jpg' // Opcional: una imagen predeterminada si no se proporciona una URL
-    }
+    },
+    rutaImagen: {
+        type: String, // Puedes usar String para almacenar la URL de la imagen
+        default: '/default-profile-image.jpg' // Opcional: una imagen predeterminada si no se proporciona una URL
+    },
 }, {
     timestamps: true
 })

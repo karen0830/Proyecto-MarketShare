@@ -27,6 +27,7 @@
     "fs": "^0.0.1-security",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.1",
+    "localStorage": "^1.0.4",
     "mongodb": "^5.7.0",
     "mongoose": "^5.13.2",
     "morgan": "^1.10.0",

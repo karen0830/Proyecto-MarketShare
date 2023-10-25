@@ -64,3 +64,13 @@ export const getImage = async file => {
     console.log(error);
   }
 }
+
+export const getUpdateUser = async () => {
+  try {
+    const response = await instance.get(`/profileUser`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}

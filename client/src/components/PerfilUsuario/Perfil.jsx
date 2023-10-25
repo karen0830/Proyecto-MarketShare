@@ -1,43 +1,55 @@
-import React, {createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import "./Perfil.css";
-import { getImage } from "../../api/auth";
+import { getImage, getUpdateUser } from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
 
 export const sharedData = createContext()
 export const useShareData = () => {
-    const context = useContext(sharedData);
-    if (!context) {
-        throw new Error("useAuth must be ussed within an AutProvider")
-    }
-    return context;
+  const context = useContext(sharedData);
+  if (!context) {
+    throw new Error("useAuth must be ussed within an AutProvider")
+  }
+  return context;
 }
 export const Perfil = () => {
   const [file, setFile] = useState(null);
-  const {user, setUser} = useAuth()
-  console.log("user p", user);
-  console.log("Imagen", user.imagen);
-  const [image, setImage] = useState(null)
-  
+  const { user, setUser } = useAuth()
+  const [image, setImage] = useState(user.imagen)
+  const [userFound, setUserFound] = useState(null)
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     console.log(file);
   };
 
   useEffect(() => {
-    setImage(user.imagen)
+    console.log("User actualizao", user);
   }, [user])
 
   const handleUpload = async () => {
+    console.log("hola");
     try {
       const response = await getImage(file);
       if (response) {
         console.log("Response", response);
-        setUser(response.data)
+        setUserFound(response.data)
       }
+      checkLogin()
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  async function checkLogin() {
+    try {
+      const res = await getUpdateUser()
+      console.log("Get LOGON", res.data);
+      setImage(res.data.imagen)
+      setUser(res.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="general-container">
