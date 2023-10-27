@@ -65,6 +65,19 @@ export const getImage = async file => {
   }
 }
 
+export const getUpdateStories = async file => {
+  try {
+    const formData = new FormData();
+    formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
+    console.log(formData.get('miArchivo'));
+    const response = await instance.post(`/stories`, formData);
+    console.log(file);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const getUpdateUser = async () => {
   try {
     const response = await instance.get(`/profileUser`);

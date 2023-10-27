@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import "./Stories.css"
 import { useAuth } from "../../../context/AuthContext.jsx";
+import { getUpdateStories, getUpdateUser } from '../../../api/auth';
 export const Stories = () => {
-    const { user } = useAuth();
+    const { user, setUser } = useAuth();
     const [selectedFileVideo, setSelectedFileVideo] = useState();
     const [selectedFileImage, setSelectedFileImage] = useState();
+    const [story, setStory] = useState(user.stories)
     console.log(user);
     const imageRef = useRef();
     const handleFileInput = (e) => {
@@ -15,6 +17,7 @@ export const Stories = () => {
                 setSelectedFileVideo(e.target.files[0]);
                 // Realiza acciones específicas para videos
             } else if (file.type.startsWith('image/')) {
+                setSelectedFileImage(e.target.files[0])
                 const imageURL = URL.createObjectURL(file);
                 imageRef.current.src = imageURL
                 // Es un archivo de imagen
@@ -26,6 +29,34 @@ export const Stories = () => {
         }
 
     }
+
+    const handleUploadImage = async () => {
+        console.log("hola");
+        try {
+            const response = await getUpdateStories(selectedFileImage);
+            if (response) {
+                console.log("Response", response);
+            }
+            checkLogin()
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    async function checkLogin() {
+        try {
+            const res = await getUpdateUser()
+            console.log("Get LOGON", res.data);
+            setUser(res.data)
+            setStory(response.data.stories)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        console.log(story);
+    }, [story])
 
     return (
         <>
@@ -57,14 +88,21 @@ export const Stories = () => {
                         <img src={user.imagen} alt="" className='image' />
                         <div class="overlay">
                             <label className="custom-file-input">
-                                <input type="file" accept="image/*" onChange={handleFileInput} />
+                                <input name="miArchivo" type="file" accept="image/*" onChange={handleFileInput} />
                             </label>
                         </div>
                         {/* <video ref={selectedFile} controls /> */}
                     </div>
+                    {story.map((element) => (
+                        <div class="stories-img color">
+                            <img className='historyImageProfile' src={element.url} alt="" />
+                        </div>
+                    ))}
+
                     <div class="stories-img color">
                         <img className='historyImageProfile' ref={imageRef} alt="" />
                     </div>
+                    <button onClick={handleUploadImage}>subir historia</button>
                     {/* <div class="stories-img color">
                         <img src="img/profile-2.jpeg" alt="" />
                         <div class="add">+</div>

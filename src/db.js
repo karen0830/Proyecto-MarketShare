@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-// const url = 'mongodb+srv://karen123:karen123@cluster0.yaxtqh3.mongodb.net/';
-const url = 'mongodb://localhost:27017/'
+const url = 'mongodb+srv://karen123:karen123@cluster0.yaxtqh3.mongodb.net/test';
+// const url = 'mongodb://localhost:27017/'
 const connectDB = async () => {
     try {
         await mongoose.connect(url, {

@@ -11,6 +11,8 @@ export function createAcccessToken(user) {
             // Agrega otros campos del usuario aquí
         };
 
+        console.log(payload);
+
         jwt.sign(
             payload,
             TOKEN_SECRET,

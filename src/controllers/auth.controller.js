@@ -47,9 +47,9 @@ export const registerCompany = async (req, res) => {
 
 export const registerUser = async (req, res) => {
     const { email, username, password } = req.body;
-    const companyFound = await CompanyModel.findOne({ email });
+    const userFound = await User.findOne({ email });
 
-    if (companyFound) {
+    if (userFound) {
         return res.status(400).json({ message: "Email in use" });
     }
     try {
@@ -58,6 +58,7 @@ export const registerUser = async (req, res) => {
             username,
             email,
             password: hash,
+            stories: []
         })
 
         newUser.profileImage = 'https://firebasestorage.googleapis.com/v0/b/marketshare-c5720.appspot.com/o/ImagenDefecto%2FImagenDefecto.jpg?alt=media&token=1cc881bb-a695-4c5c-ac3d-25687f9ae6a2&_gl=1*qy0x6m*_ga*MTc3NzI1MjIwOS4xNjk2ODAzNTQw*_ga_CW55HF8NVT*MTY5ODE5NjcwNy4xOC4xLjE2OTgxOTY3MzcuMzAuMC4w'
@@ -73,8 +74,7 @@ export const registerUser = async (req, res) => {
             email: userSaved.email,
             imagen: userSaved.profileImage,
             ruta: userSaved.rutaImagen,
-            createdAt: userSaved.createdAt,
-            updatedAt: userSaved.updatedAt
+            stories: userSaved.stories
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -134,6 +134,7 @@ export const loginUser = async (req, res) => {
             username: userFound.username,
             email: userFound.email,
             imagen: userFound.profileImage,
+            stories: userFound.stories,
             createdAt: userFound.createdAt,
             updatedAt: userFound.updatedAt
         });
@@ -172,8 +173,7 @@ export const profileUser = async (req, res) => {
         username: userFound.username,
         email: userFound.email,
         imagen: userFound.profileImage,
-        createdAt: userFound.createdAt,
-        updatedAt: userFound.updatedAt
+        stories: userFound.stories
     });
 }
 
@@ -216,9 +216,6 @@ export const imagen = async (req, res) => {
         const storagePath = 'images/' + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
         const file = bucket.file(storagePath);
         const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
-
-
-
         const stream = file.createWriteStream({
             metadata: {
                 contentType: archivo.type
@@ -337,6 +334,7 @@ export const verifyToken = async (req, res) => {
             id: userFound._id,
             email: userFound.email,
             tokens: token,
+            stories: userFound.stories,
             imagen: userFound.profileImage,
             username: userFound.username
         });
@@ -347,122 +345,146 @@ export const verifyToken = async (req, res) => {
 }
 
 export const stories = async (req, res) => {
+    const form = new IncomingForm(); // Changed this line
+    form.parse(req, (err, fields, files) => {
+        const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');
+        if (err) {
+            console.error('Error al procesar el formulario:', err);
+            res.status(500).send('Error al procesar el formulario');
+            return;
+        }
+
+        const archivo = files.miArchivo; // Asegúrate de que el nombre coincida con el campo de tu formulario
+        if (!archivo) {
+            res.status(400).send('No se ha subido ningún archivo');
+            return;
+        }
+
+        const storagePath = 'stories/' + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
+        const file = bucket.file(storagePath);
+        const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
+        const stream = file.createWriteStream({
+            metadata: {
+                contentType: archivo.type
+            }
+        });
+
+        stream.on('error', (err) => {
+            console.error('Error al subir el archivo a Firebase Storage:', err);
+            res.status(500).send('Error al subir el archivo a Firebase Storage');
+        });
+
+        stream.on('finish', () => {
+            console.log('Archivo subido exitosamente a Firebase Storage');
+            const config = {
+                action: 'read',
+                expires: '03-01-2500'
+            };
+            file.getSignedUrl(config, (err, url) => {
+                if (err) {
+                    console.error('Error al obtener el enlace de la imagen:', err);
+                    res.status(500).send('Error al obtener el enlace de la imagen');
+                } else {
+                    const token = req.cookies.token;
+                    const decodedToken = jwt.decode(token);
+                    try {
+                        console.log(decodedToken);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    if (!token) return res.status(401).json({ message: "Unauthorized" });
+                    const fechaActual = new Date();
+                    const fechaLimite = new Date(fechaActual.getTime() + (24 * 60 * 60 * 1000));
+                    console.log(fechaLimite);
+                    User.updateOne(
+                        { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                        {
+                            $push: {
+                                stories: {
+                                    url: url,
+                                    fecha_create: fechaActual,
+                                    fecha_limit: fechaLimite
+                                } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
+                            }
+                        },
+                        (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
+                            if (err) {
+                                console.error('Error al agregar el nuevo campo:', err);
+                            } else {
+                                console.log('Nuevo campo agregado correctamente:', result);
+                            }
+                        }
+                    );
+                    let email = decodedToken.email
+                    const userFoundM = async () => {
+                        const userFound = await User.findOne({ email });
+                        console.log(userFound);
+                        return res.json({
+                            id: userFound._id,
+                            email: userFound.email,
+                            tokens: token,
+                            imagen: userFound.profileImage,
+                            username: userFound.username,
+                            stories: userFound.stories
+                        });
+                    }
+
+                    userFoundM();
+                }
+            });
+        });
+        localReadStream.pipe(stream);
+    });
+}
+
+export const name = async (req, res) => {
     const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
-    console.log(decodedToken.id);
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
-    User.updateOne(
-        { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-        {
-            $push: {
-                stories: {
-                    ol: "Juana"
-                } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
-            }
-        },
-        (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
-            if (err) {
-                console.error('Error al agregar el nuevo campo:', err);
-            } else {
-                console.log('Nuevo campo agregado correctamente:', result);
-            }
-        }
-    );
-    let email = decodedToken.email
-    const userFound = await User.findOne({ email });
-    console.log(userFound);
+    try {
+        console.log(decodedToken);
+    } catch (error) {
+        console.log(error);
+    }
 
-    return res.json({
-        id: userFound._id,
-        email: userFound.email,
-        tokens: token,
-        imagen: userFound.profileImage,
-        username: userFound.username,
-        stories: userFound.stories
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    let email = decodedToken.email
+    let userFound = await User.findOne({ email });
+
+    let stories = userFound.stories;
+    console.log(stories);
+    stories.forEach(element => {
+        console.log(element);
+        if (element.fecha_limit >= element.fecha_limit) {
+            User.updateOne(
+                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                {
+                    $pull: {
+                        stories: {
+                            url: element.url,
+                            fecha_create: element.fecha_create,
+                            fecha_limit: element.fecha_limit
+                        }
+                    }
+                },
+                (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
+                    if (err) {
+                        console.error('Error al agregar el nuevo campo:', err);
+                    } else {
+                        console.log('Nuevo campo agregado correctamente:', result);
+                    }
+                }
+            );
+        } else console.log("Menor");
     });
 
-    // const form = new IncomingForm(); // Changed this line
-    // form.parse(req, (err, fields, files) => {
-    //     const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');
-    //     if (err) {
-    //         console.error('Error al procesar el formulario:', err);
-    //         res.status(500).send('Error al procesar el formulario');
-    //         return;
-    //     }
-
-    //     const archivo = files.miArchivo; // Asegúrate de que el nombre coincida con el campo de tu formulario
-    //     if (!archivo) {
-    //         res.status(400).send('No se ha subido ningún archivo');
-    //         return;
-    //     }
-
-    //     const storagePath = 'stories/' + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
-    //     const file = bucket.file(storagePath);
-    //     const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
-
-
-
-    //     const stream = file.createWriteStream({
-    //         metadata: {
-    //             contentType: archivo.type
-    //         }
-    //     });
-
-    //     stream.on('error', (err) => {
-    //         console.error('Error al subir el archivo a Firebase Storage:', err);
-    //         res.status(500).send('Error al subir el archivo a Firebase Storage');
-    //     });
-
-    //     stream.on('finish', () => {
-    //         console.log('Archivo subido exitosamente a Firebase Storage');
-    //         const config = {
-    //             action: 'read',
-    //             expires: '03-01-2500'
-    //         };
-    //         file.getSignedUrl(config, (err, url) => {
-    //             if (err) {
-    //                 console.error('Error al obtener el enlace de la imagen:', err);
-    //                 res.status(500).send('Error al obtener el enlace de la imagen');
-    //             } else {
-    //                 // El usuario está autenticado
-    //                 // Puedes realizar operaciones que requieran autenticación aquí
-    //                 const decodedToken = jwt.decode(token);
-    //                 console.log(decodedToken.id);
-    //                 // Continúa con el proceso de actualización del documento de usuario
-    //                 // const userDocRef = doc(db, 'users', decodedToken.uid);
-    //                 const getUserById = async (email) => {
-    //                     try {
-    //                         const user = await User.findOne({ email });
-    //                         console.log(User);
-    //                         return user; // Devuelve el usuario encontrado
-    //                     } catch (err) {
-    //                         console.error('Error al buscar el usuario por ID:', err);
-    //                         return null; // En caso de error, devuelve null o maneja el error según tus necesidades
-    //                     }
-    //                 };
-
-
-    //                 console.log(decodedToken.id);
-    //                 getUserById(decodedToken.email)
-    //                     .then(foundUser => {
-    //                         if (foundUser) {
-    //                             console.log('Usuario encontrado:', foundUser);
-    //                             console.log('Ruta de la imagen:', foundUser.rutaImagen);
-    //                         } else {
-    //                             console.log('Usuario no encontrado o error en la búsqueda.');
-    //                         }
-    //                     })
-    //                     .catch(err => {
-    //                         console.error('Error al buscar el usuario por ID:', err);
-    //                     });
-
-    //                     async function updateData() {
-    //                         User.create
-    //                     }
-
-    //             }
-    //         });
-    //     });
-    //     localReadStream.pipe(stream);
-    // });
+    let user = await User.findOne({ email });
+    return res.json({
+        id: user._id,
+        email: user.email,
+        tokens: token,
+        imagen: user.profileImage,
+        username: user.username,
+        stories: user.stories
+    });
 }
