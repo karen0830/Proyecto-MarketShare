@@ -1,13 +1,12 @@
 import bcrypt from 'bcryptjs'
 import { createAcccessToken } from '../libs/jwt.js'
-import { auth, db, adminApp } from '../firebase.js';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
-import { doc, setDoc, query, collection, where, getDocs, updateDoc } from "firebase/firestore";
+import { adminApp } from '../firebase.js';
 import { ref, getStorage, deleteObject } from "firebase/storage";
 import { IncomingForm } from 'formidable';
 import fs from "fs"
 import CompanyModel from '../models/company.models.js'
 import User from '../models/user.models.js'
+import publicaciones from '../models/publicaciones.js';
 import jwt from 'jsonwebtoken'
 
 export const registerCompany = async (req, res) => {
@@ -193,7 +192,7 @@ export const profileCompany = async (req, res) => {
     })
 }
 
-export const imagen = async (req, res) => {
+export const imageProfile = async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
     console.log(token);
@@ -344,7 +343,7 @@ export const verifyToken = async (req, res) => {
     }
 }
 
-export const stories = async (req, res) => {
+export const addStories = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {
         const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');
@@ -437,7 +436,7 @@ export const stories = async (req, res) => {
     });
 }
 
-export const name = async (req, res) => {
+export const archivedStories = async (req, res) => {
     const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     try {
@@ -475,6 +474,23 @@ export const name = async (req, res) => {
                     }
                 }
             );
+            User.updateOne(
+                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                {
+                    $push: {
+                        archivedStories: {
+                            url: url
+                        } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
+                    }
+                },
+                (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
+                    if (err) {
+                        console.error('Error al agregar el nuevo campo:', err);
+                    } else {
+                        console.log('Nuevo campo agregado correctamente:', result);
+                    }
+                }
+            );
         } else console.log("Menor");
     });
 
@@ -486,5 +502,108 @@ export const name = async (req, res) => {
         imagen: user.profileImage,
         username: user.username,
         stories: user.stories
+    });
+}
+export const publications = async (req, res) => {
+    try {
+      const nuevaPublicacion = new publicaciones({ contenido: req.body.contenido });
+      await nuevaPublicacion.save();
+      console.log("Publicación creada:", nuevaPublicacion);
+      res.status(200).json(nuevaPublicacion);
+    } catch (error) {
+      console.error("Error al crear la publicación:", error);
+      res.status(400).json({ error: "erro al crear la publicacion" });
+    }
+  };
+
+  export const addPublications = async (req, res) => {
+    const form = new IncomingForm(); // Changed this line
+    form.parse(req, (err, fields, files) => {
+        const contenido = fields.Hola[0]
+        console.log(contenido);
+        const bucket = adminApp.storage().bucket('gs://marketshare-c5720.appspot.com');
+        if (err) {
+            console.error('Error al procesar el formulario:', err);
+            res.status(500).send('Error al procesar el formulario');
+            return;
+        }
+
+        const archivo = files.publication; // Asegúrate de que el nombre coincida con el campo de tu formulario
+        if (!archivo) {
+            res.status(400).send('No se ha subido ningún archivo');
+            return;
+        }
+
+        const storagePath = 'publications/' + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
+        const file = bucket.file(storagePath);
+        const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
+        const stream = file.createWriteStream({
+            metadata: {
+                contentType: archivo.type
+            }
+        });
+
+        stream.on('error', (err) => {
+            console.error('Error al subir el archivo a Firebase Storage:', err);
+            res.status(500).send('Error al subir el archivo a Firebase Storage');
+        });
+
+        stream.on('finish', () => {
+            console.log('Archivo subido exitosamente a Firebase Storage');
+            const config = {
+                action: 'read',
+                expires: '03-01-2500'
+            };
+            file.getSignedUrl(config, (err, url) => {
+                if (err) {
+                    console.error('Error al obtener el enlace de la imagen:', err);
+                    res.status(500).send('Error al obtener el enlace de la imagen');
+                } else {
+                    const token = req.cookies.token;
+                    const decodedToken = jwt.decode(token);
+                    console.log(decodedToken);
+                    try {
+                        console.log(decodedToken);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    if (!token) return res.status(401).json({ message: "Unauthorized" });
+                    User.updateOne(
+                        { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                        {
+                            $push: {
+                                publications: {
+                                    url: url,
+                                    contenido: contenido
+                                } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
+                            }
+                        },
+                        (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
+                            if (err) {
+                                console.error('Error al agregar el nuevo campo:', err);
+                            } else {
+                                console.log('Nuevo campo agregado correctamente:', result);
+                            }
+                        }
+                    );
+                    let email = decodedToken.email
+                    const userFoundM = async () => {
+                        const userFound = await User.findOne({ email });
+        
+                        return res.json({
+                            id: userFound._id,
+                            email: userFound.email,
+                            tokens: token,
+                            imagen: userFound.profileImage,
+                            username: userFound.username,
+                            publications: userFound.publications
+                        });
+                    }
+
+                    userFoundM();
+                }
+            });
+        });
+        localReadStream.pipe(stream);
     });
 }

@@ -57,7 +57,7 @@ export const getImage = async file => {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
     console.log(formData.get('miArchivo'));
-    const response = await instance.post(`/imagen`, formData);
+    const response = await instance.post(`/imageProfile`, formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -70,7 +70,7 @@ export const getUpdateStories = async file => {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
     console.log(formData.get('miArchivo'));
-    const response = await instance.post(`/stories`, formData);
+    const response = await instance.post(`/addStories`, formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -87,3 +87,12 @@ export const getUpdateUser = async () => {
     console.log(error);
   }
 }
+
+export const sendPublications = async (publication) => {
+  try {
+    const response = await instance.post("/publications", publication);
+    return response;
+  } catch (error) {
+    console.log("Error al crear la publicación:", error);
+  }
+};

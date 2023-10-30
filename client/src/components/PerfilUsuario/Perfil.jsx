@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import "./Perfil.css";
 import { getImage, getUpdateUser } from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
-
+import { sendPublications } from "../../api/auth";
 export const sharedData = createContext()
 export const useShareData = () => {
   const context = useContext(sharedData);
@@ -16,6 +16,7 @@ export const Perfil = () => {
   const { user, setUser } = useAuth()
   const [image, setImage] = useState(user.imagen)
   const [userFound, setUserFound] = useState(null)
+  const [postContent, setPostContent] = useState([]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -50,6 +51,19 @@ export const Perfil = () => {
       console.log(error);
     }
   }
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await sendPublications(postContent);
+      console.log(res);
+    } catch (error) {
+      console.error("Error al enviar la publicación:", error);
+    }
+
+    // Limpia el campo de texto después de enviar la publicación
+    setPostContent("");
+  };
 
   return (
     <div className="general-container">
@@ -100,6 +114,18 @@ export const Perfil = () => {
         <p>imagen de publicacion</p>
         <img src="" alt="" />
       </div>
+      <form onSubmit={handlePostSubmit}>
+        <textarea
+          rows="4"
+          cols="50"
+          placeholder="Escribe tu publicación..."
+          value={postContent}
+          onChange={(e) => setPostContent(postContent)}
+        />
+        <button type="submit" onClick={handlePostSubmit}>
+          Publicar
+        </button>
+      </form>
     </div>
   );
 };

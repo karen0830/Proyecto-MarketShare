@@ -27,6 +27,14 @@ const userSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
     },
+    archivedStory: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    publications: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
 }, {
     timestamps: true
 })
