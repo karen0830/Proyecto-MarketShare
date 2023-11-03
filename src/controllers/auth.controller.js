@@ -172,7 +172,8 @@ export const profileUser = async (req, res) => {
         username: userFound.username,
         email: userFound.email,
         imagen: userFound.profileImage,
-        stories: userFound.stories
+        stories: userFound.stories,
+        publications: userFound.publications
     });
 }
 
@@ -335,7 +336,8 @@ export const verifyToken = async (req, res) => {
             tokens: token,
             stories: userFound.stories,
             imagen: userFound.profileImage,
-            username: userFound.username
+            username: userFound.username,
+            publications: userFound.publications
         });
     } catch (error) {
         console.error("Error al verificar el token:", error);
@@ -386,11 +388,6 @@ export const addStories = async (req, res) => {
                 } else {
                     const token = req.cookies.token;
                     const decodedToken = jwt.decode(token);
-                    try {
-                        console.log(decodedToken);
-                    } catch (error) {
-                        console.log(error);
-                    }
                     if (!token) return res.status(401).json({ message: "Unauthorized" });
                     const fechaActual = new Date();
                     const fechaLimite = new Date(fechaActual.getTime() + (24 * 60 * 60 * 1000));
@@ -439,12 +436,6 @@ export const addStories = async (req, res) => {
 export const archivedStories = async (req, res) => {
     const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
-    try {
-        console.log(decodedToken);
-    } catch (error) {
-        console.log(error);
-    }
-
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     let email = decodedToken.email
@@ -454,33 +445,22 @@ export const archivedStories = async (req, res) => {
     console.log(stories);
     stories.forEach(element => {
         console.log(element);
-        if (element.fecha_limit >= element.fecha_limit) {
-            User.updateOne(
-                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-                {
-                    $pull: {
-                        stories: {
-                            url: element.url,
-                            fecha_create: element.fecha_create,
-                            fecha_limit: element.fecha_limit
-                        }
-                    }
-                },
-                (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
-                    if (err) {
-                        console.error('Error al agregar el nuevo campo:', err);
-                    } else {
-                        console.log('Nuevo campo agregado correctamente:', result);
-                    }
-                }
-            );
+        if (element.fecha_create >= element.fecha_limit) {
+            console.log("entro");
             User.updateOne(
                 { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
                 {
                     $push: {
-                        archivedStories: {
-                            url: url
+                        archivedStory: {
+                            url: element.url
                         } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
+                    },
+                    $pull: {
+                        stories: {
+                            url: element.url,
+                            fecha_create: element.fecha_create                            ,
+                            fecha_limit: element.fecha_limit
+                        } 
                     }
                 },
                 (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
@@ -499,22 +479,10 @@ export const archivedStories = async (req, res) => {
         id: user._id,
         email: user.email,
         tokens: token,
-        imagen: user.profileImage,
-        username: user.username,
-        stories: user.stories
+        stories: user.stories,
+        publi: user.archivedStories
     });
 }
-export const publications = async (req, res) => {
-    try {
-      const nuevaPublicacion = new publicaciones({ contenido: req.body.contenido });
-      await nuevaPublicacion.save();
-      console.log("Publicación creada:", nuevaPublicacion);
-      res.status(200).json(nuevaPublicacion);
-    } catch (error) {
-      console.error("Error al crear la publicación:", error);
-      res.status(400).json({ error: "erro al crear la publicacion" });
-    }
-  };
 
   export const addPublications = async (req, res) => {
     const form = new IncomingForm(); // Changed this line

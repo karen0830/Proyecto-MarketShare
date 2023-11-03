@@ -88,11 +88,28 @@ export const getUpdateUser = async () => {
   }
 }
 
-export const sendPublications = async (publication) => {
+export const sendPublications = async (file, Hola) => {
   try {
-    const response = await instance.post("/publications", publication);
+    const formData = new FormData();
+    formData.append('publication', file); // Agregar el archivo al objeto FormData
+    formData.append('Hola', Hola); // Agregar el texto al objeto FormData
+    console.log(formData.get('miArchivo'));
+    console.log(formData.get('Hola'));
+    
+    const response = await instance.post("/publications", formData);
+    console.log(file);
     return response;
   } catch (error) {
-    console.log("Error al crear la publicación:", error);
+    console.log(error);
   }
-};
+}
+
+
+// export const sendPublications = async (publication) => {
+//   try {
+//     const response = await instance.post("/publications", publication);
+//     return response;
+//   } catch (error) {
+//     console.log("Error al crear la publicación:", error);
+//   }
+// };

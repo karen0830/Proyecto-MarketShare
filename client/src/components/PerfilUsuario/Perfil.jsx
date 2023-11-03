@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import "./Perfil.css";
-import { getImage, getUpdateUser } from "../../api/auth";
+import { getImage, getUpdateUser, sendPublications } from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
-import { sendPublications } from "../../api/auth";
 export const sharedData = createContext()
 export const useShareData = () => {
   const context = useContext(sharedData);
@@ -15,11 +14,17 @@ export const Perfil = () => {
   const [file, setFile] = useState(null);
   const { user, setUser } = useAuth()
   const [image, setImage] = useState(user.imagen)
-  const [userFound, setUserFound] = useState(null)
   const [postContent, setPostContent] = useState([]);
+  const [imagePublication, setImagePublication] = useState(null)
+  const [publication, setPublication] = useState(user.publications)
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+    console.log(file);
+  };
+
+  const handleFilePublication = (e) => {
+    setImagePublication(e.target.files[0]);
     console.log(file);
   };
 
@@ -33,7 +38,6 @@ export const Perfil = () => {
       const response = await getImage(file);
       if (response) {
         console.log("Response", response);
-        setUserFound(response.data)
       }
       checkLogin()
     } catch (error) {
@@ -47,23 +51,27 @@ export const Perfil = () => {
       console.log("Get LOGON", res.data);
       setImage(res.data.imagen)
       setUser(res.data)
+      setPublication(res.data.publications)
     } catch (error) {
       console.log(error);
     }
   }
 
-  const handlePostSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await sendPublications(postContent);
-      console.log(res);
-    } catch (error) {
-      console.error("Error al enviar la publicación:", error);
-    }
-
-    // Limpia el campo de texto después de enviar la publicación
-    setPostContent("");
+  const handlePostSubmit = (e) => {
+    setPostContent(e.target.value); // Actualiza el estado con el contenido del textarea
   };
+
+  console.log(postContent);
+
+  async function sendPublication() {
+    try {
+      const res = await sendPublications(imagePublication, postContent)
+      console.log(res);
+      checkLogin()
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="general-container">
@@ -114,18 +122,24 @@ export const Perfil = () => {
         <p>imagen de publicacion</p>
         <img src="" alt="" />
       </div>
-      <form onSubmit={handlePostSubmit}>
-        <textarea
-          rows="4"
-          cols="50"
-          placeholder="Escribe tu publicación..."
-          value={postContent}
-          onChange={(e) => setPostContent(postContent)}
-        />
-        <button type="submit" onClick={handlePostSubmit}>
-          Publicar
-        </button>
+      <form action="">
+        <div>
+          <input name="publication" type="file" onChange={handleFilePublication} />
+        </div>
+        <textarea name="" id="" cols="30" rows="10" onChange={handlePostSubmit} value={postContent}></textarea>
       </form>
+      <button type="submit" onClick={sendPublication}>
+        Publicar
+      </button>
+      <div>
+        {publication.map((element) => (
+          <div className="">
+            <p>{element.contenido}</p>
+            <img className='historyImageProfile' src={element.url} alt="" />
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 };

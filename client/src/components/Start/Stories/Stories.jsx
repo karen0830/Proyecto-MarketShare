@@ -6,6 +6,7 @@ export const Stories = () => {
     const { user, setUser } = useAuth();
     const [selectedFileVideo, setSelectedFileVideo] = useState();
     const [selectedFileImage, setSelectedFileImage] = useState();
+    const [publication, setPublication] = useState(user.publications)
     const [story, setStory] = useState(user.stories)
     console.log(user);
     const imageRef = useRef();
@@ -48,11 +49,16 @@ export const Stories = () => {
             const res = await getUpdateUser()
             console.log("Get LOGON", res.data);
             setUser(res.data)
-            setStory(response.data.stories)
         } catch (error) {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        setStory(user.stories)
+        console.log(user);
+        setPublication(user.publications)
+    }, [user])
 
     useEffect(() => {
         console.log(story);
@@ -61,32 +67,32 @@ export const Stories = () => {
     return (
         <>
             <div className='Stories'>
-                <div class="header">
-                    <div class="search">
-                        <i class="ri-search-line"></i>
+                <div className="header">
+                    <div className="search">
+                        <i className="ri-search-line"></i>
                         <input type="text" placeholder="search" />
                     </div>
-                    <div class="header-content">
-                        <i class="ri-notification-4-line"></i>
-                        <i class="ri-mail-unread-fill"></i>
-                        <a href="#" class="btn">
-                            <i class="ri-add-circle-fill"></i>
-                            <div class="btn-text">Add Photos</div>
+                    <div className="header-content">
+                        <i className="ri-notification-4-line"></i>
+                        <i className="ri-mail-unread-fill"></i>
+                        <a href="#" className="btn">
+                            <i className="ri-add-circle-fill"></i>
+                            <div className="btn-text">Add Photos</div>
 
                         </a>
                     </div>
                 </div>
-                <div class="stories-title">
+                <div className="stories-title">
                     <h1>Stories</h1>
-                    <a href="#" class="btn">
-                        <i class="ri-play-circle-line"></i>
-                        <div class="text">Watch all</div>
+                    <a href="#" className="btn">
+                        <i className="ri-play-circle-line"></i>
+                        <div className="text">Watch all</div>
                     </a>
                 </div>
-                <div class="stories">
-                    <div class="stories-img color image-container">
+                <div className="stories">
+                    <div className="stories-img color image-container">
                         <img src={user.imagen} alt="" className='image' />
-                        <div class="overlay">
+                        <div className="overlay">
                             <label className="custom-file-input">
                                 <input name="miArchivo" type="file" accept="image/*" onChange={handleFileInput} />
                             </label>
@@ -94,46 +100,55 @@ export const Stories = () => {
                         {/* <video ref={selectedFile} controls /> */}
                     </div>
                     {story.map((element) => (
-                        <div class="stories-img color">
+                        <div className="stories-img color">
                             <img className='historyImageProfile' src={element.url} alt="" />
                         </div>
                     ))}
 
-                    <div class="stories-img color">
+                    <div className="stories-img color">
                         <img className='historyImageProfile' ref={imageRef} alt="" />
                     </div>
                     <button onClick={handleUploadImage}>subir historia</button>
-                    {/* <div class="stories-img color">
+                    {/* <div className="stories-img color">
                         <img src="img/profile-2.jpeg" alt="" />
-                        <div class="add">+</div>
+                        <div className="add">+</div>
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/profile-1.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/1.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/2.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/3.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/4.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/5.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/6.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/7.jpeg" alt="" />
                     </div>
-                    <div class="stories-img">
+                    <div className="stories-img">
                         <img src="img/8.jpeg" alt="" />
                     </div> */}
+                </div>
+
+                <div>
+                    {publication.map((element, index) => (
+                        <div key={index}>
+                            <p>{element.contenido}</p>
+                            <img src={element.url} alt="" />
+                        </div>
+                    ))}
                 </div>
             </div>
         </>

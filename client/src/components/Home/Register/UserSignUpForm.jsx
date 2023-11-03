@@ -29,7 +29,7 @@ export const UserSignUpForm = () => {
       }
 
       <form className="form-signup" onSubmit={onSubmit}>
-        <label for="fullname">Full name</label>
+        <label htmlFor="fullname">Full name</label>
         <input
           className="form-styling"
           type="text"
@@ -41,7 +41,7 @@ export const UserSignUpForm = () => {
             <p className="bg-black">Username is required</p>
           )
         }
-        <label for="email">Email</label>
+        <label htmlFor="email">Email</label>
         <input className="form-styling" type="email"
           {...register('email', { required: true })} />
         {
@@ -49,7 +49,7 @@ export const UserSignUpForm = () => {
             <p className="text-red-500">Email is required</p>
           )
         }
-        <label for="password">Password</label>
+        <label htmlFor="password">Password</label>
         <input
           className="form-styling"
           type="password"
@@ -61,7 +61,7 @@ export const UserSignUpForm = () => {
           )
         }
 
-        <label for="confirmpassword">Confirm password</label>
+        <label htmlFor="confirmpassword">Confirm password</label>
         <input
           className="form-styling"
           type="password"

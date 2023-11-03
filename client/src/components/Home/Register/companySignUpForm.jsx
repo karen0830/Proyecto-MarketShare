@@ -47,7 +47,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">companyName is required</p>
           )
         }
-        <label for="companyName">Nombre de la compañía</label>
+        <label htmlFor="companyName">Nombre de la compañía</label>
         <input
           className="form-styling"
           type="text"
@@ -58,7 +58,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">legal Entity is required</p>
           )
         }
-        <label for="legalEntity">Entidad Legal</label>
+        <label htmlFor="legalEntity">Entidad Legal</label>
         <textarea
           className="form-styling"
           type="text"
@@ -69,7 +69,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">company address is required</p>
           )
         }
-        <label for="companyAddress">Dirección</label>
+        <label htmlFor="companyAddress">Dirección</label>
         <textarea
           className="form-styling"
           type="text"
@@ -80,7 +80,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">Activity description is required</p>
           )
         }
-        <label for="activityDescription">Activity description</label>
+        <label htmlFor="activityDescription">Activity description</label>
         <textarea
           className="form-styling"
           type="text"
@@ -91,7 +91,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">phone number is required</p>
           )
         }
-        <label for="phoneNumber">Phone number</label>
+        <label htmlFor="phoneNumber">Phone number</label>
         <input
           className="form-styling"
           type="number"
@@ -103,7 +103,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">Email is required</p>
           )
         }
-        <label for="email">Email</label>
+        <label htmlFor="email">Email</label>
         <input className="form-styling" type="email" {...register('email', { required: true })} />
 
         {
@@ -111,7 +111,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">Tax identity is required</p>
           )
         }
-        <label for="taxIdentity">Identidad fiscal</label>
+        <label htmlFor="taxIdentity">Identidad fiscal</label>
         <input
           className="form-styling"
           type="number"
@@ -123,7 +123,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">Password is required</p>
           )
         }
-        <label for="password">Contraseña</label>
+        <label htmlFor="password">Contraseña</label>
         <input
           className="form-styling"
           type="text"
@@ -135,7 +135,7 @@ export const CompanySignUpForm = () => {
             <p className="text-red-500">Confirm password is required</p>
           )
         }
-        <label for="confirmpassword">Confirmar contraseña</label>
+        <label htmlFor="confirmpassword">Confirmar contraseña</label>
         <input
           className="form-styling"
           type="text"

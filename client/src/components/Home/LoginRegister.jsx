@@ -16,18 +16,18 @@ const LoginRegister = () => {
                     <div className="nav">
                         <ul className="links">
                             <li className={registerLocation ? "signup-inactive" : "signup-active"}>
-                                <NavLink to="/loginUser">
-                                    <a  className="btn">Sign in</a>
+                                <NavLink to="/loginUser" className="btn">
+                                    Sign in
                                 </NavLink>
                             </li>
                             <li className={registerLocation ? "signup-active" : "signup-inactive"}>
-                                <NavLink to="/registerUser">
-                                    <a  className="btn">Sign up </a>
+                                <NavLink to="/registerUser" className="btn">
+                                   Sign up
                                 </NavLink>
                             </li>
                         </ul>
                     </div>
-                    <div ng-app ng-init="checked = false">
+                    <div ng-init="checked = false">
                         {location.pathname === '/registerUser' && <UserorCompany />}
                         {location.pathname === '/registerCompany' && <UserorCompany />}
                         {location.pathname === '/loginUser' && < SignInForm/>}
