@@ -83,7 +83,6 @@ export const Stories = () => {
                     </div>
                 </div>
                 <div className="stories-title">
-                    <h1>Stories</h1>
                     <a href="#" className="btn">
                         <i className="ri-play-circle-line"></i>
                         <div className="text">Watch all</div>
@@ -144,9 +143,31 @@ export const Stories = () => {
 
                 <div>
                     {publication.map((element, index) => (
-                        <div key={index}>
-                            <p>{element.contenido}</p>
-                            <img src={element.url} alt="" />
+                        <div class="publicacion">
+                            <div class="nombre-usuario">
+                                <div class="post-profile">
+                                    <div class="post-img">
+                                        <img src={user.imagen} alt="" />
+                                    </div>
+                                    <h3>{user.username}</h3>
+                                </div>
+                            </div>
+                            <div class="contenido">{element.contenido}</div>
+                            <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
+                            <div class="post-box">
+                                <div>
+                                    <i class="ri-heart-line"></i>
+                                    <span>${60}k</span>
+                                </div>
+                                <div>
+                                    <i class="ri-chat-3-line"></i>
+                                    <span>${200}k</span>
+                                </div>
+                                <div>
+                                    <i class="ri-download-cloud-2-line"></i>
+                                    <span>${200000}k</span>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
