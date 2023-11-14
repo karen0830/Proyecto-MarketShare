@@ -35,6 +35,20 @@ const userSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
     },
+    reactions: {
+        comments: {
+            type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+            default: []
+        },
+        share: {
+            type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+            default: []
+        },
+        like: {
+            type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+            default: []
+        }
+    },
 }, {
     timestamps: true
 })

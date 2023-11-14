@@ -157,16 +157,16 @@ export const Stories = () => {
                             <div class="post-box">
                                 <div>
                                     <i class="ri-heart-line"></i>
-                                    <span>${60}k</span>
+                                    <span>{60}k</span>
                                 </div>
                                 <div>
                                     <i class="ri-chat-3-line"></i>
-                                    <span>${200}k</span>
+                                    <span>{200}k</span>
                                 </div>
-                                <div>
+                                <button name='comments'>
                                     <i class="ri-download-cloud-2-line"></i>
-                                    <span>${200000}k</span>
-                                </div>
+                                    <span>{200000}k</span>
+                                </button>
                             </div>
                         </div>
                     ))}

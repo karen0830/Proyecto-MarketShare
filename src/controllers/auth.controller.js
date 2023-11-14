@@ -6,7 +6,6 @@ import { IncomingForm } from 'formidable';
 import fs from "fs"
 import CompanyModel from '../models/company.models.js'
 import User from '../models/user.models.js'
-import publicaciones from '../models/publicaciones.js';
 import jwt from 'jsonwebtoken'
 
 export const registerCompany = async (req, res) => {
@@ -101,9 +100,7 @@ export const loginCompany = async (req, res) => {
         res.json({
             id: companyFound._id,
             companyName: companyFound.companyName,
-            email: companyFound.email,
-            createdAt: companyFound.createdAt,
-            updatedAt: companyFound.updatedAt
+            email: companyFound.email
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -134,6 +131,7 @@ export const loginUser = async (req, res) => {
             email: userFound.email,
             imagen: userFound.profileImage,
             stories: userFound.stories,
+            publications: userFound.publications,
             createdAt: userFound.createdAt,
             updatedAt: userFound.updatedAt
         });
@@ -458,9 +456,9 @@ export const archivedStories = async (req, res) => {
                     $pull: {
                         stories: {
                             url: element.url,
-                            fecha_create: element.fecha_create                            ,
+                            fecha_create: element.fecha_create,
                             fecha_limit: element.fecha_limit
-                        } 
+                        }
                     }
                 },
                 (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
@@ -484,7 +482,7 @@ export const archivedStories = async (req, res) => {
     });
 }
 
-  export const addPublications = async (req, res) => {
+export const addPublications = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {
         const contenido = fields.Hola[0]
@@ -557,7 +555,7 @@ export const archivedStories = async (req, res) => {
                     let email = decodedToken.email
                     const userFoundM = async () => {
                         const userFound = await User.findOne({ email });
-        
+
                         return res.json({
                             id: userFound._id,
                             email: userFound.email,
@@ -573,5 +571,44 @@ export const archivedStories = async (req, res) => {
             });
         });
         localReadStream.pipe(stream);
+    });
+}
+
+export const reaction = async (req, res) => {
+    const { reaction } = req.body;
+    console.log(reaction);
+    const token = req.cookies.token;
+    console.log(token);
+    const decodedToken = jwt.decode(token);
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    if (reaction == "comment") {
+        User.updateOne(
+            { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+            {
+                $push: {
+                    'reactions.comments': {
+                        user: decodedToken.name,
+                        number: 1
+                    }
+                }
+            },
+            (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
+                if (err) {
+                    console.error('Error al agregar el nuevo campo:', err);
+                } else {
+                    console.log('Nuevo campo agregado correctamente:', result);
+                }
+            }
+        );
+    }
+
+    let email = decodedToken.email
+
+    let user = await User.findOne({ email });
+    return res.json({
+        id: user._id,
+        email: user.email,
+        reaction: user.reactions
     });
 }

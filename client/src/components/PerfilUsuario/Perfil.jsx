@@ -29,7 +29,8 @@ export const Perfil = () => {
   };
 
   useEffect(() => {
-    console.log("User actualizao", user);
+    console.log("User actualizao", user, " publication ", publication);
+    setPublication(user.publications)
   }, [user])
 
   const handleUpload = async () => {
@@ -132,36 +133,34 @@ export const Perfil = () => {
         Publicar
       </button>
       <div>
-        {publication.lenght > 0 ?
-          (publication.map((element, index) => (
-            <div class="publicacion">
-              <div class="nombre-usuario">
-                <div class="post-profile">
-                  <div class="post-img">
-                    <img src={user.imagen} alt="" />
-                  </div>
-                  <h3>{user.username}</h3>
+        {publication.map((element, index) => (
+          <div key={index} class="publicacion">
+            <div class="nombre-usuario">gggggggggggggggggggggggggggggggggggggggggg
+              <div class="post-profile">
+                <div class="post-img">
+                  <img src={user.imagen} alt="" />
                 </div>
-              </div>
-              <div class="contenido">{element.contenido}</div>
-              <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
-              <div class="post-box">
-                <div>
-                  <i class="ri-heart-line"></i>
-                  <span>${60}k</span>
-                </div>
-                <div>
-                  <i class="ri-chat-3-line"></i>
-                  <span>${200}k</span>
-                </div>
-                <div>
-                  <i class="ri-download-cloud-2-line"></i>
-                  <span>${200000}k</span>
-                </div>
+                <h3>{user.username}</h3>
               </div>
             </div>
-          ))) :
-          null}
+            <div class="contenido">{element.contenido}</div>
+            <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
+            <div class="post-box">
+              <div>
+                <i class="ri-heart-line"></i>
+                <span>{60}k</span>
+              </div>
+              <div>
+                <i class="ri-chat-3-line"></i>
+                <span>{200}k</span>
+              </div>
+              <div>
+                <i class="ri-download-cloud-2-line"></i>
+                <span>{200000}k</span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
     </div>
