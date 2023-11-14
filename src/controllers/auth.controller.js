@@ -56,7 +56,9 @@ export const registerUser = async (req, res) => {
             username,
             email,
             password: hash,
-            stories: []
+            stories: [],
+            publications: [],
+            archivedStory: []
         })
 
         newUser.profileImage = 'https://firebasestorage.googleapis.com/v0/b/marketshare-c5720.appspot.com/o/ImagenDefecto%2FImagenDefecto.jpg?alt=media&token=1cc881bb-a695-4c5c-ac3d-25687f9ae6a2&_gl=1*qy0x6m*_ga*MTc3NzI1MjIwOS4xNjk2ODAzNTQw*_ga_CW55HF8NVT*MTY5ODE5NjcwNy4xOC4xLjE2OTgxOTY3MzcuMzAuMC4w'
@@ -72,7 +74,9 @@ export const registerUser = async (req, res) => {
             email: userSaved.email,
             imagen: userSaved.profileImage,
             ruta: userSaved.rutaImagen,
-            stories: userSaved.stories
+            stories: userSaved.stories,
+            publi: userSaved.archivedStories,
+            publications: userSaved.publications
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -133,7 +137,10 @@ export const loginUser = async (req, res) => {
             stories: userFound.stories,
             publications: userFound.publications,
             createdAt: userFound.createdAt,
-            updatedAt: userFound.updatedAt
+            updatedAt: userFound.updatedAt,
+            imagen: userFound.profileImage,
+            username: userFound.username,
+            publications: userFound.publications
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -478,7 +485,7 @@ export const archivedStories = async (req, res) => {
         email: user.email,
         tokens: token,
         stories: user.stories,
-        publi: user.archivedStories
+        publi: user.archivedStories,
     });
 }
 
