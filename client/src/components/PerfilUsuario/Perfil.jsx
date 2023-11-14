@@ -73,6 +73,10 @@ export const Perfil = () => {
     }
   }
 
+  useEffect(() => {
+    console.log("Publi " + publication.length);
+  }, [publication]);
+
   return (
     <div className="general-container">
       <div className="info-usuario">
@@ -132,9 +136,9 @@ export const Perfil = () => {
         Publicar
       </button>
       <div>
-        {publication.lenght > 0 ?
+        {publication.length > 0 ?
           (publication.map((element, index) => (
-            <div class="publicacion">
+            <div key={index} class="publicacion">
               <div class="nombre-usuario">
                 <div class="post-profile">
                   <div class="post-img">
@@ -148,15 +152,15 @@ export const Perfil = () => {
               <div class="post-box">
                 <div>
                   <i class="ri-heart-line"></i>
-                  <span>${60}k</span>
+                  <span>{60}k</span>
                 </div>
                 <div>
                   <i class="ri-chat-3-line"></i>
-                  <span>${200}k</span>
+                  <span>{200}k</span>
                 </div>
                 <div>
                   <i class="ri-download-cloud-2-line"></i>
-                  <span>${200000}k</span>
+                  <span>{200000}k</span>
                 </div>
               </div>
             </div>

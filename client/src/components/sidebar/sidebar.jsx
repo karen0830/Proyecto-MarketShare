@@ -19,20 +19,6 @@ const SideBar = () => {
                   <a href="#" className="logo">
                     <img src="./img/2.png" alt="" />
                   </a>
-                  <div className="about">
-                    <div className="box">
-                      <h3>89</h3>
-                      <span>Posts</span>
-                    </div>
-                    <div className="box">
-                      <h3>123M</h3>
-                      <span>Followers</span>
-                    </div>
-                    <div className="box">
-                      <h3>14</h3>
-                      <span>Following</span>
-                    </div>
-                  </div>
                   <div className="menu">
                     <NavLink to="/Start" className="Inicio">
                       <span className="icon">
