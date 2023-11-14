@@ -12,6 +12,7 @@ export function createAcccessToken(user) {
         };
 
         console.log(payload);
+        // Jejejejejej con la manadita
 
         jwt.sign(
             payload,
