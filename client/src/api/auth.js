@@ -95,7 +95,7 @@ export const sendPublications = async (file, Hola) => {
     formData.append('Hola', Hola); // Agregar el texto al objeto FormData
     console.log(formData.get('miArchivo'));
     console.log(formData.get('Hola'));
-    
+
     const response = await instance.post("/publications", formData);
     console.log(file);
     return response;
@@ -104,12 +104,13 @@ export const sendPublications = async (file, Hola) => {
   }
 }
 
+const deleteStories = async () => {
+  try {
+    const response = await instance.put('/deleteStories')
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-// export const sendPublications = async (publication) => {
-//   try {
-//     const response = await instance.post("/publications", publication);
-//     return response;
-//   } catch (error) {
-//     console.log("Error al crear la publicación:", error);
-//   }
-// };
+setTimeout(deleteStories, 10000)
