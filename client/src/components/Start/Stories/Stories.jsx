@@ -65,7 +65,6 @@ export const Stories = () => {
   useEffect(() => {
     console.log(story);
   }, [story]);
-
   return (
     <>
       <div className="Stories">
@@ -114,113 +113,43 @@ export const Stories = () => {
             <img className="historyImageProfile" ref={imageRef} alt="" />
           </div>
           <button onClick={handleUploadImage}>subir historia</button>
-          {/* <div className="stories-img color">
-                        <img src="img/profile-2.jpeg" alt="" />
-                        <div className="add">+</div>
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/profile-1.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/1.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/2.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/3.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/4.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/5.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/6.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/7.jpeg" alt="" />
-                    </div>
-                    <div className="stories-img">
-                        <img src="img/8.jpeg" alt="" />
-                    </div> */}
         </div>
-
-<<<<<<< HEAD
-                <div>
-                    {publication.map((element, index) => (
-                        <div class="publicacion">
-                            <div class="nombre-usuario">
-                                <div class="post-profile">
-                                    <div class="post-img">
-                                        <img src={user.imagen} alt="" />
-                                    </div>
-                                    <h3>{user.username}</h3>
-                                </div>
-                            </div>
-                            <div class="contenido">{element.contenido}</div>
-                            <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
-                            <div class="post-box">
-                                <div>
-                                    <i class="ri-heart-line"></i>
-                                    <span>{60}k</span>
-                                </div>
-                                <div>
-                                    <i class="ri-chat-3-line"></i>
-                                    <span>{200}k</span>
-                                </div>
-                                <button name='comments'>
-                                    <i class="ri-download-cloud-2-line"></i>
-                                    <span>{200000}k</span>
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-=======
         <div>
-          {publication.length > 0
-            ? publication.map((element, index) => (
-                <div class="publicacion">
-                  <div class="nombre-usuario">
-                    <div class="post-profile">
-                      <div class="post-img">
-                        <img src={user.imagen} alt="" />
-                      </div>
-                      <h3>{user.username}</h3>
-                    </div>
+          {publication.map((element, index) => (
+            <div class="publicacion">
+              <div class="nombre-usuario">
+                <div class="post-profile">
+                  <div class="post-img">
+                    <img src={user.imagen} alt="" />
                   </div>
-                  <div class="contenido">{element.contenido}</div>
-                  <img
-                    src={element.url}
-                    alt="Imagen de la publicación"
-                    class="imagen-publicacion"
-                  ></img>
-                  <div class="post-box">
-                    <div>
-                      <i class="ri-heart-line"></i>
-                      <span>{60}k</span>
-                    </div>
-                    <div>
-                      <i class="ri-chat-3-line"></i>
-                      <span>{200}k</span>
-                    </div>
-                    <div>
-                      <i class="ri-download-cloud-2-line"></i>
-                      <span>{200000}k</span>
-                    </div>
-                  </div>
->>>>>>> 3fea5be09450e3a9367884e044a7c4bc027a1908
+                  <h3>{user.username}</h3>
                 </div>
-              ))
-            : null}
+              </div>
+              <div class="contenido">{element.contenido}</div>
+              <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
+              <div class="post-box">
+                <div>
+                  <i class="ri-heart-line"></i>
+                  <span>{60}k</span>
+                </div>
+                <div>
+                  <i class="ri-chat-3-line"></i>
+                  <span>{200}k</span>
+                </div>
+                <button name='comments'>
+                  <i class="ri-download-cloud-2-line"></i>
+                  <span>{200000}k</span>
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-// import React, { useState } from 'react';
+{/* // import React, { useState } from 'react';
 
 // function App() {
 //   const [selectedFile, setSelectedFile] = useState();
@@ -237,4 +166,4 @@ export const Stories = () => {
 //   );
 // }
 
-// export default App;
+// export default App; */}

@@ -97,7 +97,6 @@ export const Perfil = () => {
             <img className="profileImage" src={image} alt="" />
           </div>
         </div>
-        {/* Karennnnn */}
         <h2>Descripcion del usuario</h2>
         <h2>pivle vys</h2>
         <div className="popularidad">
@@ -125,7 +124,6 @@ export const Perfil = () => {
           más contenido aquí
         </p>
         <p>imagen de publicacion</p>
-        <img src="" alt="" />
       </div>
       <form action="">
         <div>
@@ -137,64 +135,7 @@ export const Perfil = () => {
         Publicar
       </button>
       <div>
-<<<<<<< HEAD
-        {publication.map((element, index) => (
-          <div key={index} class="publicacion">
-            <div class="nombre-usuario">gggggggggggggggggggggggggggggggggggggggggg
-              <div class="post-profile">
-                <div class="post-img">
-                  <img src={user.imagen} alt="" />
-=======
-        {publication.length > 0 ?
-          (publication.map((element, index) => (
-            <div key={index} class="publicacion">
-              <div class="nombre-usuario">
-                <div class="post-profile">
-                  <div class="post-img">
-                    <img src={user.imagen} alt="" />
-                  </div>
-                  <h3>{user.username}</h3>
-                </div>
-              </div>
-              <div class="contenido">{element.contenido}</div>
-              <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
-              <div class="post-box">
-                <div>
-                  <i class="ri-heart-line"></i>
-                  <span>{60}k</span>
-                </div>
-                <div>
-                  <i class="ri-chat-3-line"></i>
-                  <span>{200}k</span>
-                </div>
-                <div>
-                  <i class="ri-download-cloud-2-line"></i>
-                  <span>{200000}k</span>
->>>>>>> 3fea5be09450e3a9367884e044a7c4bc027a1908
-                </div>
-                <h3>{user.username}</h3>
-              </div>
-            </div>
-            <div class="contenido">{element.contenido}</div>
-            <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
-            <div class="post-box">
-              <div>
-                <i class="ri-heart-line"></i>
-                <span>{60}k</span>
-              </div>
-              <div>
-                <i class="ri-chat-3-line"></i>
-                <span>{200}k</span>
-              </div>
-              <div>
-                <i class="ri-download-cloud-2-line"></i>
-                <span>{200000}k</span>
-              </div>
-            </div>
-          </div>
-        ))}
       </div>
-
-    </div>
+    </div >
   );
 };
