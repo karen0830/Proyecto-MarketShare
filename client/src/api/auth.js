@@ -113,4 +113,3 @@ const deleteStories = async () => {
   }
 }
 
-setTimeout(deleteStories, 10000)

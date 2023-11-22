@@ -489,6 +489,57 @@ export const archivedStories = async (req, res) => {
     });
 }
 
+export const deleteStories = async (req, res) => {
+    const token = req.cookies.token;
+    const decodedToken = jwt.decode(token);
+
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    let email = decodedToken.email
+    let userFound = await User.findOne({ email });
+
+    let stories = userFound.stories;
+    console.log(stories);
+    stories.forEach(element => {
+        console.log(element);
+        if (element.fecha_create >= element.fecha_limit) {
+            console.log("entro");
+            User.updateOne(
+                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                {
+                    $push: {
+                        archivedStory: {
+                            url: element.url
+                        } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
+                    },
+                    $pull: {
+                        stories: {
+                            url: element.url,
+                            fecha_create: element.fecha_create,
+                            fecha_limit: element.fecha_limit
+                        }
+                    }
+                },
+                (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
+                    if (err) {
+                        console.error('Error al agregar el nuevo campo:', err);
+                    } else {
+                        console.log('Nuevo campo agregado correctamente:', result);
+                    }
+                }
+            );
+        } else console.log("Menor");
+    });
+
+    let user = await User.findOne({ email });
+    return res.json({
+        id: user._id,
+        email: user.email,
+        tokens: token,
+        stories: user.stories,
+        publi: user.archivedStories,
+    });
+}
+
 export const addPublications = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {
@@ -547,7 +598,12 @@ export const addPublications = async (req, res) => {
                             $push: {
                                 publications: {
                                     url: url,
-                                    contenido: contenido
+                                    contenido: contenido,
+                                    reactions: {
+                                        comments: [],
+                                        share: [],
+                                        like: []
+                                    },
                                 } // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
                             }
                         },
@@ -581,38 +637,61 @@ export const addPublications = async (req, res) => {
     });
 }
 
-export const reaction = async (req, res) => {
-    const { reaction } = req.body;
-    console.log(reaction);
+export const reactionLove = async (req, res) => {
+    const { reaction, link } = req.body;
     const token = req.cookies.token;
     console.log(token);
     const decodedToken = jwt.decode(token);
     if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-    if (reaction == "comment") {
-        User.updateOne(
-            { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-            {
-                $push: {
-                    'reactions.comments': {
-                        user: decodedToken.name,
-                        number: 1
-                    }
-                }
-            },
-            (err, result) => { // Esta es la función de callback que se ejecuta después de la operación de actualización
-                if (err) {
-                    console.error('Error al agregar el nuevo campo:', err);
-                } else {
-                    console.log('Nuevo campo agregado correctamente:', result);
-                }
-            }
-        );
-    }
-
     let email = decodedToken.email
-
     let user = await User.findOne({ email });
+    let name = user.username
+    if (reaction == "love") {
+        console.log("metioo");
+        const document = await User.findOne({
+            email: email,
+            "publications.url": link,
+            "publications.reactions.like.user": name
+        });
+        console.log(document);
+        if (document) {
+            // Si la reacción ya existe, quitarla
+            const user = await User.findOneAndUpdate(
+                {
+                    email: email,
+                    "publications.url": link,
+                    "publications.reactions.like.user": name
+                },
+                {
+                    $pull: {
+                        "publications.$.reactions.like": { user: name }
+                    }
+                },
+                { new: true }
+            );
+
+            console.log("Reacción quitada.");
+        } else {
+            User.findOneAndUpdate(
+                {
+                    email: email,
+                    "publications.url": link,
+                    "publications.reactions.like.user": name
+                },// Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                {
+                    $push: {
+                        "publications.$.reactions.like":
+                        {
+                            user: user.username,
+                            num: 1
+                        }
+                    }
+                },
+                { new: true }
+            );
+        }
+
+    }
     return res.json({
         id: user._id,
         email: user.email,

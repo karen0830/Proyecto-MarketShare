@@ -1,10 +1,9 @@
 import { Router } from 'express';
 const router = Router();
-import { loginUser, registerUser, logoutUser, profileUser, registerCompany, loginCompany, profileCompany, logoutCompany, imageProfile, verifyToken, addStories, archivedStories, addPublications, reaction} from '../controllers/auth.controller.js';
+import { loginUser, registerUser, logoutUser, profileUser, registerCompany, loginCompany, profileCompany, logoutCompany, imageProfile, verifyToken, addStories, archivedStories, addPublications, reactionLove, deleteStories} from '../controllers/auth.controller.js';
 import { authRequired, authRequiredCompany } from '../middlewares/validateToken.js';
 import { validateSchema } from "../middlewares/validator.js";
 import { registerSchema, loginSchema, CompanyShema, loginCompanyShema } from "../schemas/auth.schemas.js";
-
 
 router.post('/registerCompany', validateSchema(CompanyShema), registerCompany)
 router.post('/registerUser', validateSchema(registerSchema), registerUser);
@@ -19,5 +18,6 @@ router.post('/imageProfile', imageProfile)
 router.post('/addStories', addStories)
 router.put('/archivedStory', archivedStories)
 router.post("/publications", addPublications);
-router.post("/reaction", reaction);
+router.post("/reaction", reactionLove);
+router.put("/deleteStories", deleteStories);
 export default router;
