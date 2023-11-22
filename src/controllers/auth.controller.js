@@ -7,6 +7,7 @@ import fs from "fs"
 import CompanyModel from '../models/company.models.js'
 import User from '../models/user.models.js'
 import jwt from 'jsonwebtoken'
+import {ObjectId} from 'mongodb';
 
 export const registerCompany = async (req, res) => {
     const { companyName, legalEntity, companyAddress, activityDescription, phoneNumber, email, taxIdentity, password } = req.body;
@@ -672,11 +673,10 @@ export const reactionLove = async (req, res) => {
 
             console.log("Reacción quitada.");
         } else {
-            User.findOneAndUpdate(
+            await User.findOneAndUpdate(
                 {
                     email: email,
-                    "publications.url": link,
-                    "publications.reactions.like.user": name
+                    "publications.url": link
                 },// Esto es el filtro, que selecciona el documento a actualizar basado en el _id
                 {
                     $push: {
@@ -697,4 +697,61 @@ export const reactionLove = async (req, res) => {
         email: user.email,
         reaction: user.reactions
     });
+}
+
+export const comments = async (req, res) => {
+    try {
+        const { comment, link } = req.body;
+        const { token } = req.cookies;
+        if (!token) return res.status(401).json({ message: "Unauthorized" })
+        const decodedToken = jwt.decode(token);
+        let email = decodedToken.email
+        const user = await User.findOne({ email })
+        await User.findOneAndUpdate(
+            { email: email, "publications.url": link },
+            {
+                $push: {
+                    "publications.$.reactions.comments":
+                    {
+                        _id: ObjectId(),
+                        user: user.username,
+                        comment: comment
+                    }
+                }
+            }
+        )
+        return res.json({
+            id: user._id,
+            email: user.email,
+            reaction: user.reactions
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deletecomments = async (req, res) => {
+    try {
+        const { comment, link } = req.body;
+        const { token } = req.cookies;
+        if (!token) return res.status(401).json({ message: "Unauthorized" })
+        const decodedToken = jwt.decode(token);
+        let email = decodedToken.email
+        const user = await User.findOne({ email })
+        await User.findOneAndUpdate(
+            { email: email, "publications.url": link },
+            {
+                $pull: {
+                    "publications.$.reactions.comments":
+                    {
+                        user: user.username,
+                        comment: comment
+                    }
+                }
+            }
+        )
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+    }
 }

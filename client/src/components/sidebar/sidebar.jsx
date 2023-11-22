@@ -26,7 +26,7 @@ const SideBar = () => {
                       </span>
                       Start
                     </NavLink>
-                    <NavLink className="active">
+                    <NavLink className="">
                       <span className="icon">
                         <i className="ri-function-line"></i>
                       </span>
@@ -102,7 +102,7 @@ const SideBar = () => {
                   </span>
                   Start
                 </a>
-                <a href="index.html" className="active">
+                <a href="index.html">
                   <span className="icon">
                     <i className="ri-function-line"></i>
                   </span>
