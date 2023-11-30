@@ -340,30 +340,6 @@ body{
     align-items: center;
 }
 
-.post-profile h3{
-    font-size: 12px;
-    font-weight: 600px;
-    color: #eee;
-    margin-left: 5px;
-}
-
-.likes{
-    display: flex;
-    align-items: center;
-}
-
-.likes i{
-    font-size: 20px;
-    margin-left: 10px;
-    color: #eee;
-}
-
-.likes span{
-    font-size: 14px;
-    margin-left: 7px;
-    color: #eee;
-}
-
 .Stories{
     grid-column: 2/4;
     padding: 10px 90px 10px 90px;
@@ -421,12 +397,12 @@ body{
     left: 0;
     width: 100%;
     height: 100%;
-    background: none; /* Fondo semitransparente para el superpuesto */
+    background: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white; /* Color del texto */
+    color: white; 
     text-align: center;
   }
 

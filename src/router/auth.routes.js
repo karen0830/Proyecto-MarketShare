@@ -18,7 +18,10 @@ import {
     deleteStories,
     comments,
     deleteComment,
-    refreshToken
+    refreshToken,
+    getPublications,
+    getProfileImage,
+    getAllPublications
 } from "../controllers/auth.controller.js";
 import {
     authRequired,
@@ -39,7 +42,7 @@ router.post("/loginUser", validateSchema(loginSchema), loginUser);
 router.post("/logoutUser", logoutUser);
 router.post("/logoutCompany", logoutCompany);
 router.post("/publications", addPublications);
-router.post("/reaction", reactionLove);
+router.post("/reactionLike", reactionLove);
 router.post("/imageProfile", imageProfile);
 router.post("/addStories", addStories);
 router.post("/comment", comments);
@@ -47,6 +50,9 @@ router.post("/refreshToken", refreshToken);
 router.get("/profileUser", authRequired, profileUser);
 router.get("/profileCompany", authRequiredCompany, profileCompany);
 router.get("/verify", verifyToken);
+router.get("/getPublications", getPublications);
+router.get("/getProfileImage", getProfileImage);
+router.get("/getAllPublications", getAllPublications)
 router.put("/archivedStory", archivedStories);
 router.put("/deleteStories", deleteStories);
 router.delete("/deleteComment", deleteComment);

@@ -65,6 +65,15 @@ export const getImage = async file => {
   }
 }
 
+export const getProfileImage = async () => {
+  try {
+    const response = await instance.get(`/getProfileImage`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const getUpdateStories = async file => {
   try {
     const formData = new FormData();
@@ -104,6 +113,16 @@ export const sendPublications = async (file, Hola) => {
   }
 }
 
+export const getPublications = async () => {
+  try {
+    const response = await instance.get('/getPublications');
+    console.log(response);
+    return response
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const deleteStories = async () => {
   try {
     const response = await instance.put('/deleteStories')
@@ -113,3 +132,20 @@ const deleteStories = async () => {
   }
 }
 
+export const reactionLike = async (reaction, link) => {
+  try {
+    const response = await instance.post('/reactionLike', reaction)
+    return response
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getAllPublications = async () => {
+  try {
+    const response = await instance.get('/getAllPublications');
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}

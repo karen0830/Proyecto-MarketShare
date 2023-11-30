@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import "./Perfil.css";
-import { getImage, getUpdateUser, sendPublications } from "../../api/auth";
+import { getImage, getPublications, getUpdateUser, sendPublications } from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
+import Publications from "../Publications/Publications";
 export const sharedData = createContext()
 export const useShareData = () => {
   const context = useContext(sharedData);
@@ -12,11 +13,9 @@ export const useShareData = () => {
 }
 export const Perfil = () => {
   const [file, setFile] = useState(null);
-  const { user, setUser } = useAuth()
-  const [image, setImage] = useState(user.imagen)
+  const { user, setUser, setPublications, profileImage, setProfileImage } = useAuth()
   const [postContent, setPostContent] = useState([]);
   const [imagePublication, setImagePublication] = useState(null)
-  const [publication, setPublication] = useState(user.publications)
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -28,35 +27,19 @@ export const Perfil = () => {
     console.log(file);
   };
 
-  useEffect(() => {
-    console.log("User actualizao", user, " publication ", publication);
-    setPublication(user.publications)
-  }, [user])
-
   const handleUpload = async () => {
     console.log("hola");
     try {
       const response = await getImage(file);
       if (response) {
         console.log("Response", response);
+        setProfileImage(response.data.imagen)
       }
-      checkLogin()
+      
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-  async function checkLogin() {
-    try {
-      const res = await getUpdateUser()
-      console.log("Get LOGON", res.data);
-      setImage(res.data.imagen)
-      setUser(res.data)
-      setPublication(res.data.publications)
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handlePostSubmit = (e) => {
     setPostContent(e.target.value); // Actualiza el estado con el contenido del textarea
@@ -68,15 +51,13 @@ export const Perfil = () => {
     try {
       const res = await sendPublications(imagePublication, postContent)
       console.log(res);
-      checkLogin()
+      const getPublicationResponse = await getPublications();
+      setPublications(getPublicationResponse.data.publications);
     } catch (error) {
       console.log(error);
     }
   }
 
-  useEffect(() => {
-    console.log("Publi " + publication.length);
-  }, [publication]);
 
   return (
     <div className="general-container">
@@ -94,7 +75,7 @@ export const Perfil = () => {
             <button className="button-avatar" onClick={handleUpload}>
               Cambiar Imagen de perfil
             </button>
-            <img className="profileImage" src={image} alt="" />
+            <img className="profileImage" src={profileImage} alt="" />
           </div>
         </div>
         <h2>Descripcion del usuario</h2>
@@ -136,6 +117,7 @@ export const Perfil = () => {
       </button>
       <div>
       </div>
+      <Publications/>
     </div >
   );
 };

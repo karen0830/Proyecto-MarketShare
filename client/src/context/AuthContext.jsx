@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, logoutUser } from "../api/auth";
+import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, logoutUser, getPublications, getProfileImage } from "../api/auth";
 import Cookies from "js-cookie";
 
 export const AuthContext = createContext()
@@ -15,6 +15,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [errors, setErrors] = useState([])
+    const [publications, setPublications] = useState(null);
+    const [profileImage, setProfileImage] = useState(null)
 
     const signup = async (user) => {
         console.log(user);
@@ -28,7 +30,7 @@ export const AuthProvider = ({ children }) => {
             if (res.response.data.message) {
                 setErrors([[res.response.data.message]])
                 console.log(res.response.data.message);
-            }else setErrors([res.response.data])
+            } else setErrors([res.response.data])
         }
 
     }
@@ -45,7 +47,7 @@ export const AuthProvider = ({ children }) => {
             if (res.response.data.message) {
                 setErrors([[res.response.data.message]])
                 console.log(res.response.data.message);
-            }else setErrors([res.response.data])
+            } else setErrors([res.response.data])
         }
 
     }
@@ -58,10 +60,11 @@ export const AuthProvider = ({ children }) => {
             console.log(res);
             setIsAuthenticated(true)
             setUser(res.data)
+            setPublications(res.data.publications)
+            setProfileImage(res.data.profileImage)
         } else {
             setErrors([[res.response.data.message]])
         }
-
     }
 
     const logoutUsers = async () => {
@@ -108,6 +111,11 @@ export const AuthProvider = ({ children }) => {
                         setLoading(false);
                         return;
                     } else {
+                        const getPublicationResponse = await getPublications();
+                        const getImageProfile = await getProfileImage()
+                        console.log(getPublicationResponse.data.publications);
+                        setPublications(getPublicationResponse.data.publications);
+                        setProfileImage(getImageProfile.data.profileImage);
                         setIsAuthenticated(true)
                         setUser(res.data)
                         setLoading(false)
@@ -123,7 +131,7 @@ export const AuthProvider = ({ children }) => {
         checkLogin()
     }, [])
     return (
-        <AuthContext.Provider value={{ signup, user, isAuthenticated, errors, signIn, signupCompany, loading, logoutUsers, setUser }}>
+        <AuthContext.Provider value={{ signup, user, isAuthenticated, errors, signIn, signupCompany, loading, logoutUsers, setUser, setPublications, publications, profileImage, setProfileImage }}>
             {children}
         </AuthContext.Provider>
     )

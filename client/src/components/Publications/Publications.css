@@ -1,0 +1,23 @@
+.post-profile h3{
+    font-size: 12px;
+    font-weight: 600px;
+    color: #eee;
+    margin-left: 5px;
+}
+
+.likes{
+    display: flex;
+    align-items: center;
+}
+
+.likes i{
+    font-size: 20px;
+    margin-left: 10px;
+    color: #eee;
+}
+
+.likes span{
+    font-size: 14px;
+    margin-left: 7px;
+    color: #eee;
+} 

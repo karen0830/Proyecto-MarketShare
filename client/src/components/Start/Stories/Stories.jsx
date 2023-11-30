@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import "./Stories.css";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { getUpdateStories, getUpdateUser } from "../../../api/auth";
+import Publications from "../../Publications/Publications.jsx";
 export const Stories = () => {
-  const { user, setUser } = useAuth();
+  const { user, setUser, profileImage } = useAuth();
   const [selectedFileVideo, setSelectedFileVideo] = useState();
   const [selectedFileImage, setSelectedFileImage] = useState();
-  const [publication, setPublication] = useState(user.publications);
   const [story, setStory] = useState(user.stories);
   const imageRef = useRef();
   const handleFileInput = (e) => {
@@ -55,16 +55,10 @@ export const Stories = () => {
   useEffect(() => {
     setStory(user.stories);
     console.log(user);
-    setPublication(user.publications);
   }, [user]);
 
-  useEffect(() => {
-    console.log("Publi " + publication.length);
-  }, [publication]);
 
-  useEffect(() => {
-    console.log(story);
-  }, [story]);
+
   return (
     <>
       <div className="Stories">
@@ -90,7 +84,7 @@ export const Stories = () => {
         </div>
         <div className="stories">
           <div className="stories-img color image-container">
-            <img src={user.imagen} alt="" className="image" />
+            <img src={profileImage} alt="" className="image" />
             <div className="overlay">
               <label className="custom-file-input">
                 <input
@@ -114,36 +108,7 @@ export const Stories = () => {
           </div>
           <button onClick={handleUploadImage}>subir historia</button>
         </div>
-        <div>
-          {publication.map((element, index) => (
-            <div class="publicacion">
-              <div class="nombre-usuario">
-                <div class="post-profile">
-                  <div class="post-img">
-                    <img src={user.imagen} alt="" />
-                  </div>
-                  <h3>{user.username}</h3>
-                </div>
-              </div>
-              <div class="contenido">{element.contenido}</div>
-              <img src={element.url} alt="Imagen de la publicación" class="imagen-publicacion"></img>
-              <div class="post-box">
-                <div>
-                  <i class="ri-heart-line"></i>
-                  <span>{60}k</span>
-                </div>
-                <div>
-                  <i class="ri-chat-3-line"></i>
-                  <span>{200}k</span>
-                </div>
-                <button name='comments'>
-                  <i class="ri-download-cloud-2-line"></i>
-                  <span>{200000}k</span>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Publications/>
       </div>
     </>
   )
