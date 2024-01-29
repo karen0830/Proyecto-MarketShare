@@ -1,17 +1,61 @@
-import { Router} from 'express';
+import { Router } from "express";
 const router = Router();
-import { login, register, logout, profile, registerCompany, loginCompany, profileCompany, logoutC} from '../controllers/auth.controller.js';
-import { authRequired, authRequiredCompany } from '../middlewares/validateToken.js';
-import {validateSchema} from "../middlewares/validator.js";
-import { registerSchema, loginSchema, CompanyShema , loginCompanyShema} from "../schemas/auth.schemas.js";
+import {
+    loginUser,
+    registerUser,
+    logoutUser,
+    profileUser,
+    registerCompany,
+    loginCompany,
+    profileCompany,
+    logoutCompany,
+    imageProfile,
+    verifyToken,
+    addStories,
+    archivedStories,
+    addPublications,
+    reactionLove,
+    deleteStories,
+    comments,
+    deleteComment,
+    refreshToken,
+    getPublications,
+    getProfileImage,
+    getAllPublications,
+    pubicationsVisit
+} from "../controllers/auth.controller.js";
+import {
+    authRequired,
+    authRequiredCompany,
+} from "../middlewares/validateToken.js";
+import { validateSchema } from "../middlewares/validator.js";
+import {
+    registerSchema,
+    loginSchema,
+    CompanyShema,
+    loginCompanyShema,
+} from "../schemas/auth.schemas.js";
 
-router.post('/registerC', validateSchema(CompanyShema), registerCompany)
-router.post('/register', validateSchema(registerSchema), register);
-router.post('/loginC', validateSchema(loginCompanyShema), loginCompany)
-router.post('/login', validateSchema(loginSchema), login);
-router.post('/logout', logout);
-router.post('/logoutC', logoutC);
-router.get('/profile', authRequired, profile)
-router.get('/profileC', authRequiredCompany, profileCompany)
-
+router.post("/registerCompany", validateSchema(CompanyShema), registerCompany);
+router.post("/registerUser", validateSchema(registerSchema), registerUser);
+router.post("/loginCompany", validateSchema(loginCompanyShema), loginCompany);
+router.post("/loginUser", validateSchema(loginSchema), loginUser);
+router.post("/logoutUser", logoutUser);
+router.post("/logoutCompany", logoutCompany);
+router.post("/publications", addPublications);
+router.post("/reactionLike", reactionLove);
+router.post("/imageProfile", imageProfile);
+router.post("/addStories", addStories);
+router.post("/comment", comments);
+router.post("/refreshToken", refreshToken);
+router.post("/publicationsVisit", pubicationsVisit);
+router.get("/profileUser", authRequired, profileUser);
+router.get("/profileCompany", authRequiredCompany, profileCompany);
+router.get("/verify", verifyToken);
+router.get("/getPublications", getPublications);
+router.get("/getProfileImage", getProfileImage);
+router.get("/getAllPublications", getAllPublications);
+router.put("/archivedStory", archivedStories);
+router.put("/deleteStories", deleteStories);
+router.delete("/deleteComment", deleteComment);
 export default router;
