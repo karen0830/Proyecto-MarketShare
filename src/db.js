@@ -4,10 +4,10 @@ const url = 'mongodb+srv://karen123:karen123@cluster0.yaxtqh3.mongodb.net/test';
 // const url = 'mongodb://localhost:27017/test'
 const connectDB = async () => {
     try {
-        await mongoose.connect(url, {
-            useFindAndModify: false,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+        await mongoose.connect(url,  {
+            // useFindAndModify: false,
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
             writeConcern: {
                 w: 'majority',
                 j: true,
