@@ -4,7 +4,7 @@ import { useAuth } from "../../../context/AuthContext.jsx";
 import { getUpdateStories, getUpdateUser } from "../../../api/auth";
 import { Link } from "react-router-dom";
 import { Modal, Publicar } from "../../Publications/Publicar/Publicar.jsx";
-import AllPublication from "../../Publications/AllPublications.jsx";
+import Publications from "../../Publications/Publications.jsx";
 
 export const Stories = () => {
   const { user, setUser, profileImage } = useAuth();
@@ -125,7 +125,7 @@ export const Stories = () => {
         <Modal onClose={closeModal} isOpen={modalIsOpen}>
           <Publicar />
         </Modal>
-        <AllPublication/>
+        <Publications/>
       </div>
     </>
   )
