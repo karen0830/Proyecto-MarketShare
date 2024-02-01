@@ -615,38 +615,36 @@ export const addPublications = async (req, res) => {
                     res.status(500).send("Error al obtener el enlace de la imagen");
                 } else {
                     const token = req.cookies.token;
+                    console.log(token);
                     const decodedToken = jwt.decode(token);
-                    console.log(decodedToken);
-                    try {
-                        console.log(decodedToken);
-                    } catch (error) {
-                        console.log(error);
-                    }
+                    
                     if (!token) return res.status(401).json({ message: "Unauthorized" });
-                    User.updateOne(
-                        { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-                        {
-                            $push: {
-                                publications: {
-                                    url: url,
-                                    contenido: contenido,
-                                    reactions: {
-                                        comments: [],
-                                        share: [],
-                                        like: [],
+                    const result = async () => {
+                        try {
+                            await User.updateOne(
+                                { _id: decodedToken.id },
+                                {
+                                    $push: {
+                                        publications: {
+                                            url: url,
+                                            contenido: contenido,
+                                            reactions: {
+                                                comments: [],
+                                                share: [],
+                                                like: [],
+                                            },
+                                        },
                                     },
-                                }, // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
-                            },
-                        },
-                        (err, result) => {
-                            // Esta es la función de callback que se ejecuta después de la operación de actualización
-                            if (err) {
-                                console.error("Error al agregar el nuevo campo:", err);
-                            } else {
-                                console.log("Nuevo campo agregado correctamente:", result);
-                            }
+                                }
+                            );
+                            console.log("Nuevo campo agregado correctamente:", result);
+                        } catch (err) {
+                            console.error("Error al agregar el nuevo campo:", err);
                         }
-                    );
+                    }
+
+                    result();
+
                     let email = decodedToken.email;
                     const userFoundM = async () => {
                         const userFound = await User.findOne({ email });

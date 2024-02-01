@@ -61,6 +61,39 @@ export const Publications = () => {
 
     }
 
+
+    const increaseReactionsLocationStart = async (url, userName) => {
+        const reaction = {
+            userName: userName,
+            reaction: "love",
+            link: url
+        }
+        try {
+            const response = await reactionLike(reaction)
+            console.log(response.data.publications);
+            const updateReaction = allPublications.map((item, idx) => {
+                console.log(item.publications);
+                if (item.publications.length > 0) {
+                    if (item.publications[0].url == response.data.publications.url) {
+                        console.log("igual");
+                        item.publications[0].reactions.like = response.data.publications.reactions.like
+                        return item;
+                    }
+                }
+                return item; // Mantener los elementos que no necesitan actualización
+            });
+
+            console.log(response);
+
+            setAllPublications(updateReaction)
+
+            // Actualizar el estado con el nuevo arreglo que tiene la posición modificada
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     useEffect(() => {
         async function publicationsFound() {
             const response = await getAllPublications();
@@ -80,19 +113,15 @@ export const Publications = () => {
     }, [isAuthenticated])
 
     useEffect(() => {
-        console.log(modalStates);
-        console.log(closingIndex);
-    }, [modalStates])
+        if (locationStart) {
 
-    useEffect(() => {
-        console.log("publicaciones: ");
-        console.log(publications);
-    }, [publications])
+        }
+    })
 
     return (
         <div className='publications'>
             {isAuthenticated === false ?
-                 allPublications.map(element => (
+                allPublications.map(element => (
                     element.publications.map((publication, index) => (
                         <div key={index} className="publication">
                             <div className="nombre-usuario">
@@ -256,7 +285,7 @@ export const Publications = () => {
                                                 ))}
                                             </div>
                                         )}
-                                        <button name='Love' onClick={() => increaseReactions(element.url, userImage.username)}>
+                                        <button name='Love' onClick={() => increaseReactionsLocationStart(element.url, userImage.username)}>
                                             <i className="ri-heart-line"></i>
                                         </button>
                                         <button
