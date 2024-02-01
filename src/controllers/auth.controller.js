@@ -300,23 +300,19 @@ export const imageProfile = async (req, res) => {
                                 console.error("Error al eliminar el archivo:", error);
                             });
 
-                        User.updateOne(
-                            { _id: userFound._id },
-                            {
-                                rutaImagen: `gs://marketshare-c5720.appspot.com/${storagePath}`,
-                                profileImage: url,
-                            },
-                            (err, result) => {
-                                if (err) {
-                                    console.error('Error al actualizar el campo "nombre":', err);
-                                } else {
-                                    console.log(
-                                        'Campo "nombre" actualizado correctamente:',
-                                        result
-                                    );
+                        try {
+                            const result = await User.updateOne(
+                                { _id: userFound._id },
+                                {
+                                    rutaImagen: `gs://marketshare-c5720.appspot.com/${storagePath}`,
+                                    profileImage: url,
                                 }
-                            }
-                        );
+                            );
+                            console.log('Campo "nombre" actualizado correctamente:', result);
+                        } catch (err) {
+                            console.error('Error al actualizar el campo "nombre":', err);
+                        }
+
                         let email = decodedToken.email;
                         console.log(email);
                         let userFoundMongodb = await User.findOne({ email });
@@ -617,7 +613,7 @@ export const addPublications = async (req, res) => {
                     const token = req.cookies.token;
                     console.log(token);
                     const decodedToken = jwt.decode(token);
-                    
+
                     if (!token) return res.status(401).json({ message: "Unauthorized" });
                     const result = async () => {
                         try {
