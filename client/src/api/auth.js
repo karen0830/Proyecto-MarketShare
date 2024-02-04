@@ -149,3 +149,21 @@ export const getAllPublications = async () => {
     console.log(error);
   }
 }
+
+
+export const getProfile = async username => {
+  const postData = {
+    username: username,
+    // Otros datos que deseas enviar
+  };
+
+  try {
+    const response = await instance.post('/getProfile', postData);
+    console.log('Respuesta del servidor:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    // Puedes manejar el error según tus necesidades
+    throw error; // Lanzar el error nuevamente o manejarlo de otra manera
+  }
+}

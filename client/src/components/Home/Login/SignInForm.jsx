@@ -10,6 +10,7 @@ export const SignInForm = () => {
   const navigate = useNavigate()
 
   const onSubmit = handleSubmit(data => {
+    console.log(data);
     signIn(data);
   })
 

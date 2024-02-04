@@ -17,7 +17,7 @@ export const useShareData = () => {
 }
 export const Perfil = () => {
   const [file, setFile] = useState(null);
-  const { user, profileImage, setProfileImage } = useAuth()
+  const { user, profileImage, setProfileImage, profileData } = useAuth()
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
@@ -38,7 +38,7 @@ export const Perfil = () => {
     try {
       const response = await getImage(file);
       if (response) {
-        console.log("Response", response);
+        console.log("Response Image", response);
         setProfileImage(response.data.imagen)
       }
 
@@ -47,9 +47,116 @@ export const Perfil = () => {
     }
   };
 
+
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (profileData != null) {
+      setLoading(false)
+    }
+  })
+
+  // Tu lógica para increaseReactions
+
   return (
-    <div className="general-container">
-      <div className="info-usuario">
+    <div className={"general-container"}>
+      {profileData ? (
+        <div className={loading ? "spinner" : null}>
+          <div className={loading ? "hiddenInfo" : null}>
+            <div className="info-usuario">
+              <h1>{profileData.username}</h1>
+              <div className="form-container">
+                <form
+                  action="/perfil"
+                  method="post"
+                  encType="multipart/form-data"
+                ></form>
+                <input type="file" name="avatar" className="input-button" />
+                <div>
+                  <img className="profileImage" src={profileData.profileImage} alt="" />
+                </div>
+              </div>
+              <h2>Descripcion del usuario</h2>
+              <h2>pivle vys</h2>
+              <div className="popularidad">
+                <div>
+                  <h3>100</h3>
+                  <p>publicaciones</p>
+                </div>
+                <div>
+                  <h3>500</h3>
+                  <p>seguidores</p>
+                </div>
+                <div>
+                  <h3>200</h3>
+                  <p>seguidos</p>
+                </div>
+              </div>
+              <div className="button-container">
+                <button>Seguir</button>
+                <button>Mensaje</button>
+              </div>
+            </div>
+            <Publications />
+          </div>
+        </div>
+      ) :
+        <div>
+          <div className="info-usuario">
+            <h1>{user.username}</h1>
+            <div className="form-container">
+              <form
+                action="/perfil"
+                method="post"
+                encType="multipart/form-data"
+              ></form>
+              <input type="file" name="avatar" className="input-button" />
+              <div>
+                <input name="miArchivo" type="file" onChange={handleFileChange} />
+                <button className="button-avatar" onClick={handleUpload}>
+                  Cambiar Imagen de perfil
+                </button>
+                <img className="profileImage" src={profileImage} alt="" />
+              </div>
+            </div>
+            <h2>Descripcion del usuario</h2>
+            <h2>pivle vys</h2>
+            <div className="popularidad">
+              <div>
+                <h3>100</h3>
+                <p>publicaciones</p>
+              </div>
+              <div>
+                <h3>500</h3>
+                <p>seguidores</p>
+              </div>
+              <div>
+                <h3>200</h3>
+                <p>seguidos</p>
+              </div>
+            </div>
+            <div className="button-container">
+              <button>Seguir</button>
+              <button>Mensaje</button>
+            </div>
+          </div>
+          <button type="submit" onClick={openModal}>
+            Publicar
+          </button>
+          <div>
+          </div>
+          <Modal onClose={closeModal} isOpen={modalIsOpen}>
+            <Publicar />
+          </Modal>
+          <Publications />
+        </div>
+      }
+    </div>
+
+  );
+};
+
+{/* <div className="info-usuario">
         <h1>{user.username}</h1>
         <div className="form-container">
           <form
@@ -95,7 +202,4 @@ export const Perfil = () => {
       <Modal onClose={closeModal} isOpen={modalIsOpen}>
         <Publicar />
       </Modal>
-      <Publications />
-    </div >
-  );
-};
+      <Publications /> */}

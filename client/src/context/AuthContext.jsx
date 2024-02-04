@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
     const [errors, setErrors] = useState([])
     const [publications, setPublications] = useState(null);
     const [profileImage, setProfileImage] = useState(null)
+    const [profileData, setProfileData] = useState(null);
 
     const signup = async (user) => {
         console.log(user);
@@ -131,7 +132,7 @@ export const AuthProvider = ({ children }) => {
         checkLogin()
     }, [])
     return (
-        <AuthContext.Provider value={{ signup, user, isAuthenticated, errors, signIn, signupCompany, loading, logoutUsers, setUser, setPublications, publications, profileImage, setProfileImage }}>
+        <AuthContext.Provider value={{ signup, user, isAuthenticated, errors, signIn, signupCompany, loading, logoutUsers, setUser, setPublications, publications, profileImage, setProfileImage, profileData, setProfileData }}>
             {children}
         </AuthContext.Provider>
     )

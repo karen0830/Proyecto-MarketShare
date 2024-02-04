@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from "../../context/AuthContext";
 import "./Publications.css";
-import { reactionLike, getAllPublications } from '../../api/auth';
-import { useLocation } from 'react-router-dom';
+import { reactionLike, getAllPublications, getProfile, getPublications } from '../../api/auth';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export const Publications = () => {
     const location = useLocation();
     const [locationStart, setLocationStart] = useState(location.pathname === "/Start");
-    const { user, publications, profileImage, setPublications, isAuthenticated } = useAuth()
+    const { user, publications, profileImage, setPublications, isAuthenticated, setProfileData, profileData } = useAuth()
     const [allPublications, setAllPublications] = useState([])
     const [modalStates, setModalStates] = useState([]);
     const [closingIndex, setClosingIndex] = useState(null);
@@ -42,12 +42,10 @@ export const Publications = () => {
         }
         try {
             const response = await reactionLike(reaction)
-            console.log(response);
             const updateReaction = publications.map((item, idx) => {
                 if (item.url == response.data.publications.url) {
                     item.reactions.like = response.data.publications.reactions.like
                     return item;
-                    console.log(item);
                 }
                 return item; // Mantener los elementos que no necesitan actualización
             });
@@ -69,22 +67,16 @@ export const Publications = () => {
             link: url
         }
         try {
-            const response = await reactionLike(reaction)
-            console.log(response.data.publications);
-            const updateReaction = allPublications.map((item, idx) => {
-                console.log(item.publications);
-                if (item.publications.length > 0) {
-                    if (item.publications[0].url == response.data.publications.url) {
-                        console.log("igual");
-                        item.publications[0].reactions.like = response.data.publications.reactions.like
-                        return item;
-                    }
-                }
-                return item; // Mantener los elementos que no necesitan actualización
-            });
-
+            const response = await reactionLike(reaction);
             console.log(response);
-
+            const updateReaction = allPublications.map((item) => {
+                if (item.url === response.data.publications.url) {
+                    console.log("igual");
+                    item.reactions.like = response.data.publications.reactions.like;
+                }
+                // No need to return anything here for the elements that don't need updating
+                return item; // Return the updated or unchanged item
+            });
             setAllPublications(updateReaction)
 
             // Actualizar el estado con el nuevo arreglo que tiene la posición modificada
@@ -95,47 +87,60 @@ export const Publications = () => {
     }
 
     useEffect(() => {
+        const publications = [];
         async function publicationsFound() {
             const response = await getAllPublications();
-            setAllPublications(response.data.publis)
+            console.log(response);
+            response.data.publis.forEach(element => {
+                element.publications.forEach(publication => {
+                    publications.push(publication)
+                })
+            })
+            setAllPublications(publications)
         }
 
         publicationsFound()
-    }, [isAuthenticated])
+    }, [])
 
     useEffect(() => {
-        async function publicationsFound() {
-            const response = await getAllPublications();
-            setAllPublications(response.data.publis)
+        async function changeProfile() {
+            if (profileData !== null) {
+                if (location.pathname !== "/profileUser") {
+                    setProfileData(null)
+                    const getPublicationResponse = await getPublications();
+                    setPublications(getPublicationResponse.data.publications);
+                }
+            }
         }
+        changeProfile()
+        console.log("profileadta: ", profileData);
+    }, [profileData])
 
-        publicationsFound()
-    }, [isAuthenticated])
+    const getProfileUser = async (username) => {
+        console.log(username);
+        const response = await getProfile(username);
+        console.log(response);
+        setProfileData(response)
+        setPublications(response.publications)
+    }
 
-    useEffect(() => {
-        if (locationStart) {
-
-        }
-    })
 
     return (
         <div className='publications'>
             {isAuthenticated === false ?
-                allPublications.map(element => (
-                    element.publications.map((publication, index) => (
-                        <div key={index} className="publication">
-                            <div className="nombre-usuario">
-                                <div className="post-profile">
-                                    <div className="post-img">
-                                        <img src={element.profileImage} alt="" />
-                                    </div>
-                                    <h3>{element.username}</h3>
+                allPublications.map((element, index) => (
+                    <div key={index} className="publication">
+                        <div className="nombre-usuario">
+                            <div className="post-profile">
+                                <div className="post-img">
+                                    <img src={element.profileImage} alt="" />
                                 </div>
+                                <h3>{element.user}</h3>
                             </div>
-                            <div className="contenido">{publication.contenido}</div>
-                            <img src={publication.url} alt="Imagen de la publicación" className="imagen-publicacion" />
                         </div>
-                    ))
+                        <div className="contenido">{element.contenido}</div>
+                        <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                    </div>
                 ))
                 :
                 !locationStart ?
@@ -144,9 +149,9 @@ export const Publications = () => {
                             <div className="nombre-usuario">
                                 <div className="post-profile">
                                     <div className="post-img">
-                                        <img src={profileImage} alt="" />
+                                        <img src={profileData ? element.profileImage : profileImage} alt="" />
                                     </div>
-                                    <h3>{user.username}</h3>
+                                    <h3>{element.user}</h3>
                                 </div>
                             </div>
                             <div className="contenido">{element.contenido}</div>
@@ -179,9 +184,10 @@ export const Publications = () => {
                                         </div>
                                     )
                                     }
-                                    <button name='Love' onClick={() => increaseReactions(element.url, user.username)}>
+                                    <button name='Love' onClick={() => profileData ? increaseReactions(element.url, element.user) : increaseReactions(element.url, user.username)}>
                                         <i className="ri-heart-line"></i>
                                     </button>
+
 
                                     <button
                                         onClick={() => {
@@ -250,97 +256,99 @@ export const Publications = () => {
                     ))
                     :
                     /* Código adicional cuando locationStart no es verdadero */
-                    allPublications.map((userImage, userIndex) =>
-                        userImage.publications.map((element, index) => (
-                            <div key={index} data-key={index} className="publication">
-                                <div className="nombre-usuario">
-                                    <div className="post-profile">
-                                        <div className="post-img">
-                                            <img src={userImage.profileImage} alt="" />
-                                        </div>
-                                        <h3>{userImage.username}</h3>
-                                    </div>
-                                </div>
-                                <div className="contenido">{element.contenido}</div>
-                                <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
-                                <div className="post-box">
-                                    <div>
-                                        {modalStates[index] && (
-                                            <div className={`modal ${closingIndex == null ? 'open' : 'closed'}`}>
-                                                <div className='modal-buttons'>
-                                                    <button className="modal-close" onClick={() => handleClose(index)}>
-                                                        <i className="ri-chat-delete-line"></i>
-                                                    </button>
-                                                    <button>
-                                                        <i className="ri-heart-line"></i>
-                                                    </button>
-                                                </div>
-                                                {element.reactions.like.map((userReaction, key) => (
-                                                    <div key={key}>
-                                                        <div className="post-img">
-                                                            <img src={userReaction.imageProfile} alt="" />
-                                                        </div>
-                                                        <h3>{userReaction.user}</h3>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                        <button name='Love' onClick={() => increaseReactionsLocationStart(element.url, userImage.username)}>
-                                            <i className="ri-heart-line"></i>
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setClosingIndex(null);
-                                                setModalStates((prev) => ({ ...prev, [index]: true }));
-                                            }}
-                                            className={modalStates[index] ? 'active' : ''}
-                                        >
-                                            <span>{element.reactions.like.length}</span>
-                                        </button>
-                                    </div>
 
-                                    <div>
-                                        {modalCommentState[index] && (
-                                            <div className={`modal ${closingIndexComents == null ? 'open' : 'closed'}`}>
-                                                <div className='modal-buttons'>
-                                                    <button className="modal-close" onClick={() => handleCloseModalComments(index)}>
-                                                        <i className="ri-chat-delete-line"></i>
-                                                    </button>
-                                                    <button>
-                                                        <i className="ri-heart-line"></i>
-                                                    </button>
-                                                </div>
-                                                {element.reactions.comments.map((userReaction, key) => (
-                                                    <div key={key}>
-                                                        <div className="post-img">
-                                                            <img src={userImage.profileImage} alt="" />
-                                                        </div>
-                                                        <h3>{userReaction.comment}</h3>
-                                                    </div>
-                                                ))}
-                                                <form action="">
-                                                    <input type="text" placeholder='comment' />
-                                                    <button>
-                                                        <i className="ri-send-plane-2-fill"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        )}
-                                        <button onClick={() => {
-                                            setClosingIndexComments(null);
-                                            setModalComments((prev) => ({ ...prev, [index]: true }));
-                                        }}>
-                                            <i className="ri-chat-3-line"></i>
-                                        </button>
-                                        <span>{200}k</span>
+                    allPublications.map((element, index) => (
+                        <div key={index} data-key={index} className="publication">
+                            <div className="nombre-usuario">
+                                <div className="post-profile">
+                                    <div className="post-img">
+                                        <img src={element.profileImage} alt="" />
                                     </div>
-                                    <button name='comments'>
-                                        <i className="ri-download-cloud-2-line"></i>
-                                        <span>{200000}k</span>
-                                    </button>
+                                    <NavLink onClick={() => getProfileUser(element.user)} to="/profileUser">
+                                        <h3>{element.user}</h3>
+                                    </NavLink>
                                 </div>
                             </div>
-                        )))
+                            <div className="contenido">{element.contenido}</div>
+                            <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                            <div className="post-box">
+                                <div>
+                                    {modalStates[index] && (
+                                        <div className={`modal ${closingIndex == null ? 'open' : 'closed'}`}>
+                                            <div className='modal-buttons'>
+                                                <button className="modal-close" onClick={() => handleClose(index)}>
+                                                    <i className="ri-chat-delete-line"></i>
+                                                </button>
+                                                <button>
+                                                    <i className="ri-heart-line"></i>
+                                                </button>
+                                            </div>
+                                            {element.reactions.like.map((userReaction, key) => (
+                                                <div key={key}>
+                                                    <div className="post-img">
+                                                        <img src={userReaction.imageProfile} alt="" />
+                                                    </div>
+                                                    <h3>{userReaction.user}</h3>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <button name='Love' onClick={() => increaseReactionsLocationStart(element.url, element.user)}>
+                                        <i className="ri-heart-line"></i>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setClosingIndex(null);
+                                            setModalStates((prev) => ({ ...prev, [index]: true }));
+                                        }}
+                                        className={modalStates[index] ? 'active' : ''}
+                                    >
+                                        <span>{element.reactions.like.length}</span>
+                                    </button>
+                                </div>
+
+                                <div>
+                                    {modalCommentState[index] && (
+                                        <div className={`modal ${closingIndexComents == null ? 'open' : 'closed'}`}>
+                                            <div className='modal-buttons'>
+                                                <button className="modal-close" onClick={() => handleCloseModalComments(index)}>
+                                                    <i className="ri-chat-delete-line"></i>
+                                                </button>
+                                                <button>
+                                                    <i className="ri-heart-line"></i>
+                                                </button>
+                                            </div>
+                                            {element.reactions.comments.map((userReaction, key) => (
+                                                <div key={key}>
+                                                    <div className="post-img">
+                                                        <img src={element.profileImage} alt="" />
+                                                    </div>
+                                                    <h3>{userReaction.comment}</h3>
+                                                </div>
+                                            ))}
+                                            <form action="">
+                                                <input type="text" placeholder='comment' />
+                                                <button>
+                                                    <i className="ri-send-plane-2-fill"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    )}
+                                    <button onClick={() => {
+                                        setClosingIndexComments(null);
+                                        setModalComments((prev) => ({ ...prev, [index]: true }));
+                                    }}>
+                                        <i className="ri-chat-3-line"></i>
+                                    </button>
+                                    <span>{200}k</span>
+                                </div>
+                                <button name='comments'>
+                                    <i className="ri-download-cloud-2-line"></i>
+                                    <span>{200000}k</span>
+                                </button>
+                            </div>
+                        </div>
+                    ))
             }
         </div >
     )

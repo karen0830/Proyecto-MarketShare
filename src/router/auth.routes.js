@@ -21,8 +21,9 @@ import {
     refreshToken,
     getPublications,
     getProfileImage,
+    getProfile,
     getAllPublications,
-    pubicationsVisit
+    followPerson
 } from "../controllers/auth.controller.js";
 import {
     authRequired,
@@ -48,13 +49,14 @@ router.post("/imageProfile", imageProfile);
 router.post("/addStories", addStories);
 router.post("/comment", comments);
 router.post("/refreshToken", refreshToken);
-router.post("/publicationsVisit", pubicationsVisit);
+router.post("/followPerson", followPerson)
 router.get("/profileUser", authRequired, profileUser);
 router.get("/profileCompany", authRequiredCompany, profileCompany);
 router.get("/verify", verifyToken);
 router.get("/getPublications", getPublications);
 router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);
+router.post("/getProfile", getProfile);
 router.put("/archivedStory", archivedStories);
 router.put("/deleteStories", deleteStories);
 router.delete("/deleteComment", deleteComment);

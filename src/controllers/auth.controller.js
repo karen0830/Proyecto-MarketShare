@@ -9,6 +9,9 @@ import User from "../models/user.models.js";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
+import SHA256 from 'crypto-js/sha256.js';
+import { log } from "console";
+
 
 export const registerCompany = async (req, res) => {
     const {
@@ -81,6 +84,21 @@ export const registerUser = async (req, res) => {
         const token = await createAcccessToken({ id: userSaved._id });
 
         res.cookie("token", token);
+        // Ejemplo de uso
+        const userID = userSaved._id;
+        const hashedID = hashString(userID);
+
+        try {
+            await User.updateOne(
+                { _id: userSaved._id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                {
+                    $push: {
+                        hashedID: hashedID // Nombre del campo donde deseas almacenar los IDs hasheados
+                    },
+                })
+        } catch (error) {
+            console.log(error);
+        }
         res.json({
             id: userSaved._id,
             username: userSaved.username,
@@ -292,20 +310,19 @@ export const imageProfile = async (req, res) => {
                         // Obtén la referencia al archivo a partir de la URL
                         const imageRef = ref(storage, fileURL);
                         // Borra el archivo
-                        deleteObject(imageRef)
-                            .then(() => {
-                                console.log("Archivo eliminado exitosamente");
-                            })
-                            .catch((error) => {
-                                console.error("Error al eliminar el archivo:", error);
-                            });
-
                         try {
+                            await deleteObject(imageRef)
+                                .then(() => {
+                                    console.log("Archivo eliminado exitosamente");
+                                })
+                                .catch((error) => {
+                                    console.error("Error al eliminar el archivo:", error);
+                                });
                             const result = await User.updateOne(
                                 { _id: userFound._id },
                                 {
                                     rutaImagen: `gs://marketshare-c5720.appspot.com/${storagePath}`,
-                                    profileImage: url,
+                                    profileImage: url, 
                                 }
                             );
                             console.log('Campo "nombre" actualizado correctamente:', result);
@@ -615,7 +632,11 @@ export const addPublications = async (req, res) => {
                     const decodedToken = jwt.decode(token);
 
                     if (!token) return res.status(401).json({ message: "Unauthorized" });
+
                     const result = async () => {
+                        const email = decodedToken.email;
+                        const userFound = await User.findOne({ email });
+                        console.log(userFound);
                         try {
                             await User.updateOne(
                                 { _id: decodedToken.id },
@@ -624,6 +645,8 @@ export const addPublications = async (req, res) => {
                                         publications: {
                                             url: url,
                                             contenido: contenido,
+                                            profileImage: userFound.profileImage,
+                                            user: userFound.username,
                                             reactions: {
                                                 comments: [],
                                                 share: [],
@@ -690,13 +713,14 @@ export const reactionLove = async (req, res) => {
     const imageProfile = await User.findOne({ username: name }, 'profileImage');
     console.log("imagen: ", imageProfile);
     console.log(userName);
+    console.log(link);
 
     const document = await User.findOne({
         username: userName,
         "publications.url": link
     }, { "publications.$": 1 });
 
-    console.log("docu ", document.publications[0]);
+    console.log("docu ", document);
 
     const publication = document.publications[0];
 
@@ -862,57 +886,56 @@ export const getAllPublications = async (req, res) => {
     const decodedToken = jwt.decode(token);
     let publications;
     if (!token) {
-        publications = await User.find({}, 'publications profileImage username');
+        publications = await User.find({}, 'publications');
         return res.json({
             publis: publications
         })
     }
-    publications = await User.find({ username: { $ne: decodedToken.name } }, 'publications profileImage username');
+    publications = await User.find({ username: { $ne: decodedToken.name } }, 'publications');
     console.log(publications);
     res.json({
         publis: publications
     })
 }
 
-export const pubicationsVisit = async (req, res) => {
-    const token = req.cookies.token;
-    const { urlPublications } = req.body
-    const decodedToken = jwt.decode(token);
-    const name = decodedToken.name;
-    let publications = await User.find({ username: name }, 'publicationsVisits');
-    if (urlPublications) {
-        let publications = await User.find({ username: name }, 'publicationsVisits');
-        let veryfyUrl = publications[0].publicationsVisits
-
-        let urlEncontrada = true;
-
-        for (const objeto of publications[0].publicationsVisits) {
-            if (objeto.url === urlPublications[0]) {
-                urlEncontrada = false;
-                break;
-            }
-        }
-
-        if (urlEncontrada) {
-            await User.findOneAndUpdate(
-                { username: name },
-                {
-                    $push: {
-                        "publicationsVisits": {
-                            url: urlPublications[0]
-                        },
-                    },
-                }
-            );
-        } else {
-            console.log('La URL está presente en el arreglo.');
-        }
-
-        publications = await User.find({ username: name }, 'publicationsVisits');
-        return res.json({
-            publis: publications
-        })
-    }
-
-    return res.json(publications[0].publicationsVisits)
+export const followPerson = async (req, res) => {
+    const { token } = req.cookies;
+    const { seguir } = req.body;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    res.json({
+        seguir: seguir
+    })
 }
+
+export const getProfile = async (req, res) => {
+    const { token } = req.cookies;
+    console.log("TOKEN:", token);
+
+    // Obtén el username desde req.params o req.query dependiendo de cómo estás pasando el parámetro
+    const {username } = req.body; // o req.query según sea necesario
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    try {
+        const userFound = await User.findOne({ username: username });
+        console.log(userFound);
+
+        if (userFound !== null) {
+            res.json({
+                id: userFound.hashedID,
+                username: userFound.username,
+                publications: userFound.publications,
+                profileImage: userFound.profileImage
+            });
+        } else {
+            return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+function hashString(input) {
+    return SHA256(input).toString();
+}
+

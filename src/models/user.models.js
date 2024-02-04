@@ -38,6 +38,13 @@ const userSchema = new mongoose.Schema({
     publicationsVisits: {
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
+    },
+    followers: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    hashedID: {
+        type: String
     }
 }, {
     timestamps: true
