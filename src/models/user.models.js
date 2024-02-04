@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    password:{
+    password: {
         type: String,
         required: true,
     },
@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
     },
     hashedID: {
         type: String
+    },
+    messages: {
+        type: [mongoose.Schema.Types.Mixed],
+        default: []
     }
 }, {
     timestamps: true

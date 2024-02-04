@@ -322,7 +322,7 @@ export const imageProfile = async (req, res) => {
                                 { _id: userFound._id },
                                 {
                                     rutaImagen: `gs://marketshare-c5720.appspot.com/${storagePath}`,
-                                    profileImage: url, 
+                                    profileImage: url,
                                 }
                             );
                             console.log('Campo "nombre" actualizado correctamente:', result);
@@ -912,7 +912,7 @@ export const getProfile = async (req, res) => {
     console.log("TOKEN:", token);
 
     // Obtén el username desde req.params o req.query dependiendo de cómo estás pasando el parámetro
-    const {username } = req.body; // o req.query según sea necesario
+    const { username } = req.body; // o req.query según sea necesario
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {
@@ -939,3 +939,114 @@ function hashString(input) {
     return SHA256(input).toString();
 }
 
+export const postMessage = async (req, res) => {
+    const token = req.cookies.token;
+    const decodedToken = jwt.decode(token);
+    console.log(token);
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    try {
+        const { from, to, message } = req.body;
+        console.log(req.body);
+
+        const chatUsers = {
+            "userOne": from,
+            "userTwo": to
+        };
+
+        // Crea un nuevo mensaje
+        const newMessage = {
+            "from": from,
+            "to": to,
+            message: message
+        };
+
+        const { messages } = await User.findOne({ username: from }, { messages: 1 });
+
+        let chatMessage = false;
+
+        // ...
+
+        for (const element of messages) {
+            const chatUsersElement = element.ChatUsers;
+
+            // Verifica si ya existe una conversación entre 'from' y 'to'
+            if ((chatUsersElement.userOne === from && chatUsersElement.userTwo === to) ||
+                (chatUsersElement.userOne === to && chatUsersElement.userTwo === from)) {
+                chatMessage = true;
+
+                // Asegúrate de que element.message sea un array antes de intentar agregar
+                if (!Array.isArray(element.message)) {
+                    element.message = [];
+                }
+
+                // Agrega el nuevo mensaje a la conversación existente
+                element.message.push(newMessage);
+
+                // Guarda los cambios en el documento de usuario
+                await User.findOneAndUpdate(
+                    { username: from, 'messages.ChatUsers.userOne': chatUsersElement.userOne, 'messages.ChatUsers.userTwo': chatUsersElement.userTwo },
+                    {
+                        $set: {
+                            'messages.$.message': element.message
+                        },
+                    }
+                );
+
+                await User.findOneAndUpdate(
+                    { username: to, 'messages.ChatUsers.userOne': chatUsersElement.userOne, 'messages.ChatUsers.userTwo': chatUsersElement.userTwo },
+                    {
+                        $set: {
+                            'messages.$.message': element.message
+                        },
+                    }
+                );
+
+                break; // Puedes salir del bucle una vez que encuentras una coincidencia
+            }
+        }
+
+        // ...
+
+
+        // Si no hay conversación existente, crea una nueva
+        if (!chatMessage) {
+            const verifyUserFrom = await User.findOne({username: from});
+            const verifyUserTo = await User.findOne({username: to});
+            if (!verifyUserFrom || !verifyUserTo) return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
+
+            await User.findOneAndUpdate(
+                { username: from },
+                {
+                    $push: {
+                        messages: {
+                            message: [newMessage],
+                            ChatUsers: chatUsers
+                        }
+                    },
+                }
+            );
+
+            await User.findOneAndUpdate(
+                { username: to },
+                {
+                    $push: {
+                        messages: {
+                            message: [newMessage],
+                            ChatUsers: chatUsers
+                        }
+                    },
+                }
+            );
+        }
+
+        console.log(decodedToken);
+        const user = await User.findOne({ username: from });
+        console.log(user);
+        res.json({
+            user: user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json("Internal Server Error");
+    }
+};

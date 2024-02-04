@@ -23,7 +23,8 @@ import {
     getProfileImage,
     getProfile,
     getAllPublications,
-    followPerson
+    followPerson,
+    postMessage
 } from "../controllers/auth.controller.js";
 import {
     authRequired,
@@ -38,6 +39,7 @@ import {
 } from "../schemas/auth.schemas.js";
 
 router.post("/registerCompany", validateSchema(CompanyShema), registerCompany);
+router.post("/msj", postMessage);
 router.post("/registerUser", validateSchema(registerSchema), registerUser);
 router.post("/loginCompany", validateSchema(loginCompanyShema), loginCompany);
 router.post("/loginUser", validateSchema(loginSchema), loginUser);
