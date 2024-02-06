@@ -24,7 +24,8 @@ import {
     getProfile,
     getAllPublications,
     followPerson,
-    postMessage
+    postMessage,
+    getMessage
 } from "../controllers/auth.controller.js";
 import {
     authRequired,
@@ -39,7 +40,7 @@ import {
 } from "../schemas/auth.schemas.js";
 
 router.post("/registerCompany", validateSchema(CompanyShema), registerCompany);
-router.post("/msj", postMessage);
+router.post("/msg", postMessage);
 router.post("/registerUser", validateSchema(registerSchema), registerUser);
 router.post("/loginCompany", validateSchema(loginCompanyShema), loginCompany);
 router.post("/loginUser", validateSchema(loginSchema), loginUser);
@@ -58,6 +59,7 @@ router.get("/verify", verifyToken);
 router.get("/getPublications", getPublications);
 router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);
+router.get("/getMessages", getMessage)
 router.post("/getProfile", getProfile);
 router.put("/archivedStory", archivedStories);
 router.put("/deleteStories", deleteStories);

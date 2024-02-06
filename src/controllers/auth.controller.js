@@ -11,6 +11,7 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
 import { log } from "console";
+import { name } from "ejs";
 
 
 export const registerCompany = async (req, res) => {
@@ -157,7 +158,9 @@ export const loginUser = async (req, res) => {
 
         const token = await createAcccessToken(userFound);
 
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            
+        });
         console.log(token);
         res.json({
             username: userFound.username,
@@ -945,24 +948,26 @@ export const postMessage = async (req, res) => {
     console.log(token);
     if (!token) return res.status(401).json({ message: "Unauthorized" });
     try {
-        const { from, to, message } = req.body;
+        const username = decodedToken.name;
+        const { from, message } = req.body;
         console.log(req.body);
 
         const chatUsers = {
             "userOne": from,
-            "userTwo": to
+            "userTwo": username
         };
 
         // Crea un nuevo mensaje
         const newMessage = {
             "from": from,
-            "to": to,
+            "to": username,
             message: message
         };
 
         const { messages } = await User.findOne({ username: from }, { messages: 1 });
 
         let chatMessage = false;
+        console.log(username);
 
         // ...
 
@@ -970,8 +975,8 @@ export const postMessage = async (req, res) => {
             const chatUsersElement = element.ChatUsers;
 
             // Verifica si ya existe una conversación entre 'from' y 'to'
-            if ((chatUsersElement.userOne === from && chatUsersElement.userTwo === to) ||
-                (chatUsersElement.userOne === to && chatUsersElement.userTwo === from)) {
+            if ((chatUsersElement.userOne === from && chatUsersElement.userTwo === username) ||
+                (chatUsersElement.userOne === username && chatUsersElement.userTwo === from)) {
                 chatMessage = true;
 
                 // Asegúrate de que element.message sea un array antes de intentar agregar
@@ -993,7 +998,7 @@ export const postMessage = async (req, res) => {
                 );
 
                 await User.findOneAndUpdate(
-                    { username: to, 'messages.ChatUsers.userOne': chatUsersElement.userOne, 'messages.ChatUsers.userTwo': chatUsersElement.userTwo },
+                    { username: username, 'messages.ChatUsers.userOne': chatUsersElement.userOne, 'messages.ChatUsers.userTwo': chatUsersElement.userTwo },
                     {
                         $set: {
                             'messages.$.message': element.message
@@ -1011,7 +1016,7 @@ export const postMessage = async (req, res) => {
         // Si no hay conversación existente, crea una nueva
         if (!chatMessage) {
             const verifyUserFrom = await User.findOne({username: from});
-            const verifyUserTo = await User.findOne({username: to});
+            const verifyUserTo = await User.findOne({username: username});
             if (!verifyUserFrom || !verifyUserTo) return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
 
             await User.findOneAndUpdate(
@@ -1027,7 +1032,7 @@ export const postMessage = async (req, res) => {
             );
 
             await User.findOneAndUpdate(
-                { username: to },
+                { username: username },
                 {
                     $push: {
                         messages: {
@@ -1050,3 +1055,49 @@ export const postMessage = async (req, res) => {
         res.status(500).json("Internal Server Error");
     }
 };
+
+
+export const getMessage = async (req, res) => {
+    const token = req.cookies.token;
+    const decodedToken = jwt.decode(token);
+    console.log(token);
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    try {
+        const username = decodedToken.name;
+        const { user } = req.body;
+        console.log(req.body);
+
+        const { messages } = await User.findOne({ username: user }, { messages: 1 });
+
+        let chatMessage = false;
+        console.log(username);
+
+        let getMessagesUser = "";
+
+        // ...
+
+        for (const element of messages) {
+            const chatUsersElement = element.ChatUsers;
+
+            // Verifica si ya existe una conversación entre 'from' y 'to'
+            if ((chatUsersElement.userOne === user && chatUsersElement.userTwo === username) ||
+                (chatUsersElement.userOne === username && chatUsersElement.userTwo === user)) {
+                chatMessage = true;
+
+                // Asegúrate de que element.message sea un array antes de intentar agregar
+                if (!Array.isArray(element.message)) {
+                    element.message = [];
+                }
+
+                getMessagesUser = element;
+
+                break; // Puedes salir del bucle una vez que encuentras una coincidencia
+            }
+        }
+        res.json(getMessagesUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json("Internal Server Error");
+    }
+};
+
