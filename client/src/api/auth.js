@@ -167,3 +167,19 @@ export const getProfile = async username => {
     throw error; // Lanzar el error nuevamente o manejarlo de otra manera
   }
 }
+
+export const addPublicationsVideo = async (file, Hola) => {
+  try {
+    const formData = new FormData();
+    formData.append('publication', file); // Agregar el archivo al objeto FormData
+    formData.append('Hola', Hola); // Agregar el texto al objeto FormData
+    console.log(formData.get('miArchivo'));
+    console.log(formData.get('Hola'));
+
+    const response = await instance.post("/addPublicationVideo", formData);
+    console.log(file);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}

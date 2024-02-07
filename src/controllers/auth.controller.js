@@ -10,8 +10,7 @@ import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
-import { log } from "console";
-import { name } from "ejs";
+import { promisify } from "util";
 
 
 export const registerCompany = async (req, res) => {
@@ -159,7 +158,7 @@ export const loginUser = async (req, res) => {
         const token = await createAcccessToken(userFound);
 
         res.cookie("token", token, {
-            
+
         });
         console.log(token);
         res.json({
@@ -646,6 +645,7 @@ export const addPublications = async (req, res) => {
                                 {
                                     $push: {
                                         publications: {
+                                            type: "img",
                                             url: url,
                                             contenido: contenido,
                                             profileImage: userFound.profileImage,
@@ -683,6 +683,120 @@ export const addPublications = async (req, res) => {
         localReadStream.pipe(stream);
     });
 };
+
+
+//const path = require('path');
+
+// Función para subir el video a Firebase Storage y obtener la URL firmada
+const uploadVideoToStorage = (filePath, fileName) => {
+    const bucket = adminApp.storage().bucket();
+
+    // Subir el archivo a Firebase Storage
+    return bucket.upload(filePath, {
+        destination: `publications/${fileName}` // Especifica la ruta y el nombre del archivo en Firebase Storage
+    })
+        .then(() => {
+            // Generar una URL firmada para acceder al archivo
+            return bucket.file(`publications/${fileName}`).getSignedUrl({
+                action: 'read',
+                expires: '03-01-2500', // Fecha de expiración de la URL
+            });
+        })
+        .then((signedUrls) => {
+            // Devolver la URL firmada
+            return signedUrls[0];
+        })
+        .catch((error) => {
+            console.error('Error al subir el video a Firebase Storage:', error);
+            throw error;
+        });
+};
+
+// Función para procesar el formulario y subir el video a Firebase Storage
+export const addPublicationsVideo = (req, res) => {
+    const { token } = req.cookies;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    const decodedToken = jwt.decode(token);
+    const form = new IncomingForm();
+
+    form.parse(req, (err, fields, files) => {
+        const contenido = fields.Hola[0] ? fields.Hola[0] : "";
+        if (err) {
+            console.error('Error al procesar el formulario:', err);
+            res.status(500).send('Error al procesar el formulario');
+            return;
+        }
+        console.log(files);
+        // Obtener el nombre original del archivo de video
+        const originalFileName = files.publication ? files.publication[0].originalFilename : null;
+        console.log(originalFileName);
+        if (!originalFileName) {
+            res.status(400).send('No se ha subido ningún archivo de video');
+            return;
+        }
+
+        // Renombrar el archivo para eliminar caracteres especiales
+        const fileName = originalFileName.replace(/[^\w\s.-]/gi, '');
+
+        // Obtener la ruta del archivo del campo de formulario 'video'
+        const filePath = files.publication ? files.publication[0].filepath : null;
+        if (!filePath) {
+            res.status(400).send('No se ha subido ningún archivo de video');
+            return;
+        }
+
+        // Subir el video a Firebase Storage y obtener la URL firmada
+        uploadVideoToStorage(filePath, fileName)
+            .then((signedUrl) => {
+                // Enviar la URL firmada como respuesta
+                const result = async () => {
+                    const email = decodedToken.email;
+                    let userFound = await User.findOne({ email });
+                    console.log(userFound);
+                    try {
+                        await User.updateOne(
+                            { _id: decodedToken.id },
+                            {
+                                $push: {
+                                    publications: {
+                                        url: signedUrl,
+                                        type: "video/mp4",
+                                        contenido: contenido,
+                                        profileImage: userFound.profileImage,
+                                        user: userFound.username,
+                                        reactions: {
+                                            comments: [],
+                                            share: [],
+                                            like: [],
+                                        },
+                                    },
+                                },
+                            }
+                        );
+                        console.log("Nuevo campo agregado correctamente:", result);
+                        userFound = await User.findOne({ email });
+
+                        return res.json({
+                            publications: userFound.publications.reverse(),
+                        });
+                    } catch (err) {
+                        console.error("Error al agregar el nuevo campo:", err);
+                        res.status(500).send("Error al agregar el nuevo campo:", err);
+                    }
+                }
+
+                result();
+            })
+            .catch((error) => {
+                // Manejar errores
+                console.error('Error al subir el video a Firebase Storage:', error);
+                res.status(500).send('Error al subir el video a Firebase Storage');
+            });
+    });
+};
+
+
+
 
 export const getPublications = async (req, res) => {
     const token = req.cookies.token;
@@ -1015,8 +1129,8 @@ export const postMessage = async (req, res) => {
 
         // Si no hay conversación existente, crea una nueva
         if (!chatMessage) {
-            const verifyUserFrom = await User.findOne({username: from});
-            const verifyUserTo = await User.findOne({username: username});
+            const verifyUserFrom = await User.findOne({ username: from });
+            const verifyUserTo = await User.findOne({ username: username });
             if (!verifyUserFrom || !verifyUserTo) return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
 
             await User.findOneAndUpdate(
@@ -1100,4 +1214,7 @@ export const getMessage = async (req, res) => {
         res.status(500).json("Internal Server Error");
     }
 };
+
+
+
 

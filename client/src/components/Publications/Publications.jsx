@@ -139,7 +139,11 @@ export const Publications = () => {
                             </div>
                         </div>
                         <div className="contenido">{element.contenido}</div>
-                        <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                        {element.type === 'video/mp4' ? (
+                            <video src={element.url} controls></video>
+                        ) :
+                            <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                        }
                     </div>
                 ))
                 :
@@ -155,7 +159,11 @@ export const Publications = () => {
                                 </div>
                             </div>
                             <div className="contenido">{element.contenido}</div>
-                            <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion"></img>
+                            {element.type === 'video/mp4' ? (
+                                <video src={element.url} controls></video>
+                            ) :
+                                <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                            }
                             <div className="post-box">
                                 <div>
                                     {modalStates[index] && (
@@ -270,7 +278,11 @@ export const Publications = () => {
                                 </div>
                             </div>
                             <div className="contenido">{element.contenido}</div>
-                            <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                            {element.type === 'video/mp4' ? (
+                                <video src={element.url} controls></video>
+                            ) :
+                                <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
+                            }
                             <div className="post-box">
                                 <div>
                                     {modalStates[index] && (
