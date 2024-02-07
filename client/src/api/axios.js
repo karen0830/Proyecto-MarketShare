@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'https://backend-pp8i.onrender.com/api',
+    baseURL: 'https://backend-kbo5.onrender.com/api',
     withCredentials: true
 })
 
