@@ -158,8 +158,11 @@ export const loginUser = async (req, res) => {
         const token = await createAcccessToken(userFound);
 
         res.cookie("token", token, {
-
+            httpOnly: true, // Esto asegura que la cookie sólo se envía a través de HTTP(S), no accesible a través de JavaScript. Esto ayuda a prevenir ataques de cross-site scripting (XSS).
+            secure: true, // Esto asegura que la cookie sólo se envía a través de HTTPS. Esto ayuda a prevenir ataques de interceptación de cookies.
+            sameSite: 'none', // Esto puede ser 'strict', 'lax', 'none', o no establecerlo. Esto ayuda a prevenir ataques de cross-site request forgery (CSRF).
         });
+        
         console.log(token);
         res.json({
             username: userFound.username,
