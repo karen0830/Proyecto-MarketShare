@@ -8,7 +8,7 @@ import axios from 'axios'
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173', // reemplaza 'http://localhost:3000' con la URL de tu aplicación frontend
+    origin: 'https://maket-share.netlify.app/', // reemplaza 'http://localhost:3000' con la URL de tu aplicación frontend
     credentials: true
 }));
 app.use(morgan('dev'));
