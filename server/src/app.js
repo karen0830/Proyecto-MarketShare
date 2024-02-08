@@ -8,9 +8,10 @@ import axios from 'axios'
 const app = express();
 
 app.use(cors({
-    origin: 'https://maket-share.netlify.app/', // reemplaza 'http://localhost:3000' con la URL de tu aplicación frontend
+    origin: 'https://maket-share.netlify.app', // reemplaza 'http://localhost:3000' con la URL de tu aplicación frontend
     credentials: true
 }));
+
 app.use(morgan('dev'));
 app.use(express.json()); // Middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(cookieParser());
