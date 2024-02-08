@@ -1,11 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/home";
-import "./App.css";
-import { AuthProvider } from "./context/AuthContext";
-import ProtectedRouter from "./ProtectedRouter";
-import { PerfilUsuario } from "./pages/PerfilUsuario/PerfilUsuario";
-import { Start } from "./pages/Start/Start";
-import { Publicar } from "./components/Publications/Publicar/Publicar.jsx";
+import Home from "pages/home/home";
+import "App.css";
+import { AuthProvider } from "context/AuthContext";
+import ProtectedRouter from "ProtectedRouter";
+import { PerfilUsuario } from "pages/PerfilUsuario/PerfilUsuario";
+import { Start } from "pages/Start/Start";
 const App = () => {
   return (
     <AuthProvider>
