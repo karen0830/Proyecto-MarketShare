@@ -9,11 +9,12 @@ const app = express();
 app.use(cors({
     origin: 'https://maket-share.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
 app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Credentials', 'https://maket-share.netlify.app');
+    res.header('Access-Control-Allow-Credentials', true);
     next();
 });
 
