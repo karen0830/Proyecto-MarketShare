@@ -190,9 +190,9 @@ export const logoutCompany = (req, res) => {
 
 export const profileUser = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
-    console.log("header", req.headers);
     const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
     // const token = req.cookies.token;
+    console.log("Tokencito " , token);
     if (token === 'null') {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
