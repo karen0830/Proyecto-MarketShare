@@ -7,12 +7,12 @@ import Redbird from 'redbird';
 
 const app = express();
 
-let corsOptions = {
+app.use(cors({
     origin: 'https://maket-share.netlify.app',
-    credentials: true
-}
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(cors(corsOptions));
 
 app.use(morgan('dev'));
 app.use(express.json()); // Middleware para analizar el cuerpo de las solicitudes en formato JSON
@@ -27,14 +27,14 @@ app.get('/', (req, res) => {
 });
 
 // Configuración de Redbird
-let proxy = new Redbird({port: 80});
+let proxy = new Redbird({ port: 80 });
 
 proxy.register("maket-share.netlify.app", "https://backend-ve18.onrender.com/api/getAllPublications", {
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
-  }
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    }
 });
 
 
