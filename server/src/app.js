@@ -13,11 +13,6 @@ let corsOptions = {
 }
 
 app.use(cors(corsOptions));
-app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Credentials', true);
-});
-
-
 
 app.use(morgan('dev'));
 app.use(express.json()); // Middleware para analizar el cuerpo de las solicitudes en formato JSON
