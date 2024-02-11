@@ -157,14 +157,15 @@ export const loginUser = async (req, res) => {
 
         const token = await createAcccessToken(userFound);
 
-        res.cookie("token", token, {
-            httpOnly: true, // Esto asegura que la cookie sólo se envía a través de HTTP(S), no accesible a través de JavaScript. Esto ayuda a prevenir ataques de cross-site scripting (XSS).
-            secure: true, // Esto asegura que la cookie sólo se envía a través de HTTPS. Esto ayuda a prevenir ataques de interceptación de cookies.
-            sameSite: 'none', // Esto puede ser 'strict', 'lax', 'none', o no establecerlo. Esto ayuda a prevenir ataques de cross-site request forgery (CSRF).
-        });
-        
+        // res.cookie("token", token, {
+        //     httpOnly: true, // Esto asegura que la cookie sólo se envía a través de HTTP(S), no accesible a través de JavaScript. Esto ayuda a prevenir ataques de cross-site scripting (XSS).
+        //     secure: true, // Esto asegura que la cookie sólo se envía a través de HTTPS. Esto ayuda a prevenir ataques de interceptación de cookies.
+        //     sameSite: 'none', // Esto puede ser 'strict', 'lax', 'none', o no establecerlo. Esto ayuda a prevenir ataques de cross-site request forgery (CSRF).
+        // });
+
         console.log(token);
         res.json({
+            token: token,
             username: userFound.username,
             email: userFound.email,
             profileImage: userFound.profileImage,
@@ -177,9 +178,6 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = (req, res) => {
-    res.cookie("token", "", {
-        expires: new Date(0),
-    });
     return res.sendStatus(200);
 };
 
@@ -352,7 +350,15 @@ export const imageProfile = async (req, res) => {
 };
 
 export const getProfileImage = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     if (!token) return res.status(401).json({ message: "Unauthorized" });
     let email = decodedToken.email;
@@ -363,9 +369,18 @@ export const getProfileImage = async (req, res) => {
 
 }
 
+
 export const verifyToken = async (req, res) => {
-    const token = req.cookies.token;
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
+    // if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {
         // Decodifica el token para obtener la información del usuario
@@ -433,7 +448,15 @@ export const addStories = async (req, res) => {
                     console.error("Error al obtener el enlace de la imagen:", err);
                     res.status(500).send("Error al obtener el enlace de la imagen");
                 } else {
-                    const token = req.cookies.token;
+                    const authorizationHeader = req.headers['authorization'];
+                    console.log("header", req.headers);
+
+                    if (!authorizationHeader) {
+                        return res.status(401).json({ message: "Unauthorized 1" });
+                    }
+
+                    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+                    // const token = req.cookies.token;
                     const decodedToken = jwt.decode(token);
                     if (!token) return res.status(401).json({ message: "Unauthorized" });
                     const fechaActual = new Date();
@@ -484,7 +507,15 @@ export const addStories = async (req, res) => {
 };
 
 export const archivedStories = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
@@ -536,7 +567,15 @@ export const archivedStories = async (req, res) => {
 };
 
 export const deleteStories = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
 
     if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -632,7 +671,15 @@ export const addPublications = async (req, res) => {
                     console.error("Error al obtener el enlace de la imagen:", err);
                     res.status(500).send("Error al obtener el enlace de la imagen");
                 } else {
-                    const token = req.cookies.token;
+                    const authorizationHeader = req.headers['authorization'];
+                    console.log("header", req.headers);
+
+                    if (!authorizationHeader) {
+                        return res.status(401).json({ message: "Unauthorized 1" });
+                    }
+
+                    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+                    // const token = req.cookies.token;
                     console.log(token);
                     const decodedToken = jwt.decode(token);
 
@@ -717,7 +764,15 @@ const uploadVideoToStorage = (filePath, fileName) => {
 
 // Función para procesar el formulario y subir el video a Firebase Storage
 export const addPublicationsVideo = (req, res) => {
-    const { token } = req.cookies;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
     const decodedToken = jwt.decode(token);
     const form = new IncomingForm();
@@ -802,9 +857,17 @@ export const addPublicationsVideo = (req, res) => {
 
 
 export const getPublications = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
+    // if (!token) return res.status(401).json({ message: "Unauthorized" });
     const decodedToken = jwt.decode(token);
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
     let email = decodedToken.email;
     let user = await User.findOne({ email });
     res.json({
@@ -814,7 +877,15 @@ export const getPublications = async (req, res) => {
 
 export const reactionLove = async (req, res) => {
     const { link, userName } = req.body;
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     console.log(userName);
 
@@ -903,8 +974,15 @@ export const reactionLove = async (req, res) => {
 export const comments = async (req, res) => {
     try {
         const { comment, link } = req.body;
-        const { token } = req.cookies;
-        if (!token) return res.status(401).json({ message: "Unauthorized" });
+        const authorizationHeader = req.headers['authorization'];
+        console.log("header", req.headers);
+
+        if (!authorizationHeader) {
+            return res.status(401).json({ message: "Unauthorized 1" });
+        }
+
+        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+        // const token = req.cookies.token;
         const decodedToken = jwt.decode(token);
         let email = decodedToken.email;
         const user = await User.findOne({ email });
@@ -933,8 +1011,15 @@ export const comments = async (req, res) => {
 export const deleteComment = async (req, res) => {
     try {
         const { comment, link, idUser } = req.body;
-        const { token } = req.cookies;
-        if (!token) return res.status(401).json({ message: "Unauthorized" });
+        const authorizationHeader = req.headers['authorization'];
+        console.log("header", req.headers);
+
+        if (!authorizationHeader) {
+            return res.status(401).json({ message: "Unauthorized 1" });
+        }
+
+        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+        // const token = req.cookies.token;if (!token) return res.status(401).json({ message: "Unauthorized" });
         const decodedToken = jwt.decode(token);
         let email = decodedToken.email;
         const user = await User.findOne({ email });
@@ -964,11 +1049,15 @@ export const deleteComment = async (req, res) => {
 
 // Endpoint para refrescar tokens
 export const refreshToken = async (req, res) => {
-    const refreshToken = req.cookies.token; // Obtener el token de actualización desde las cookies
+    const authorizationHeader = req.headers['authorization'];
 
-    if (!refreshToken) {
-        return res.status(401).json({ message: "No se proporcionó el token" });
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
     }
+
+    const refreshToken = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
+   
 
     try {
         const currentTime = Math.floor(Date.now() / 1000);
@@ -1002,7 +1091,15 @@ export const refreshToken = async (req, res) => {
 
 
 export const getAllPublications = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     let publications;
     if (!token) {
@@ -1028,12 +1125,19 @@ export const followPerson = async (req, res) => {
 }
 
 export const getProfile = async (req, res) => {
-    const { token } = req.cookies;
-    console.log("TOKEN:", token);
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
+    // if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     // Obtén el username desde req.params o req.query dependiendo de cómo estás pasando el parámetro
     const { username } = req.body; // o req.query según sea necesario
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {
         const userFound = await User.findOne({ username: username });
@@ -1060,7 +1164,15 @@ function hashString(input) {
 }
 
 export const postMessage = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     console.log(token);
     if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -1175,7 +1287,15 @@ export const postMessage = async (req, res) => {
 
 
 export const getMessage = async (req, res) => {
-    const token = req.cookies.token;
+    const authorizationHeader = req.headers['authorization'];
+    console.log("header", req.headers);
+
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized 1" });
+    }
+
+    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
     console.log(token);
     if (!token) return res.status(401).json({ message: "Unauthorized" });
