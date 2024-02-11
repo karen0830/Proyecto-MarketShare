@@ -1093,11 +1093,6 @@ export const refreshToken = async (req, res) => {
 export const getAllPublications = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
     console.log("header", req.headers);
-
-    if (!authorizationHeader) {
-        return res.status(401).json({ message: "Unauthorized 1" });
-    }
-
     const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
     // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
