@@ -1099,7 +1099,7 @@ export const getAllPublications = async (req, res) => {
         console.log("token", token);
         const decodedToken = jwt.decode(token);
         let publications;
-        if (token == null) {
+        if (token == 'null') {
             publications = await User.find({}, 'publications');
             return res.json({
                 publis: publications
