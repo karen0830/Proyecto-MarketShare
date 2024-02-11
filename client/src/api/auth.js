@@ -1,5 +1,20 @@
 import instance from "./axios";
 
+
+const ruta_protegida = () => {
+  // Recuperar el token del localStorage
+  const token = localStorage.getItem('token');
+  const clienteAxios = instance.create({
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  return clienteAxios;
+}
+
+const clientAxios = ruta_protegida();
+
 export const registerRequest = async user => {
   try {
     console.log(user);
@@ -33,19 +48,33 @@ export const loginRequest = async user => {
   }
 }
 
+export const verityTokenRequest = async () => {
+  // Recuperar el token del localStorage
 
-export const verityTokenRequest = async user => {
   try {
-    const response = await instance.get(`/verify`, user);
-    return response
-  } catch (ex) {
-    console.log("error.status:", ex);
+    // Realizar la solicitud al servidor usando el cliente Axios configurado
+    const response = await clientAxios.get('/verify');
+
+    // Si la solicitud tiene éxito, puedes hacer lo que necesites con la respuesta
+    console.log(response.data); // Aquí puedes hacer lo que necesites con la respuesta
+
+    // Puedes devolver la respuesta si es necesario
+    return response;
+  } catch (error) {
+    // Si ocurre un error durante la solicitud, lo manejas aquí
+    console.error('Error al llamar a la ruta protegida:', error);
+
+    // Puedes hacer lo que necesites en caso de error, como mostrar un mensaje al usuario o realizar alguna acción adicional
+    // Si quieres devolver algo en caso de error, también puedes hacerlo aquí
   }
+
 }
 
-export const logoutUser = async user => {
+export const logoutUser = async () => {
   try {
-    const response = await instance.post(`/logoutUser`, user);
+    // Eliminar el token del localStorage
+    localStorage.removeItem('token');
+    const response = await instance.post(`/logoutUser`);
     return response
   } catch (ex) {
     console.log("error.status:", ex);
@@ -57,7 +86,7 @@ export const getImage = async file => {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
     console.log(formData.get('miArchivo'));
-    const response = await instance.post(`/imageProfile`, formData);
+    const response = await clientAxios.post(`/imageProfile`, formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -67,7 +96,7 @@ export const getImage = async file => {
 
 export const getProfileImage = async () => {
   try {
-    const response = await instance.get(`/getProfileImage`);
+    const response = await clientAxios.get(`/getProfileImage`);
     return response;
   } catch (error) {
     console.log(error);
@@ -79,7 +108,7 @@ export const getUpdateStories = async file => {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
     console.log(formData.get('miArchivo'));
-    const response = await instance.post(`/addStories`, formData);
+    const response = await clientAxios.post(`/addStories`, formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -89,7 +118,7 @@ export const getUpdateStories = async file => {
 
 export const getUpdateUser = async () => {
   try {
-    const response = await instance.get(`/profileUser`);
+    const response = await clientAxios.get(`/profileUser`);
     console.log(response);
     return response;
   } catch (error) {
@@ -105,7 +134,7 @@ export const sendPublications = async (file, Hola) => {
     console.log(formData.get('miArchivo'));
     console.log(formData.get('Hola'));
 
-    const response = await instance.post("/publications", formData);
+    const response = await clientAxios.post("/publications", formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -115,7 +144,7 @@ export const sendPublications = async (file, Hola) => {
 
 export const getPublications = async () => {
   try {
-    const response = await instance.get('/getPublications');
+    const response = await clientAxios.get('/getPublications');
     console.log(response);
     return response
   } catch (error) {
@@ -125,7 +154,7 @@ export const getPublications = async () => {
 
 const deleteStories = async () => {
   try {
-    const response = await instance.put('/deleteStories')
+    const response = await clientAxios.put('/deleteStories')
     console.log(response);
   } catch (error) {
     console.log(error);
@@ -134,7 +163,7 @@ const deleteStories = async () => {
 
 export const reactionLike = async (reaction) => {
   try {
-    const response = await instance.post('/reactionLike', reaction)
+    const response = await clientAxios.post('/reactionLike', reaction)
     return response
   } catch (error) {
     console.log(error);
@@ -143,7 +172,7 @@ export const reactionLike = async (reaction) => {
 
 export const getAllPublications = async () => {
   try {
-    const response = await instance.get('/getAllPublications');
+    const response = await clientAxios.get('/getAllPublications');
     return response;
   } catch (error) {
     console.log(error);
@@ -158,7 +187,7 @@ export const getProfile = async username => {
   };
 
   try {
-    const response = await instance.post('/getProfile', postData);
+    const response = await clientAxios.post('/getProfile', postData);
     console.log('Respuesta del servidor:', response.data);
     return response.data;
   } catch (error) {
@@ -176,10 +205,12 @@ export const addPublicationsVideo = async (file, Hola) => {
     console.log(formData.get('miArchivo'));
     console.log(formData.get('Hola'));
 
-    const response = await instance.post("/addPublicationVideo", formData);
+    const response = await clientAxios.post("/addPublicationVideo", formData);
     console.log(file);
     return response;
   } catch (error) {
     console.log(error);
   }
 }
+
+
