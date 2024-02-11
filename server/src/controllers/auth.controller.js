@@ -369,7 +369,7 @@ export const getProfileImage = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
 
-   
+
     const decodedToken = jwt.decode(token);
     if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
     let email = decodedToken.email;
@@ -391,7 +391,7 @@ export const verifyToken = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
 
-    
+
     // if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {
@@ -470,32 +470,37 @@ export const addStories = async (req, res) => {
                     const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
                     // const token = req.cookies.token;
                     const decodedToken = jwt.decode(token);
-                    if (token ==='null') return res.status(401).json({ message: "Unauthorized" });
+                    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
                     const fechaActual = new Date();
                     const fechaLimite = new Date(
                         fechaActual.getTime() + 24 * 60 * 60 * 1000
                     );
                     console.log(fechaLimite);
-                    User.updateOne(
-                        { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-                        {
-                            $push: {
-                                stories: {
-                                    url: url,
-                                    fecha_create: fechaActual,
-                                    fecha_limit: fechaLimite,
-                                }, // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
-                            },
-                        },
-                        (err, result) => {
-                            // Esta es la función de callback que se ejecuta después de la operación de actualización
-                            if (err) {
-                                console.error("Error al agregar el nuevo campo:", err);
-                            } else {
-                                console.log("Nuevo campo agregado correctamente:", result);
-                            }
+
+                    const result = async () => {
+                        const email = decodedToken.email;
+                        const userFound = await User.findOne({ email });
+                        console.log(userFound);
+                        try {
+                            await User.updateOne(
+                                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
+                                {
+                                    $push: {
+                                        stories: {
+                                            url: url,
+                                            fecha_create: fechaActual,
+                                            fecha_limit: fechaLimite,
+                                        }, // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
+                                    },
+                                }
+                            );
+                            console.log("Nuevo campo agregado correctamente:", result);
+                        } catch (err) {
+                            console.error("Error al agregar el nuevo campo:", err);
                         }
-                    );
+                    }
+
+                    result();
                     let email = decodedToken.email;
                     const userFoundM = async () => {
                         const userFound = await User.findOne({ email });
@@ -529,7 +534,7 @@ export const archivedStories = async (req, res) => {
     const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
     // const token = req.cookies.token;
     const decodedToken = jwt.decode(token);
-    if (token ==='null') return res.status(401).json({ message: "Unauthorized" });
+    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
 
     let email = decodedToken.email;
     let userFound = await User.findOne({ email });
@@ -878,7 +883,7 @@ export const getPublications = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
 
-    
+
     // if (!token) return res.status(401).json({ message: "Unauthorized" });
     const decodedToken = jwt.decode(token);
     let email = decodedToken.email;
@@ -1028,7 +1033,7 @@ export const deleteComment = async (req, res) => {
         if (token === 'null') {
             return res.status(401).json({ message: "Unauthorized 1" });
         }
-        
+
         // const token = req.cookies.token;if (!token) return res.status(401).json({ message: "Unauthorized" });
         const decodedToken = jwt.decode(token);
         let email = decodedToken.email;
@@ -1067,7 +1072,7 @@ export const refreshToken = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
 
-   
+
 
     try {
         const currentTime = Math.floor(Date.now() / 1000);
