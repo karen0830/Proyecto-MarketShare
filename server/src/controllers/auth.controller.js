@@ -1096,6 +1096,7 @@ export const getAllPublications = async (req, res) => {
         console.log("header", req.headers);
         const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
         // const token = req.cookies.token;
+        console.log(token);
         const decodedToken = jwt.decode(token);
         let publications;
         if (!token) {
