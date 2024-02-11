@@ -57,7 +57,7 @@ router.post("/followPerson", followPerson)
 router.post("/addPublicationVideo", addPublicationsVideo)
 router.get("/profileUser", authRequired, profileUser);
 router.get("/profileCompany", authRequiredCompany, profileCompany);
-router.get("/verify", verifyToken);
+router.get("/verify", authRequired, verifyToken);
 router.get("/getPublications", getPublications);
 router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);

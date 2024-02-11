@@ -124,6 +124,10 @@ export const Publications = () => {
         setPublications(response.publications)
     }
 
+    useEffect(() => {
+        console.log(allPublications);
+    }, [allPublications])
+
 
     return (
         <div className='publications'>

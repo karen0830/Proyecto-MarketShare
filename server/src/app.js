@@ -5,7 +5,8 @@ import cookieParser from 'cookie-parser';
 import cors from "cors";
 
 const app = express();
-
+// http://localhost:5173
+// https://maket-share.netlify.app
 app.use(cors({
     origin: 'https://maket-share.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

@@ -4,9 +4,10 @@ import instance from "./axios";
 const ruta_protegida = () => {
   // Recuperar el token del localStorage
   const token = localStorage.getItem('token');
+  console.log("token : ", token);
   const clienteAxios = instance.create({
     headers: {
-      'Authorization': `Bearer ${token}`
+      'authorization': `Bearer ${token}`
     }
   });
 
@@ -163,7 +164,7 @@ const deleteStories = async () => {
 
 export const reactionLike = async (reaction) => {
   try {
-    const response = await clientAxios.post('/reactionLike', reaction)
+    const response = await ruta_protegida().post('/reactionLike', reaction)
     return response
   } catch (error) {
     console.log(error);
