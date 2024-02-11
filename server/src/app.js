@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import Router from '../src/router/auth.routes.js';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-import * as redbird from 'redbird';
+import Redbird from 'redbird';
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 // Configuración de Redbird
-let proxy = redbird({port: 80});
+let proxy = new Redbird({port: 80});
 
 proxy.register("maket-share.netlify.app", "https://backend-ve18.onrender.com/api/getAllPublications", {
   headers: {
@@ -36,5 +36,7 @@ proxy.register("maket-share.netlify.app", "https://backend-ve18.onrender.com/api
     'Access-Control-Allow-Headers': 'Content-Type'
   }
 });
+
+
 
 export default app;
