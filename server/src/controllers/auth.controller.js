@@ -1057,7 +1057,7 @@ export const refreshToken = async (req, res) => {
 
     const refreshToken = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
     // const token = req.cookies.token;
-   
+
 
     try {
         const currentTime = Math.floor(Date.now() / 1000);
@@ -1091,23 +1091,27 @@ export const refreshToken = async (req, res) => {
 
 
 export const getAllPublications = async (req, res) => {
-    const authorizationHeader = req.headers['authorization'];
-    console.log("header", req.headers);
-    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-    // const token = req.cookies.token;
-    const decodedToken = jwt.decode(token);
-    let publications;
-    if (!token) {
-        publications = await User.find({}, 'publications');
-        return res.json({
+    try {
+        const authorizationHeader = req.headers['authorization'];
+        console.log("header", req.headers);
+        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+        // const token = req.cookies.token;
+        const decodedToken = jwt.decode(token);
+        let publications;
+        if (!token) {
+            publications = await User.find({}, 'publications');
+            return res.json({
+                publis: publications
+            })
+        }
+        publications = await User.find({ username: { $ne: decodedToken.name } }, 'publications');
+        console.log(publications);
+        res.json({
             publis: publications
         })
+    } catch (error) {
+        console.log(error);
     }
-    publications = await User.find({ username: { $ne: decodedToken.name } }, 'publications');
-    console.log(publications);
-    res.json({
-        publis: publications
-    })
 }
 
 export const followPerson = async (req, res) => {
