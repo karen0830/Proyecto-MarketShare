@@ -26,7 +26,8 @@ import {
     followPerson,
     postMessage,
     getMessage,
-    addPublicationsVideo
+    addPublicationsVideo,
+    updateProfilePublications
 } from "../controllers/auth.controller.js";
 import {
     authRequired,
@@ -62,6 +63,7 @@ router.get("/getPublications", getPublications);
 router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);
 router.get("/getMessages", getMessage)
+router.get('/updateProfilePublications', updateProfilePublications)
 router.post("/getProfile", getProfile);
 router.put("/archivedStory", archivedStories);
 router.put("/deleteStories", deleteStories);

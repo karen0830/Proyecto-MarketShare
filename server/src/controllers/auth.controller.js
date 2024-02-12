@@ -192,7 +192,7 @@ export const profileUser = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
     const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
     // const token = req.cookies.token;
-    console.log("Tokencito " , token);
+    console.log("Tokencito ", token);
     if (token === 'null') {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
@@ -344,6 +344,8 @@ export const imageProfile = async (req, res) => {
                             console.error('Error al actualizar el campo "nombre":', err);
                         }
 
+                        updateProfilePublications(req, res, url);
+
                         let email = decodedToken.email;
                         console.log(email);
                         let userFoundMongodb = await User.findOne({ email });
@@ -359,6 +361,29 @@ export const imageProfile = async (req, res) => {
         localReadStream.pipe(stream);
     });
 };
+
+export const updateProfilePublications = async (req, res, url) => {
+    try {
+        const authorizationHeader = req.headers['authorization'];
+        console.log("header", req.headers);
+        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+        // const token = req.cookies.token;
+        if (token === 'null') {
+            return res.status(401).json({ message: "Unauthorized 1" });
+        }
+        // Busca al usuario por su ID y actualiza todas las publicaciones con la nueva profileImage
+        const decodedToken = jwt.decode(token);
+        await User.updateOne(
+            { _id: decodedToken.id },
+            { $set: { "publications.$[].profileImage": url } }
+        );
+        console.log('ProfileImage actualizada en todas las publicaciones del usuario');
+    } catch (error) {
+        console.log("Error al actualizar las publicaciones:", error);
+        return res.status(500).send("Error al actualizar las publicaciones");
+    }
+}
+
 
 export const getProfileImage = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
@@ -1113,6 +1138,7 @@ export const getAllPublications = async (req, res) => {
         // const token = req.cookies.token;
         console.log("token", token);
         const decodedToken = jwt.decode(token);
+        console.log(decodedToken);
         let publications;
         if (token === 'null') {
             publications = await User.find({}, 'publications');

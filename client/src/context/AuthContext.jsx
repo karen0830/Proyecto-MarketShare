@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, logoutUser, getPublications, getProfileImage } from "../api/auth";
+import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, logoutUser, getPublications, getProfileImage, getAllPublications } from "../api/auth";
 import Cookies from "js-cookie";
 
 export const AuthContext = createContext()
@@ -74,6 +74,7 @@ export const AuthProvider = ({ children }) => {
     const logoutUsers = async () => {
         try {
             logoutUser()
+            getAllPublications();
             setIsAuthenticated(false)
             setUser(null)
         } catch (error) {

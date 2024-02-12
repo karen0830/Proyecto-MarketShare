@@ -100,7 +100,7 @@ export const Publications = () => {
         }
 
         publicationsFound()
-    }, [])
+    }, [isAuthenticated])
 
     useEffect(() => {
         async function changeProfile() {
@@ -116,6 +116,8 @@ export const Publications = () => {
         console.log("profileadta: ", profileData);
     }, [profileData])
 
+
+
     const getProfileUser = async (username) => {
         console.log(username);
         const response = await getProfile(username);
@@ -123,10 +125,6 @@ export const Publications = () => {
         setProfileData(response)
         setPublications(response.publications)
     }
-
-    useEffect(() => {
-        console.log(allPublications);
-    }, [allPublications])
 
 
     return (
