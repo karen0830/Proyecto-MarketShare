@@ -167,7 +167,7 @@ export const Publications = () => {
                                 <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
                             }
                             <div className="post-box">
-                                <div>
+                                <div className='div-comments'>
                                     {modalStates[index] && (
                                         <div className={`modal ${closingIndex == null ? 'open' : 'closed'}`}>
                                             <div className='modal-buttons'>
@@ -194,7 +194,7 @@ export const Publications = () => {
                                         </div>
                                     )
                                     }
-                                    <button name='Love' onClick={() => profileData ? increaseReactions(element.url, element.user) : increaseReactions(element.url, user.username)}>
+                                    <button name='Love' className='love-button' onClick={() => profileData ? increaseReactions(element.url, element.user) : increaseReactions(element.url, user.username)}>
                                         <i className="ri-heart-line"></i>
                                     </button>
 
@@ -209,7 +209,7 @@ export const Publications = () => {
                                             }));
                                             // Segunda función
                                         }}
-                                        className={modalStates[index] ? 'active' : ''}
+                                        className='number-likes'
                                     >
                                         <span>{element.reactions.like.length}</span>
                                     </button>
@@ -252,12 +252,14 @@ export const Publications = () => {
                                             ...prev,
                                             [index]: true,
                                         }));
-                                    }}>
+                                    }}
+                                    className='love-button'
+                                    >
                                         <i className="ri-chat-3-line"></i>
                                     </button>
                                     <span>{element.reactions.comments.length}</span>
                                 </div>
-                                <button name='comments'>
+                                <button className='' name='comments'>
                                     <i className="ri-download-cloud-2-line"></i>
                                     <span>{200000}k</span>
                                 </button>
@@ -307,7 +309,7 @@ export const Publications = () => {
                                             ))}
                                         </div>
                                     )}
-                                    <button name='Love' onClick={() => increaseReactionsLocationStart(element.url, element.user)}>
+                                    <button name='Love' className='love-button' onClick={() => increaseReactionsLocationStart(element.url, element.user)}>
                                         <i className="ri-heart-line"></i>
                                     </button>
                                     <button
@@ -315,13 +317,13 @@ export const Publications = () => {
                                             setClosingIndex(null);
                                             setModalStates((prev) => ({ ...prev, [index]: true }));
                                         }}
-                                        className={modalStates[index] ? 'active' : ''}
+                                        className='number-likes'
                                     >
                                         <span>{element.reactions.like.length}</span>
                                     </button>
                                 </div>
 
-                                <div>
+                                <div className='div-comments'>
                                     {modalCommentState[index] && (
                                         <div className={`modal ${closingIndexComents == null ? 'open' : 'closed'}`}>
                                             <div className='modal-buttons'>
@@ -351,12 +353,14 @@ export const Publications = () => {
                                     <button onClick={() => {
                                         setClosingIndexComments(null);
                                         setModalComments((prev) => ({ ...prev, [index]: true }));
-                                    }}>
+                                    }}
+                                    className='love-button'
+                                    >
                                         <i className="ri-chat-3-line"></i>
                                     </button>
-                                    <span>{200}k</span>
+                                    <span>{element.reactions.comments.length}</span>
                                 </div>
-                                <button name='comments'>
+                                <button name='comments' className='comment-button'>
                                     <i className="ri-download-cloud-2-line"></i>
                                     <span>{200000}k</span>
                                 </button>

@@ -362,7 +362,7 @@ export const imageProfile = async (req, res) => {
     });
 };
 
-export const updateProfilePublications = async (req, res, url) => {
+const updateProfilePublications = async (req, res, url) => {
     try {
         const authorizationHeader = req.headers['authorization'];
         console.log("header", req.headers);
@@ -384,6 +384,49 @@ export const updateProfilePublications = async (req, res, url) => {
     }
 }
 
+export const updateProfileReactionsLove = async (req, res) => {
+    try {
+        const url = "hdjhfjhsdfjfhjf";
+        const authorizationHeader = req.headers['authorization'];
+        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+        
+        if (token === 'null') {
+            return res.status(401).json({ message: "Unauthorized 1" });
+        }
+
+        const decodedToken = jwt.decode(token);
+        const userName = decodedToken.name;
+    
+        // Busca las publicaciones de otros usuarios donde el usuario actual ha reaccionado
+        const otherUserPublications = await User.find({ 
+            "publications.reactions.like.user": userName
+        });
+        
+        if (!otherUserPublications) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        
+
+        console.log(otherUserPublications);
+        // Actualiza la foto de perfil en las reacciones de otros usuarios
+        await Promise.all(otherUserPublications.map(async (publication) => {
+            publication.reactions.like.forEach(element => {
+                if (element.user === userName) {
+                    element.profileImage = url;
+                }
+            });
+            await publication.save();
+        }));
+
+        console.log('Foto de perfil actualizada en las reacciones de otros usuarios');
+
+        return res.status(200).json({ message: "Profile image updated successfully" });
+    } catch (error) {
+        console.log("Error al actualizar las publicaciones:", error);
+        return res.status(500).send("Error al actualizar las publicaciones");
+    }
+}
 
 export const getProfileImage = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
@@ -1016,7 +1059,7 @@ export const reactionLove = async (req, res) => {
 
 export const comments = async (req, res) => {
     try {
-        const { comment, link } = req.body;
+        const { comment, link, userName } = req.body;
         const authorizationHeader = req.headers['authorization'];
         console.log("header", req.headers);
         const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
@@ -1027,22 +1070,29 @@ export const comments = async (req, res) => {
         const decodedToken = jwt.decode(token);
         let email = decodedToken.email;
         const user = await User.findOne({ email });
+        const userLink = await User.findOne({ username: userName });
         await User.findOneAndUpdate(
-            { email: email, "publications.url": link },
+            { email: userLink.email, "publications.url": link },
             {
                 $push: {
                     "publications.$.reactions.comments": {
                         _id: new ObjectId(),
                         user: user.username,
                         comment: comment,
+                        profileImage: user.profileImage
                     },
                 },
             }
         );
+        const publicationFound = await User.findOne(
+            { username: userName, "publications.url": link },
+            { "publications.$": 1 }
+        );
+    
+        console.log(publicationFound.publications[0].reactions);
+    
         return res.json({
-            id: user._id,
-            email: user.email,
-            reaction: user.reactions,
+            publications: publicationFound.publications[0]
         });
     } catch (error) {
         console.log(error);

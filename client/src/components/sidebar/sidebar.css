@@ -1,71 +1,63 @@
 .sidebar-container {
-    grid-column: 1;
-    position: fixed;
-    height: 100vh;
-    background-color: #1c1c1c;
-    width: 25%;
+  grid-column: 1;
+  position: fixed;
+  height: 100vh;
+  background-color: #1c1c1c;
+  width: 25%; /* 25% en unidades em */
+  transition: width 0.3s ease;
+  z-index: 3;
+  border: 1px solid rgba(47, 51, 54, 255);
+}
+
+.div-general.sidebar-expanded .sidebar-container {
+  width: 100%;
 }
 
 .sidebar-logo__div {
-    padding: 1.75rem;
+  margin-top: 4.375em; /* 70px en unidades em */
+  padding: 1.75em; /* 1.75rem en unidades em */
 }
 
-.sidebar-vetical-line {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background-color: rgba(47, 51, 54, 255);
-    z-index: 9999;
-    left: 27%;
-}
-
-.sidebar-vetical-line::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-    background-color: rgba(47, 51, 54, 255);
-    transform: translateX(-50%);
-    pointer-events: none;
-}
-
-.sidebar-logo__div>img {
-    width: 175px;
+.sidebar-logo__div > img {
+  width: 10.9375em; /* 175px en unidades em */
 }
 
 .sidebar-menu {
-    margin-top: 15px;
-    margin-left: 5px;
+  margin-top: 0.9375em; /* 15px en unidades em */
+  margin-left: 0.3125em; /* 5px en unidades em */
 }
 
 .sidebar-menu a {
-    text-decoration: none;
-    width: 100%;
-    font-size: 1.15rem;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    line-height: 40px;
-    gap: 20px;
+  text-decoration: none;
+  width: 100%;
+  font-size: 1.15em; /* 1.15rem en unidades em */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  line-height: 2.5em; /* 40px en unidades em */
+  gap: 1.25em; /* 20px en unidades em */
 }
 
 .sidebar-menu a:hover::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    width: 2px;
-    height: 17px;
-    background: #2121fa;
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 0.125em; /* 2px en unidades em */
+  height: 1.0625em; /* 17px en unidades em */
+  background: #2121fa;
 }
 
 .sidebar-menu a:hover {
-    color: #2121fa;
+  color: #2121fa;
 }
 
 .sidebar-menu img {
-    height: 25px;
-    margin-right: 1rem;
+  height: 1.5625em; /* 25px en unidades em */
+  margin-right: 0.625em; /* 1rem en unidades em */
+}
+
+.button-logout {
+  border: none;
+  background-color: #ffff;
+  padding: 0.5em 2em;
 }

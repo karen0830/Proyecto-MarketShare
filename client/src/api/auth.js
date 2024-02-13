@@ -4,7 +4,6 @@ import instance from "./axios";
 const ruta_protegida = () => {
   // Recuperar el token del localStorage
   const token = localStorage.getItem('token');
-  console.log("token : ", token);
   if (token) {
     const clienteAxios = instance.create({
       headers: {
@@ -24,10 +23,7 @@ const ruta_protegida = () => {
 
 export const registerRequest = async user => {
   try {
-    console.log(user);
     const response = await instance.post(`/registerUser`, user);
-    console.log(response);
-    console.log("http response = " + response);
     return response;
   } catch (ex) {
     console.log("error.status:", ex);
@@ -38,7 +34,6 @@ export const registerRequest = async user => {
 export const registerCompanyRequest = async company => {
   try {
     const response = await instance.post(`/registerC`, company);
-    console.log("http response = " + response.data);
   } catch (ex) {
     console.log("error.status:", ex);
     return ex
@@ -63,7 +58,6 @@ export const verityTokenRequest = async () => {
     const response = await ruta_protegida().get('/verify');
 
     // Si la solicitud tiene éxito, puedes hacer lo que necesites con la respuesta
-    console.log(response.data); // Aquí puedes hacer lo que necesites con la respuesta
 
     // Puedes devolver la respuesta si es necesario
     return response;
@@ -92,9 +86,7 @@ export const getImage = async file => {
   try {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
-    console.log(formData.get('miArchivo'));
     const response = await ruta_protegida().post(`/imageProfile`, formData);
-    console.log(file);
     return response;
   } catch (error) {
     console.log(error);
@@ -114,7 +106,6 @@ export const getUpdateStories = async file => {
   try {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
-    console.log(formData.get('miArchivo'));
     const response = await ruta_protegida().post(`/addStories`, formData);
     console.log(file);
     return response;
@@ -126,7 +117,6 @@ export const getUpdateStories = async file => {
 export const getUpdateUser = async () => {
   try {
     const response = await ruta_protegida().get(`/profileUser`);
-    console.log(response);
     return response;
   } catch (error) {
     console.log(error);
@@ -138,8 +128,6 @@ export const sendPublications = async (file, Hola) => {
     const formData = new FormData();
     formData.append('publication', file); // Agregar el archivo al objeto FormData
     formData.append('Hola', Hola); // Agregar el texto al objeto FormData
-    console.log(formData.get('miArchivo'));
-    console.log(formData.get('Hola'));
 
     const response = await ruta_protegida().post("/publications", formData);
     console.log(file);
@@ -152,7 +140,6 @@ export const sendPublications = async (file, Hola) => {
 export const getPublications = async () => {
   try {
     const response = await ruta_protegida().get('/getPublications');
-    console.log(response);
     return response
   } catch (error) {
     console.log(error);
@@ -162,7 +149,7 @@ export const getPublications = async () => {
 const deleteStories = async () => {
   try {
     const response = await ruta_protegida().put('/deleteStories')
-    console.log(response);
+    return response;
   } catch (error) {
     console.log(error);
   }
@@ -195,7 +182,6 @@ export const getProfile = async username => {
 
   try {
     const response = await ruta_protegida().post('/getProfile', postData);
-    console.log('Respuesta del servidor:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error en la solicitud:', error);
@@ -209,8 +195,6 @@ export const addPublicationsVideo = async (file, Hola) => {
     const formData = new FormData();
     formData.append('publication', file); // Agregar el archivo al objeto FormData
     formData.append('Hola', Hola); // Agregar el texto al objeto FormData
-    console.log(formData.get('miArchivo'));
-    console.log(formData.get('Hola'));
 
     const response = await ruta_protegida().post("/addPublicationVideo", formData);
     console.log(file);
@@ -219,5 +203,3 @@ export const addPublicationsVideo = async (file, Hola) => {
     console.log(error);
   }
 }
-
-
