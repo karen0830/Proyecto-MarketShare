@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import "./Stories.css";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { getUpdateStories, getUpdateUser } from "../../../api/auth";
-import { Link } from "react-router-dom";
 import { Modal, Publicar } from "../../Publications/Publicar/Publicar.jsx";
 import Publications from "../../Publications/Publications.jsx";
 

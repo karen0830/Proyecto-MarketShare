@@ -115,7 +115,7 @@ export const Perfil = () => {
                 /> */}
                 <i className="ri-camera-line camera-icon"></i>
               </button>
-              <ModalChangeProfile onClose={closeModalChageProfile} isOpen={modalChageProfileOpen}>
+              <ModalChangeProfile onClose={closeModalChageProfile} isOpen={modalChageProfileOpen} title='Elegir foto de perfil'>
                 <ChangeProfile />
               </ModalChangeProfile>
             </div>

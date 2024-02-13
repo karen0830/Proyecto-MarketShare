@@ -16,9 +16,13 @@ export const Modal = ({ isOpen, onClose, children }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="modal-close" onClick={onClose}>
-          Cerrar
-        </button>
+        <div className="closeModalChangeProfile">
+          <h4>Crear Publicación</h4>
+          <button className="modal-close" onClick={onClose}>
+            <i className="ri-chat-delete-line"></i>
+          </button>
+        </div>
+        <hr className="line-divider" />
         {children}
       </div>
     </div>
@@ -106,48 +110,58 @@ export const Publicar = () => {
   }
 
   return (
-    <div className="div-general">
-      <div className="publicar">
-        <form action="">
-          <div>
-            <input
-              name="publication"
-              accept="video/*,image/*"
-              type="file"
-              onChange={handleFilePublication}
-            />
-          </div>
+    <div className="publicar">
+      <form action="">
+        <div className="input-publication">
+          <label htmlFor="">Describe tu producto:</label>
           <input
+          placeholder="Describe tu producto"
             type="text"
-            name=""
-            id=""
+            name="postContent"
+            className="text-publication"
             cols="30"
             rows="10"
             onChange={handlePostSubmit}
             value={postContent}
-          ></input>
-          {imagePublication && (
-            <img
-              src={previewImage}
-              alt="Vista Previa"
-              className="preview-image"
-            />
-          )}
-          {videoPublication && (
-            <video src={previewImage} controls className="preview-image" />
-          )}
-        </form>
-        <button
-          className="button-modal"
-          type="submit"
-          onClick={function () {
+          />
+        </div>
+        <div className="file-input-container">
+          <label htmlFor="publication" className="file-publication">
+            <span>
+              <i className="ri-add-line"></i>
+              Agregar fotos/videos
+            </span>
+            <input id="publication" name="miArchivo" type="file" onChange={handleFilePublication} />
+          </label>
+        </div>
+
+        {/* <input
+              name="publication"
+              accept="video/*,image/*"
+              type="file"
+              onChange={handleFilePublication}
+            /> */}
+        {imagePublication && (
+          <img
+            src={previewImage}
+            alt="Vista Previa"
+            className="preview-image"
+          />
+        )}
+        {videoPublication && (
+          <video src={previewImage} controls className="preview-image" />
+        )}
+      </form>
+      {imagePublication || videoPublication ?
+        <div className="button-container">
+          <button className="button-publication" onClick={function () {
             sendPublication();
             goBack();
-          }}
-        >
-          Publicar
-        </button>
-      </div>
+          }}>
+            Publicar
+          </button>
+        </div> : null
+      }
     </div>
   );
 };

@@ -139,7 +139,6 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  backdrop-filter: blur(2px);
 }
 
 .publication {
@@ -178,15 +177,6 @@
   cursor: pointer;
   outline: none;
   transition: transform 0.2s ease;
-}
-
-.div-comments {
-  display: flex;
-  gap: 3px;
-}
-
-.div-comments span{
-  margin-top: 2px;
 }
 
 .love-button i,
