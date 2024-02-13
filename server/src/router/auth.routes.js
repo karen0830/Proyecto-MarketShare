@@ -26,7 +26,8 @@ import {
     followPerson,
     postMessage,
     getMessage,
-    addPublicationsVideo
+    addPublicationsVideo,
+    updateProfileReactionsLove 
 } from "../controllers/auth.controller.js";
 import {
     authRequired,
@@ -57,7 +58,7 @@ router.post("/followPerson", followPerson)
 router.post("/addPublicationVideo", addPublicationsVideo)
 router.get("/profileUser", authRequired, profileUser);
 router.get("/profileCompany", authRequiredCompany, profileCompany);
-router.get("/verify", verifyToken);
+router.get("/verify", authRequired, verifyToken);
 router.get("/getPublications", getPublications);
 router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);
@@ -65,5 +66,6 @@ router.get("/getMessages", getMessage)
 router.post("/getProfile", getProfile);
 router.put("/archivedStory", archivedStories);
 router.put("/deleteStories", deleteStories);
+router.put("/updateReactions", authRequired, updateProfileReactionsLove)
 router.delete("/deleteComment", deleteComment);
 export default router;

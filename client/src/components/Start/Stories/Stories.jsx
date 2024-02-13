@@ -21,7 +21,6 @@ export const Stories = () => {
     setModalIsOpen(false);
   };
 
-
   const imageRef = useRef();
   const handleFileInput = (e) => {
     const file = e.target.files[0];
@@ -70,8 +69,6 @@ export const Stories = () => {
     setStory(user.stories);
     console.log(user);
   }, [user]);
-
-
 
   return (
     <>
@@ -125,13 +122,14 @@ export const Stories = () => {
         <Modal onClose={closeModal} isOpen={modalIsOpen}>
           <Publicar />
         </Modal>
-        <Publications/>
+        <Publications />
       </div>
     </>
-  )
-}
+  );
+};
 
-{/* // import React, { useState } from 'react';
+{
+  /* // import React, { useState } from 'react';
 
 // function App() {
 //   const [selectedFile, setSelectedFile] = useState();
@@ -148,4 +146,5 @@ export const Stories = () => {
 //   );
 // }
 
-// export default App; */}
+// export default App; */
+}

@@ -1,11 +1,29 @@
 import instance from "./axios";
 
+
+const ruta_protegida = () => {
+  // Recuperar el token del localStorage
+  const token = localStorage.getItem('token');
+  if (token) {
+    const clienteAxios = instance.create({
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    });
+    return clienteAxios;
+  }else{
+    const clienteAxios = instance.create({
+      headers: {
+        'authorization': `Bearer null`
+      }
+    });
+    return clienteAxios;
+  }
+}
+
 export const registerRequest = async user => {
   try {
-    console.log(user);
     const response = await instance.post(`/registerUser`, user);
-    console.log(response);
-    console.log("http response = " + response);
     return response;
   } catch (ex) {
     console.log("error.status:", ex);
@@ -16,7 +34,6 @@ export const registerRequest = async user => {
 export const registerCompanyRequest = async company => {
   try {
     const response = await instance.post(`/registerC`, company);
-    console.log("http response = " + response.data);
   } catch (ex) {
     console.log("error.status:", ex);
     return ex
@@ -33,19 +50,32 @@ export const loginRequest = async user => {
   }
 }
 
+export const verityTokenRequest = async () => {
+  // Recuperar el token del localStorage
 
-export const verityTokenRequest = async user => {
   try {
-    const response = await instance.get(`/verify`, user);
-    return response
-  } catch (ex) {
-    console.log("error.status:", ex);
+    // Realizar la solicitud al servidor usando el cliente Axios configurado
+    const response = await ruta_protegida().get('/verify');
+
+    // Si la solicitud tiene éxito, puedes hacer lo que necesites con la respuesta
+
+    // Puedes devolver la respuesta si es necesario
+    return response;
+  } catch (error) {
+    // Si ocurre un error durante la solicitud, lo manejas aquí
+    console.error('Error al llamar a la ruta protegida:', error);
+
+    // Puedes hacer lo que necesites en caso de error, como mostrar un mensaje al usuario o realizar alguna acción adicional
+    // Si quieres devolver algo en caso de error, también puedes hacerlo aquí
   }
+
 }
 
-export const logoutUser = async user => {
+export const logoutUser = async () => {
   try {
-    const response = await instance.post(`/logoutUser`, user);
+    // Eliminar el token del localStorage
+    localStorage.removeItem('token');
+    const response = await ruta_protegida().post(`/logoutUser`);
     return response
   } catch (ex) {
     console.log("error.status:", ex);
@@ -56,9 +86,7 @@ export const getImage = async file => {
   try {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
-    console.log(formData.get('miArchivo'));
-    const response = await instance.post(`/imageProfile`, formData);
-    console.log(file);
+    const response = await ruta_protegida().post(`/imageProfile`, formData);
     return response;
   } catch (error) {
     console.log(error);
@@ -67,7 +95,7 @@ export const getImage = async file => {
 
 export const getProfileImage = async () => {
   try {
-    const response = await instance.get(`/getProfileImage`);
+    const response = await ruta_protegida().get(`/getProfileImage`);
     return response;
   } catch (error) {
     console.log(error);
@@ -78,8 +106,7 @@ export const getUpdateStories = async file => {
   try {
     const formData = new FormData();
     formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
-    console.log(formData.get('miArchivo'));
-    const response = await instance.post(`/addStories`, formData);
+    const response = await ruta_protegida().post(`/addStories`, formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -89,8 +116,7 @@ export const getUpdateStories = async file => {
 
 export const getUpdateUser = async () => {
   try {
-    const response = await instance.get(`/profileUser`);
-    console.log(response);
+    const response = await ruta_protegida().get(`/profileUser`);
     return response;
   } catch (error) {
     console.log(error);
@@ -102,10 +128,8 @@ export const sendPublications = async (file, Hola) => {
     const formData = new FormData();
     formData.append('publication', file); // Agregar el archivo al objeto FormData
     formData.append('Hola', Hola); // Agregar el texto al objeto FormData
-    console.log(formData.get('miArchivo'));
-    console.log(formData.get('Hola'));
 
-    const response = await instance.post("/publications", formData);
+    const response = await ruta_protegida().post("/publications", formData);
     console.log(file);
     return response;
   } catch (error) {
@@ -115,8 +139,7 @@ export const sendPublications = async (file, Hola) => {
 
 export const getPublications = async () => {
   try {
-    const response = await instance.get('/getPublications');
-    console.log(response);
+    const response = await ruta_protegida().get('/getPublications');
     return response
   } catch (error) {
     console.log(error);
@@ -125,8 +148,8 @@ export const getPublications = async () => {
 
 const deleteStories = async () => {
   try {
-    const response = await instance.put('/deleteStories')
-    console.log(response);
+    const response = await ruta_protegida().put('/deleteStories')
+    return response;
   } catch (error) {
     console.log(error);
   }
@@ -134,7 +157,7 @@ const deleteStories = async () => {
 
 export const reactionLike = async (reaction) => {
   try {
-    const response = await instance.post('/reactionLike', reaction)
+    const response = await ruta_protegida().post('/reactionLike', reaction)
     return response
   } catch (error) {
     console.log(error);
@@ -143,7 +166,7 @@ export const reactionLike = async (reaction) => {
 
 export const getAllPublications = async () => {
   try {
-    const response = await instance.get('/getAllPublications');
+    const response = await ruta_protegida().get('/getAllPublications');
     return response;
   } catch (error) {
     console.log(error);
@@ -158,8 +181,7 @@ export const getProfile = async username => {
   };
 
   try {
-    const response = await instance.post('/getProfile', postData);
-    console.log('Respuesta del servidor:', response.data);
+    const response = await ruta_protegida().post('/getProfile', postData);
     return response.data;
   } catch (error) {
     console.error('Error en la solicitud:', error);
@@ -173,10 +195,8 @@ export const addPublicationsVideo = async (file, Hola) => {
     const formData = new FormData();
     formData.append('publication', file); // Agregar el archivo al objeto FormData
     formData.append('Hola', Hola); // Agregar el texto al objeto FormData
-    console.log(formData.get('miArchivo'));
-    console.log(formData.get('Hola'));
 
-    const response = await instance.post("/addPublicationVideo", formData);
+    const response = await ruta_protegida().post("/addPublicationVideo", formData);
     console.log(file);
     return response;
   } catch (error) {

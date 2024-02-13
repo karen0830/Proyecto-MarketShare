@@ -9,7 +9,7 @@ const Home = () => {
     <div className="div-general">
       <SideBar />
       <Publications />
-      <LoginRegister/>
+      <LoginRegister />
     </div>
   );
 };

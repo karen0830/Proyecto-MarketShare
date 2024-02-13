@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, logoutUser, getPublications, getProfileImage } from "../api/auth";
+import { registerRequest, loginRequest, registerCompanyRequest, verityTokenRequest, logoutUser, getPublications, getProfileImage, getAllPublications } from "../api/auth";
 import Cookies from "js-cookie";
 
 export const AuthContext = createContext()
@@ -59,8 +59,11 @@ export const AuthProvider = ({ children }) => {
         console.log(res.data);
         if (res.data) {
             console.log(res);
-            setIsAuthenticated(true)
-            setUser(res.data)
+            localStorage.setItem('token', res.data.token);
+            const resverify = await verityTokenRequest(res.data.token);
+            console.log(resverify );
+            setIsAuthenticated(true);
+            setUser(res.data);
             setPublications(res.data.publications)
             setProfileImage(res.data.profileImage)
         } else {
@@ -70,9 +73,8 @@ export const AuthProvider = ({ children }) => {
 
     const logoutUsers = async () => {
         try {
-            const cookies = Cookies.get()
-            console.log(cookies);
-            logoutUser(cookies.token)
+            logoutUser()
+            getAllPublications();
             setIsAuthenticated(false)
             setUser(null)
         } catch (error) {
@@ -97,15 +99,14 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         async function checkLogin() {
-            const cookies = Cookies.get()
-            console.log(cookies);
-            if (!cookies.token) {
+            const Token = localStorage.getItem('token');
+            if (!Token) {
                 setIsAuthenticated(false)
                 setLoading(false)
                 return setUser(null);
             } else {
                 try {
-                    const res = await verityTokenRequest(cookies.token)
+                    const res = await verityTokenRequest(Token)
                     console.log(res.data);
                     if (!res.data) {
                         setIsAuthenticated(false);

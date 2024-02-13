@@ -16,7 +16,7 @@ export function createAcccessToken(user) {
             payload,
             TOKEN_SECRET,
             {
-                expiresIn: "10000"
+                expiresIn: "86400000"
             }, (err, token) => {
                 if (err) reject(err)
                 resolve(token)
