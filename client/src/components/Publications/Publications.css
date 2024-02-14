@@ -182,7 +182,7 @@
 .comment-button i {
   font-size: 24px;
   transition: color 0.2s ease;
-  color: #0056b3;
+  color: #969a9f;
 }
 
 .love-button:hover,
@@ -200,7 +200,7 @@
 }
 
 .comment-button:hover i {
-  color: #0056b3;
+  color: #ff0000;
   transform: scale(1.2);
 }
 

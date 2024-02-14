@@ -108,13 +108,8 @@ const SideBar = () => {
                     </span>
                     Start
                   </a>
-                  <a href="index.html">
-                    <span className="icon">
-                      <i className="ri-function-line"></i>
-                    </span>
-                    Feed
-                  </a>
-                  <a href="#">
+                  
+                  <a href="#" className="inactive">
                     <span className="icon">
                       <i className="ri-search-line"></i>
                     </span>
