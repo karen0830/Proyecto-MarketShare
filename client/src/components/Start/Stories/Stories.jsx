@@ -10,15 +10,6 @@ export const Stories = () => {
   const [selectedFileVideo, setSelectedFileVideo] = useState();
   const [selectedFileImage, setSelectedFileImage] = useState();
   const [story, setStory] = useState(user.stories);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
 
   const imageRef = useRef();
   const handleFileInput = (e) => {
@@ -73,24 +64,6 @@ export const Stories = () => {
     <>
       <div className="Stories">
         <div className="header">
-          <div className="search">
-            <i className="ri-search-line"></i>
-            <input type="text" placeholder="search" />
-          </div>
-          <div className="header-content">
-            <i className="ri-notification-4-line"></i>
-            <i className="ri-mail-unread-fill"></i>
-            <a href="#" className="btn" onClick={openModal}>
-              <i className="ri-add-circle-fill"></i>
-              <div className="btn-text">Add Photos</div>
-            </a>
-          </div>
-        </div>
-        <div className="stories-title">
-          <a href="#" className="btn">
-            <i className="ri-play-circle-line"></i>
-            <div className="text">Watch all</div>
-          </a>
         </div>
         <div className="stories">
           <div className="stories-img color image-container">
@@ -118,9 +91,6 @@ export const Stories = () => {
           </div>
           <button onClick={handleUploadImage}>subir historia</button>
         </div>
-        <Modal onClose={closeModal} isOpen={modalIsOpen}>
-          <Publicar />
-        </Modal>
         <Publications />
       </div>
     </>

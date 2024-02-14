@@ -163,33 +163,12 @@ body {
   color: #eee;
 }
 
-.header-content {
-  display: flex;
-  align-items: center;
-}
-
-.header-content i {
-  color: #fff;
-  font-size: 20px;
-  margin-left: 1rem;
-}
-
-.header-content .btn {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 8px;
-  background: var(--gradient);
-  margin-left: 1rem;
-}
-
-.header-content .btn i {
-  color: hsla(0, 0%, 100%, 1.6);
-  margin-right: 10px;
-}
-
 .btn-text {
   color: #fff;
+}
+
+.stories{
+  height: 180px
 }
 
 .stories-title {

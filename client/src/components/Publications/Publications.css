@@ -171,7 +171,6 @@
 
 .love-button,
 .comment-button {
-  position: relative;
   background-color: transparent;
   border: none;
   cursor: pointer;
