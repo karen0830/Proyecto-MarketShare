@@ -21,11 +21,12 @@ export const authRequired = (req, res, next) => {
 }
 
 export const authRequiredCompany = (req, res, next) => {
-    const {tokenCompany} = req.cookies;
-    console.log(tokenCompany);
+    const authorizationHeader = req.headers['authorization'];
+    const tokenCompany = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
 
     if(!tokenCompany) return res.status(401).json({
-        message: "No token, suthorization denied"
+        message: "No token, authorization denied"
     })
 
     jwt.verify(tokenCompany, TOKEN_SECRET, (err, company) => {

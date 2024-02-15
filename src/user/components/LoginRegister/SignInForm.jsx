@@ -15,7 +15,7 @@ export const SignInForm = () => {
   })
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/profileUser")
+    if (isAuthenticated) navigate("/Start")
   }, [isAuthenticated])
 
   return (

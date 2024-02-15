@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import Router from '../src/router/auth.routes.js';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
+import RouterCompany from './router/company.auth.router.js';
+
 
 const app = express();
 // http://localhost:5173
@@ -25,6 +27,7 @@ app.use(cookieParser());
 
 // Define tus rutas y configura Express
 app.use("/api", Router);
+app.use("/api", RouterCompany)
 
 // Redirigir desde la raíz '/' a '/login'
 app.get('/', (req, res) => {

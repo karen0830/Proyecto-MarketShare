@@ -1,7 +1,7 @@
 import React from "react";
 import "./TopBar.css";
 import { NavLink } from "react-router-dom";
-import SearchBar from "../searchBar/SearchBar.jsx";
+import SearchBar from "../../user/components/searchBar/SearchBar.jsx";
 import { Icon } from "@iconify/react";
 const TopBar = ({ toggleSidebar }) => {
   return (

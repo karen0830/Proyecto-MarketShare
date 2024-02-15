@@ -5,10 +5,6 @@ import {
     registerUser,
     logoutUser,
     profileUser,
-    registerCompany,
-    loginCompany,
-    profileCompany,
-    logoutCompany,
     imageProfile,
     verifyToken,
     addStories,
@@ -41,13 +37,10 @@ import {
     loginCompanyShema,
 } from "../schemas/auth.schemas.js";
 
-router.post("/registerCompany", validateSchema(CompanyShema), registerCompany);
 router.post("/msg", postMessage);
 router.post("/registerUser", validateSchema(registerSchema), registerUser);
-router.post("/loginCompany", validateSchema(loginCompanyShema), loginCompany);
 router.post("/loginUser", validateSchema(loginSchema), loginUser);
 router.post("/logoutUser", logoutUser);
-router.post("/logoutCompany", logoutCompany);
 router.post("/publications", addPublications);
 router.post("/reactionLike", reactionLove);
 router.post("/imageProfile", imageProfile);
@@ -57,7 +50,6 @@ router.post("/refreshToken", refreshToken);
 router.post("/followPerson", followPerson)
 router.post("/addPublicationVideo", addPublicationsVideo)
 router.get("/profileUser", authRequired, profileUser);
-router.get("/profileCompany", authRequiredCompany, profileCompany);
 router.get("/verify", authRequired, verifyToken);
 router.get("/getPublications", getPublications);
 router.get("/getProfileImage", getProfileImage);

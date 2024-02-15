@@ -10,52 +10,7 @@ import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
-import { promisify } from "util";
 
-
-export const registerCompany = async (req, res) => {
-    const {
-        companyName,
-        legalEntity,
-        companyAddress,
-        activityDescription,
-        phoneNumber,
-        email,
-        taxIdentity,
-        password,
-    } = req.body;
-
-    try {
-        const hash = await bcrypt.hash(password, 10);
-        const newCompany = new CompanyModel({
-            companyName,
-            legalEntity,
-            companyAddress,
-            activityDescription,
-            phoneNumber,
-            email,
-            taxIdentity,
-            password: hash,
-        });
-
-        const companySaved = await newCompany.save();
-        const tokenCompany = await createAcccessToken({ id: companySaved._id });
-        res.cookie("tokenCompany", tokenCompany);
-        res.json({
-            id: companySaved._id,
-            companyName: companySaved.companyName,
-            legalEntity: companySaved.legalEntity,
-            companyAddress: companySaved.companyAddress,
-            activityDescription: companySaved.activityDescription,
-            phoneNumber: companySaved.phoneNumber,
-            email: companySaved.email,
-            taxIdentity: companySaved.taxIdentity,
-            password: companySaved.password,
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 export const registerUser = async (req, res) => {
     const { email, username, password } = req.body;
@@ -181,13 +136,6 @@ export const logoutUser = (req, res) => {
     return res.sendStatus(200);
 };
 
-export const logoutCompany = (req, res) => {
-    res.cookie("tokenCompany", "", {
-        expires: new Date(0),
-    });
-    return res.sendStatus(200);
-};
-
 export const profileUser = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
     const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
@@ -213,23 +161,6 @@ export const profileUser = async (req, res) => {
         imagen: userFound.profileImage,
         stories: userFound.stories,
         publications: userFound.publications,
-    });
-};
-
-export const profileCompany = async (req, res) => {
-    const companyFound = await CompanyModel.findById(req.company.id);
-
-    if (!companyFound)
-        return res.status(400).json({
-            message: "User not found",
-        });
-
-    return res.json({
-        id: companyFound._id,
-        companyName: companyFound.companyName,
-        email: companyFound.email,
-        createdAt: companyFound.creatdAte,
-        updatedAt: companyFound.updatedAt,
     });
 };
 
