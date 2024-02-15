@@ -1207,22 +1207,22 @@ export const postMessage = async (req, res) => {
     if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
     try {
         const username = decodedToken.name;
-        const { from, message } = req.body;
+        const { to, message } = req.body;
         console.log(req.body);
 
         const chatUsers = {
-            "userOne": from,
+            "userOne": to,
             "userTwo": username
         };
 
         // Crea un nuevo mensaje
         const newMessage = {
-            "from": from,
-            "to": username,
+            "from": username,
+            "to": to,
             message: message
         };
 
-        const { messages } = await User.findOne({ username: from }, { messages: 1 });
+        const { messages } = await User.findOne({ username: to }, { messages: 1 });
 
         let chatMessage = false;
         console.log(username);
@@ -1233,8 +1233,8 @@ export const postMessage = async (req, res) => {
             const chatUsersElement = element.ChatUsers;
 
             // Verifica si ya existe una conversación entre 'from' y 'to'
-            if ((chatUsersElement.userOne === from && chatUsersElement.userTwo === username) ||
-                (chatUsersElement.userOne === username && chatUsersElement.userTwo === from)) {
+            if ((chatUsersElement.userOne === to && chatUsersElement.userTwo === username) ||
+                (chatUsersElement.userOne === username && chatUsersElement.userTwo === to)) {
                 chatMessage = true;
 
                 // Asegúrate de que element.message sea un array antes de intentar agregar
@@ -1247,7 +1247,7 @@ export const postMessage = async (req, res) => {
 
                 // Guarda los cambios en el documento de usuario
                 await User.findOneAndUpdate(
-                    { username: from, 'messages.ChatUsers.userOne': chatUsersElement.userOne, 'messages.ChatUsers.userTwo': chatUsersElement.userTwo },
+                    { username: to, 'messages.ChatUsers.userOne': chatUsersElement.userOne, 'messages.ChatUsers.userTwo': chatUsersElement.userTwo },
                     {
                         $set: {
                             'messages.$.message': element.message
@@ -1278,7 +1278,7 @@ export const postMessage = async (req, res) => {
             if (!verifyUserFrom || !verifyUserTo) return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
 
             await User.findOneAndUpdate(
-                { username: from },
+                { username: to},
                 {
                     $push: {
                         messages: {
@@ -1303,7 +1303,7 @@ export const postMessage = async (req, res) => {
         }
 
         console.log(decodedToken);
-        const user = await User.findOne({ username: from });
+        const user = await User.findOne({ username: to });
         console.log(user);
         res.json({
             user: user

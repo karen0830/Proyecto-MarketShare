@@ -93,8 +93,8 @@ export const profileCompany = async (req, res) => {
 };
 
 export const logoutCompany = (req, res) => {
-    res.cookie("tokenCompany", "", {
-        expires: new Date(0),
-    });
+    // res.cookie("tokenCompany", "", {
+    //     expires: new Date(0),
+    // });
     return res.sendStatus(200);
 };
