@@ -142,7 +142,7 @@ export const Publications = () => {
                         </div>
                         <div className="contenido">{element.contenido}</div>
                         {element.type === 'video/mp4' ? (
-                            <video src={element.url} controls></video>
+                            <video className='video'  src={element.url} controls></video>
                         ) :
                             <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
                         }
@@ -162,7 +162,7 @@ export const Publications = () => {
                             </div>
                             <div className="contenido">{element.contenido}</div>
                             {element.type === 'video/mp4' ? (
-                                <video src={element.url} controls></video>
+                                <video className='video'  src={element.url} controls></video>
                             ) :
                                 <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
                             }
@@ -283,7 +283,7 @@ export const Publications = () => {
                             </div>
                             <div className="contenido">{element.contenido}</div>
                             {element.type === 'video/mp4' ? (
-                                <video src={element.url} controls></video>
+                                <video className='video' src={element.url} controls></video>
                             ) :
                                 <img src={element.url} alt="Imagen de la publicación" className="imagen-publicacion" />
                             }

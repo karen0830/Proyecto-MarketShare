@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink } from 'react-router-dom'
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 export const SignInForm = () => {

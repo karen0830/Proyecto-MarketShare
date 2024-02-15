@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom'
-import { UserSignUpForm } from '../../../user/components/LoginRegister/UserSignUpForm.jsx'
-import { CompanySignUpForm } from '../../../company/components/RegiterCompany/companySignUpForm.jsx';
+import { UserSignUpForm } from './UserSignUpForm.jsx'
+import { CompanySignUpForm } from './companySignUpForm.jsx';
 import "./Registro.css"
 export const UserorCompany = () => {
     const location = useLocation()
@@ -19,7 +19,7 @@ export const UserorCompany = () => {
                         User
                 </NavLink>
             </div>
-            {location.pathname === "/LoginCompany" && <CompanySignUpForm />}
+            {location.pathname === "/registerCompany" && <CompanySignUpForm />}
             {location.pathname === "/registerUser" && <UserSignUpForm />}
         </div>
     );

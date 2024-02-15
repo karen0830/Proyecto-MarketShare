@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./Stories.css";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { getUpdateStories, getUpdateUser } from "../../../api/auth";
+import { Link } from "react-router-dom";
 import { Modal, Publicar } from "../../Publications/Publicar/Publicar.jsx";
 import Publications from "../../Publications/Publications.jsx";
 
@@ -10,6 +11,15 @@ export const Stories = () => {
   const [selectedFileVideo, setSelectedFileVideo] = useState();
   const [selectedFileImage, setSelectedFileImage] = useState();
   const [story, setStory] = useState(user.stories);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   const imageRef = useRef();
   const handleFileInput = (e) => {
@@ -63,7 +73,20 @@ export const Stories = () => {
   return (
     <>
       <div className="Stories">
+        <div className="margin-top"></div>
         <div className="header">
+          <div className="stories-title">
+            <a href="#" className="btn">
+              <i className="ri-play-circle-line"></i>
+              <div className="text">Watch all</div>
+            </a>
+          </div>
+          <div className="header-content">
+            <a href="#" className="btn" onClick={openModal}>
+              <i className="ri-add-circle-fill"></i>
+              <div className="btn-text">Add Photos</div>
+            </a>
+          </div>
         </div>
         <div className="stories">
           <div className="stories-img color image-container">
@@ -91,6 +114,9 @@ export const Stories = () => {
           </div>
           <button onClick={handleUploadImage}>subir historia</button>
         </div>
+        <Modal onClose={closeModal} isOpen={modalIsOpen}>
+          <Publicar />
+        </Modal>
         <Publications />
       </div>
     </>

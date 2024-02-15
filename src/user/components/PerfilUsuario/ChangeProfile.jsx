@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../api/auth.js";
 
-export const ModalChangeProfile = ({ isOpen, onClose, children, title }) => {
+export const ModalChangeProfile = ({ isOpen, onClose, children }) => {
     if (!isOpen) {
         return null;
     }
@@ -13,7 +13,7 @@ export const ModalChangeProfile = ({ isOpen, onClose, children, title }) => {
         <div className="modal-overlay">
             <div className="modalChangeProfile">
                 <div className="closeModalChangeProfile">
-                    <h4>{title}</h4>
+                    <h4>Elegir foto de perfil</h4>
                     <button className="modal-close" onClick={onClose}>
                         <i className="ri-chat-delete-line"></i>
                     </button>

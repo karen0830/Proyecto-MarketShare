@@ -10,6 +10,10 @@
   text-decoration: none;
 }
 
+.margin-top{
+  margin-top: 60px;
+}
+
 body {
   background: #242424;
   letter-spacing: 0.5px;
@@ -33,7 +37,7 @@ body {
 }
 
 .logo img {
-  width: 175px;
+  width: auto
 }
 
 .profile {
@@ -107,7 +111,6 @@ body {
   color: #fff;
   display: flex;
   align-items: center;
-  line-height: 40px;
 }
 
 .menu .icon {
@@ -163,12 +166,33 @@ body {
   color: #eee;
 }
 
-.btn-text {
-  color: #fff;
+.header-content {
+  display: flex;
+  align-items: center;
 }
 
-.stories{
-  height: 180px
+.header-content i {
+  color: #fff;
+  font-size: 20px;
+  margin-left: 1rem;
+}
+
+.header-content .btn {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--gradient);
+  margin-left: 1rem;
+}
+
+.header-content .btn i {
+  color: hsla(0, 0%, 100%, 1.6);
+  margin-right: 10px;
+}
+
+.btn-text {
+  color: #fff;
 }
 
 .stories-title {
@@ -272,11 +296,6 @@ body {
   gap: 11px;
 }
 
-.post-box {
-  width: 300px;
-  background-color: #1c1c1c;
-  padding: 15px;
-}
 
 .post-box img {
   width: 100%;

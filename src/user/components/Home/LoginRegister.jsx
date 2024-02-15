@@ -1,10 +1,9 @@
 import React from "react";
-import { SignInForm } from "../../user/components/LoginRegister/SignInForm";
+import { SignInForm } from "./Login/SignInForm";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { UserorCompany } from "./Register/UserOrCompany";
 import "./LoginRegister.css";
-import { SignInUserorCompany } from "./SignInUserorCompany";
 const LoginRegister = () => {
   const location = useLocation();
   const registerLocation =
@@ -23,7 +22,7 @@ const LoginRegister = () => {
                 }
               >
                 <NavLink to="/loginUser" className="btn">
-                 Iniciar sesión
+                  Sign in
                 </NavLink>
               </li>
               <li
@@ -32,7 +31,7 @@ const LoginRegister = () => {
                 }
               >
                 <NavLink to="/registerUser" className="btn">
-                  Registrarse
+                  Sign up
                 </NavLink>
               </li>
             </ul>
@@ -40,9 +39,8 @@ const LoginRegister = () => {
           <div ng-init="checked = false">
             {location.pathname === "/registerUser" && <UserorCompany />}
             {location.pathname === "/registerCompany" && <UserorCompany />}
-            {location.pathname === "/loginUser" && < SignInUserorCompany/>}
-            {location.pathname === "/loginCompany" && < SignInUserorCompany/>}
-            {location.pathname === "/" && <SignInUserorCompany/>}
+            {location.pathname === "/loginUser" && <SignInForm />}
+            {location.pathname === "/" && <SignInForm />}
           </div>
         </div>
       </div>

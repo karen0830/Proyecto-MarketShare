@@ -9,8 +9,11 @@ export const Start = () => {
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
+
   return (
-    <div className="div-general">
+    <div
+      className={`div-general ${isSidebarExpanded ? "sidebar-expanded" : ""}`}
+    >
       <TopBar toggleSidebar={toggleSidebar} />
       <SideBar />
       <Stories></Stories>
