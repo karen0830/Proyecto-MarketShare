@@ -69,32 +69,6 @@ export const registerUser = async (req, res) => {
     }
 };
 
-export const loginCompany = async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const companyFound = await CompanyModel.findOne({ email });
-
-        if (!companyFound) {
-            return res.status(400).json({ message: "User not found" });
-        }
-
-        const isMatch = await bcrypt.compare(password, companyFound.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "User or password incorrect" });
-        }
-
-        const tokenCompany = await createAcccessToken({ id: companyFound._id });
-        console.log(tokenCompany);
-        res.cookie("tokenCompany", tokenCompany);
-        res.json({
-            id: companyFound._id,
-            companyName: companyFound.companyName,
-            email: companyFound.email,
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;

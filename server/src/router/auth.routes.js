@@ -19,7 +19,6 @@ import {
     getProfileImage,
     getProfile,
     getAllPublications,
-    followPerson,
     postMessage,
     getMessage,
     addPublicationsVideo,
@@ -47,7 +46,6 @@ router.post("/imageProfile", imageProfile);
 router.post("/addStories", addStories);
 router.post("/comment", comments);
 router.post("/refreshToken", refreshToken);
-router.post("/followPerson", followPerson)
 router.post("/addPublicationVideo", addPublicationsVideo)
 router.get("/profileUser", authRequired, profileUser);
 router.get("/verify", authRequired, verifyToken);

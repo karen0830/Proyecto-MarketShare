@@ -6,6 +6,11 @@ const companySchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    userNameCompany: {
+        type: String,
+        required: true,
+        trim: true
+    },
     email: {
         type: String,
         required: true,
@@ -20,6 +25,10 @@ const companySchema = new mongoose.Schema({
         type: Number,  
         required: true,
         trim: true
+    },
+    followers: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
     },
     password: {
         type: String,
