@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+} from "react";
 import "./Perfil.css";
 import {
   getImage,
@@ -12,7 +19,9 @@ import { Link } from "react-router-dom";
 import { Publicar } from "../Publications/Publicar/Publicar.jsx";
 import { Modal } from "../Publications/Publicar/Publicar.jsx";
 import { ChangeProfile, ModalChangeProfile } from "./ChangeProfile.jsx";
+import Loader from "../Loaders/Loader";
 
+const Publications = lazy(() => import("../Publications/Publications.jsx"));
 export const sharedData = createContext();
 export const useShareData = () => {
   const context = useContext(sharedData);
@@ -55,7 +64,7 @@ export const Perfil = () => {
       {profileData ? (
         <div className={loading ? "spinner hiddenInfo" : "profileUser"}>
           <div className="banner">
-            <img src="./img/banner.jpeg" alt="" />
+            {/* <img src="./img/banner.jpeg" alt="" />*/}
           </div>
           <div className="floatData">
             <div className="profile-picture">
@@ -97,12 +106,13 @@ export const Perfil = () => {
               <div></div>
             </div>
           </div>
+
           <Publications />
         </div>
       ) : (
         <div className={"general-container"}>
           <div className="banner">
-            <img src="./img/banner.jpeg" alt="" />
+            {/* <img src="./img/banner.jpeg" alt="" />*/}
           </div>
           <div className="floatData">
             <div className="profile-picture">
@@ -166,7 +176,9 @@ export const Perfil = () => {
               <div></div>
             </div>
           </div>
-          <Publications />
+          <Suspense fallback={<Loader />}>
+            <Publications />
+          </Suspense>
         </div>
       )}
     </div>

@@ -16,9 +16,7 @@ const Carousel = () => {
             <img src="./img/sena.png" alt="" />
           </section>
           <section className="section-right">
-            <h1>
-              ABOUT <span className="title-text">US</span>
-            </h1>
+            <h1>ABOUT US</h1>
             <p>
               "Somos un equipo comprometido con la creación de una experiencia
               única en el comercio electrónico. Nuestra plataforma combina la

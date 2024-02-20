@@ -6,15 +6,19 @@
 }
 
 .banner {
+  background-color: #287bff;
+  height: 200px;
+  width: 100%;
   position: relative;
   z-index: -2;
 }
 
+/*
 .banner > img {
   height: 200px;
   width: 100%;
 }
-
+*/
 .floatData {
   display: flex;
   height: 80px;
@@ -55,12 +59,15 @@
 }
 
 .camera-icon {
-  color: rgba(16, 89, 255, 1);
+  color: #287bff;
   font-size: 1.6rem;
   margin: 5px;
   /* Ajusta este margen según tus preferencias */
 }
 
+.camera-icon:hover {
+  color: #5da9fd;
+}
 .change-image {
   position: relative;
   bottom: 50px;
@@ -97,7 +104,7 @@
 }
 
 .button-avatar {
-  background-color: rgba(16, 89, 255, 1);
+  background-color: #287bff;
 }
 
 .popularidad {
@@ -112,12 +119,16 @@
 }
 
 .button-containerData > button {
-  background-color: rgba(16, 89, 255, 1);
+  background-color: #287bff;
   padding: 0.05em 2em;
   border-radius: 10px;
   border: none;
   color: #ffff;
   height: 3.75em;
+}
+
+.button-containerData > button:hover {
+  background-color: #5da9fd;
 }
 
 .publicar-container {
@@ -148,7 +159,7 @@
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  background-color: rgba(16, 89, 255, 1);
+  background-color: #287bff;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
@@ -277,7 +288,7 @@
 }
 
 .file-label {
-  background-color: rgba(16, 89, 255, 1);
+  background-color: #287bff;
   color: #fff;
   padding: 10px;
   border-radius: 5px;

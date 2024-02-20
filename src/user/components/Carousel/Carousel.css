@@ -31,7 +31,6 @@
 }
 
 .section-left > img {
-  border: 1px #ffff solid;
   padding: 10px;
   position: relative;
   top: 10.5vh;
@@ -59,7 +58,6 @@
 }
 .section-right h1 {
   line-height: 2em;
-  color: #2121fa;
   font-weight: 100;
   position: relative;
   left: 0.4em;

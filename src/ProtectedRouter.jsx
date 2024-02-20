@@ -1,9 +1,10 @@
+
 import React, { useEffect } from 'react'
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from './common/context/AuthContext'
 export const ProtectedRouter = () => {
     const { loading, user, isAuthenticated } = useAuth()
-    if (loading) return <h1>Loading...</h1>
+    if (loading) return <Loader />;
     if (!loading && !isAuthenticated) return (<Navigate to="/loginUser" />)
 
     return <Outlet />
@@ -17,3 +18,4 @@ export const ProtectedRouterCompany = () => {
 
     return <Outlet />
 }
+
