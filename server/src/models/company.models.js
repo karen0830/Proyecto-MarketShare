@@ -33,6 +33,41 @@ const companySchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    profileImage: {
+        type: String, // Puedes usar String para almacenar la URL de la imagen
+        default: '/default-profile-image.jpg' // Opcional: una imagen predeterminada si no se proporciona una URL
+    },
+    rutaImagen: {
+        type: String, // Puedes usar String para almacenar la URL de la imagen
+        default: '/default-profile-image.jpg' // Opcional: una imagen predeterminada si no se proporciona una URL
+    },
+    stories: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    archivedStory: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    publications: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    publicationsVisits: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    followers: {
+        type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
+        default: []
+    },
+    hashedID: {
+        type: String
+    },
+    messages: {
+        type: [mongoose.Schema.Types.Mixed],
+        default: []
     }
 }, {
     timestamps: true

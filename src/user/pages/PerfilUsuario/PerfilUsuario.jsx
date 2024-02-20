@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./PerfilUsuario.css";
 import SideBar from "../../components/sidebar/sidebar.jsx";
 import { Perfil } from "../../components/PerfilUsuario/Perfil";
-import TopBar from "../../components/TopBar/TopBar";
+import TopBar from "../../../common/TopBar/TopBar.jsx";
 
 export const PerfilUsuario = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);

@@ -2,7 +2,7 @@
 
 import React from "react";
 import "./sidebar.css";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { useAuth } from "../../../common/context/AuthContext.jsx";
 import { NavLink } from "react-router-dom";
 
 const SideBar = () => {

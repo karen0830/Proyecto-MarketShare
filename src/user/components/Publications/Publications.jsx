@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../common/context/AuthContext";
 import "./Publications.css";
-import { reactionLike, getAllPublications, getProfile, getPublications } from '../../api/auth';
+import { reactionLike, getAllPublications, getProfile, getPublications } from '../../../common/api/auth';
 import { NavLink, useLocation } from 'react-router-dom';
 
 export const Publications = () => {

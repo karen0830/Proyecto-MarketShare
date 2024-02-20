@@ -1,6 +1,6 @@
 import "./About.css";
 import Carousel from "../../components/Carousel/Carousel";
-import TopBar from "../../components/TopBar/TopBar";
+import TopBar from "../../../common/TopBar/TopBar.jsx";
 import Footer from "../../components/Footer/Footer";
 
 const About = () => {

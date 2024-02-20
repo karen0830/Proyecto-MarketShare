@@ -31,15 +31,6 @@ export const registerRequest = async user => {
   }
 }
 
-export const registerCompanyRequest = async company => {
-  try {
-    const response = await instance.post(`/registerC`, company);
-  } catch (ex) {
-    console.log("error.status:", ex);
-    return ex
-  }
-}
-
 export const loginRequest = async user => {
   try {
     const response = await instance.post(`/loginUser`, user);

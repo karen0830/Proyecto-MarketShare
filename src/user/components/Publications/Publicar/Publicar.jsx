@@ -3,8 +3,8 @@ import {
   sendPublications,
   getPublications,
   addPublicationsVideo,
-} from "../../../api/auth";
-import { useAuth } from "../../../context/AuthContext";
+} from "../../../../common/api/auth";
+import { useAuth } from "../../../../common/context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

@@ -1,11 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./common/home/home.jsx";
 import "./App.css";
-import { AuthProvider } from "./user/context/AuthContext.jsx";
-import ProtectedRouter from "./ProtectedRouter.jsx";
+import { AuthProvider } from "./common/context/AuthContext.jsx";
+import { ProtectedRouter, ProtectedRouterCompany} from "./ProtectedRouter.jsx";
 import { PerfilUsuario } from "./user/pages/PerfilUsuario/PerfilUsuario.jsx";
 import { Start } from "./user/pages/Start/Start";
 import About from "./user/pages/About/About";
+
+// Company
+
+import HomeCompany from "./company/pages/HomeCompany/HomeCompany.jsx";
 const App = () => {
   return (
     <AuthProvider>
@@ -19,6 +23,10 @@ const App = () => {
           <Route element={<ProtectedRouter />}>
             <Route path="/profileUser" element={<PerfilUsuario />}></Route>
             <Route path="/Start" element={<Start />}></Route>
+            {/* <Route path="/Publicar" element={<Publicar/>}></Route> */}
+          </Route>
+          <Route element={<ProtectedRouterCompany />}>
+            <Route path="/HomeCompany" element={<HomeCompany />}></Route>
             {/* <Route path="/Publicar" element={<Publicar/>}></Route> */}
           </Route>
           <Route path="/about" element={<About />}></Route>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SideBar from "../../components/sidebar/sidebar";
 import { Stories } from "../../components/Start/Stories/Stories";
-import TopBar from "../../components/TopBar/TopBar";
+import TopBar from "../../../common/TopBar/TopBar.jsx";
 
 export const Start = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
