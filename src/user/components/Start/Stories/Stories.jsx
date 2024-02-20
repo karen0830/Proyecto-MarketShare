@@ -112,7 +112,9 @@ export const Stories = () => {
           <div className="stories-img color">
             <img className="historyImageProfile" ref={imageRef} alt="" />
           </div>
-          <button onClick={handleUploadImage}>subir historia</button>
+          <button className="subir-historias" onClick={handleUploadImage}>
+            subir historia
+          </button>
         </div>
         <Modal onClose={closeModal} isOpen={modalIsOpen}>
           <Publicar />

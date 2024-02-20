@@ -58,11 +58,11 @@
   right: 0;
   width: 0.125em; /* 2px en unidades em */
   height: 1.0625em; /* 17px en unidades em */
-  background: #2121fa;
+  background: #287bff;
 }
 
 .sidebar-menu a:hover {
-  color: #2121fa;
+  color: #287bff;
 }
 
 .sidebar-menu img {
@@ -72,8 +72,13 @@
 
 .button-logout {
   border: none;
-  background-color: #ffff;
+  background-color: #287bff;
   padding: 0.5em 2em;
+  color: #ffff;
+}
+
+.button-logout:hover {
+  background-color: #133495;
 }
 
 /* Estilos para la barra lateral en pantalla pequeña */
@@ -92,5 +97,12 @@
   .sidebar-menu a {
     flex-direction: column;
     line-height: 20px; /* Aplica la altura de línea al texto */
+  }
+
+  .sidebar-menu button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 }

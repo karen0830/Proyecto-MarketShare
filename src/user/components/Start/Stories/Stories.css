@@ -10,7 +10,7 @@
   text-decoration: none;
 }
 
-.margin-top{
+.margin-top {
   margin-top: 60px;
 }
 
@@ -37,7 +37,7 @@ body {
 }
 
 .logo img {
-  width: auto
+  width: auto;
 }
 
 .profile {
@@ -120,7 +120,7 @@ body {
 
 .menu a:hover,
 .menu .active {
-  color: #2121fa;
+  color: #287bff;
 }
 
 .menu a:hover::before,
@@ -182,7 +182,7 @@ body {
   align-items: center;
   padding: 10px;
   border-radius: 8px;
-  background: var(--gradient);
+  background: #287bff;
   margin-left: 1rem;
 }
 
@@ -296,7 +296,6 @@ body {
   gap: 11px;
 }
 
-
 .post-box img {
   width: 100%;
   height: 344px;
@@ -316,7 +315,7 @@ body {
   justify-content: center;
   width: 35px;
   height: 35px;
-  border: 2px solid #2121fa;
+  border: 2px solid #287bff;
   border-radius: 50%;
 }
 
@@ -348,6 +347,17 @@ body {
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
+}
+
+.subir-historias {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: #287bff;
+  margin-left: 1rem;
+  border: none;
+  color: #ffff;
 }
 
 .custom-file-input input {
@@ -398,4 +408,8 @@ body {
   align-items: center;
   color: white;
   text-align: center;
+}
+
+.contenido {
+  padding-left: 10px;
 }

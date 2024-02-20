@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import "./PerfilUsuario.css";
 import SideBar from "../../components/sidebar/sidebar.jsx";
 import { Perfil } from "../../components/PerfilUsuario/Perfil";

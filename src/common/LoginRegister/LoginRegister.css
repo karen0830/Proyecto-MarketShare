@@ -63,7 +63,7 @@ li {
   padding-bottom: 10px;
   color: #ffffff;
   text-decoration: none;
-  border-bottom: solid 2px #1059ff;
+  border-bottom: solid 2px #287bff;
   transition: all 0.25s ease;
   cursor: pointer;
 }
@@ -80,7 +80,7 @@ li {
   cursor: pointer;
   color: #ffffff;
   text-decoration: none;
-  border-bottom: solid 2px #1059ff;
+  border-bottom: solid 2px #287bff;
   padding-bottom: 10px;
 }
 
@@ -248,7 +248,7 @@ textarea:focus {
 
 /* on checked */
 [type="checkbox"]:checked + label:before {
-  background: #0f4fe6;
+  background: #287bff;
 }
 
 [type="checkbox"]:checked + label:after {
@@ -295,7 +295,7 @@ textarea:focus {
   height: 35px;
   border-radius: 20px;
   margin-top: 23px;
-  background-color: #1059ff;
+  background-color: #287bff;
   border: none;
   color: #ffff;
 }
@@ -322,7 +322,7 @@ textarea:focus {
   background: transparent;
   border-radius: 20px;
   margin-top: 18px;
-  background-color: rgba(16, 89, 255, 1);
+  background-color: #287bff;
   transition: all 0.5s ease, top 0.5s ease 0.5s, height 0.5s ease 0.5s,
     background-color 0.5s ease 0.75s;
 }
@@ -435,9 +435,9 @@ h1 {
   text-transform: uppercase;
   font-size: 13px;
   text-align: center;
-  color: #1059ff;
+  color: #287bff;
   margin-top: -8px;
-  border: solid 1px #1059ff;
+  border: solid 1px #287bff;
   opacity: 0;
   transition: top 1.5s ease 0.35s, opacity 0.75s ease 0.5s;
 }
@@ -525,7 +525,7 @@ a.btn-goback:hover {
 }
 
 .signUpUserCompany-active {
-  color: #0f4fe6;
+  color: #287bff;
 }
 
 .signUpUserCompany-inactive {
