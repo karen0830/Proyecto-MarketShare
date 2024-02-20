@@ -11,7 +11,7 @@ const app = express();
 // http://localhost:5173
 // https://maket-share.netlify.app
 app.use(cors({
-    origin: 'https://maket-share.netlify.app',
+    origin: 'https://main--maket-share.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
