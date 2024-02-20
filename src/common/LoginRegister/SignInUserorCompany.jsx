@@ -7,7 +7,7 @@ import {SignInCompany} from '../../company/components/LoginCompany/SignInCompany
 export const SignInUserorCompany = () => {
     const location = useLocation()
 
-    const locationRegister = location.pathname === "/loginUser"
+    const locationRegister = location.pathname === "/loginUser";
 
     return (
         <div className="companyorUser">
@@ -22,6 +22,7 @@ export const SignInUserorCompany = () => {
             </div>
             {location.pathname === "/loginCompany" && <SignInCompany />}
             {location.pathname === "/loginUser" && <SignInForm />}
+            {location.pathname === "/" && <SignInCompany/>}
         </div>
     );
 };

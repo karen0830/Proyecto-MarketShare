@@ -2,14 +2,13 @@ import { createContext, useState, useContext, useEffect } from "react";
 import {
   registerRequest,
   loginRequest,
-  registerCompanyRequest,
   verityTokenRequest,
   logoutUser,
   getPublications,
   getProfileImage,
   getAllPublications,
 } from "../api/auth";
-import Cookies from "js-cookie";
+import { registerCompanyRequest, loginRequestCompany, verityTokenRequestCompany } from "../api/auth.company";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -27,6 +26,10 @@ export const AuthProvider = ({ children }) => {
   const [publications, setPublications] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [profileData, setProfileData] = useState(null);
+  const [profileImageCompany, setProfileImageCompany] = useState(null);
+  const [isAuthenticatedCompany, setIsAuthenticatedCompany] = useState(false);
+  const [loadingCompany, setLoadingCompany] = useState(true);
+  const [companyData, setCompanyData] = useState(null);
 
   const signup = async (user) => {
     console.log(user);
@@ -36,7 +39,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       setIsAuthenticated(false);
     } else {
-      console.log(res.response);
+      console.log(res);
       if (res.response.data.message) {
         setErrors([[res.response.data.message]]);
         console.log(res.response.data.message);
@@ -45,20 +48,39 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signupCompany = async (company) => {
-    try {
-      console.log(company);
-      const res = await registerCompanyRequest(company);
+    const res = await registerCompanyRequest(company);
+    if (res.data) {
       console.log(res.data);
-      setUser(res.data);
-      setIsAuthenticated(false);
-    } catch (error) {
-      console.log(error.response);
+      // setUser(res.data);
+      // setIsAuthenticated(false);
+      window.location.href = '/loginCompany'
+    } else {
+      console.log(res);
       if (res.response.data.message) {
         setErrors([[res.response.data.message]]);
         console.log(res.response.data.message);
       } else setErrors([res.response.data]);
     }
   };
+
+  const signInCompany = async (company) => {
+    const res = await loginRequestCompany(company);
+    console.log(res.data);
+    if (res.data) {
+      console.log("entroooo");
+      console.log(res);
+      localStorage.setItem("tokenCompany", res.data.token);
+      const resverify = await verityTokenRequest();
+      console.log(resverify);
+      setIsAuthenticatedCompany(true);
+      setCompanyData(res.data);
+      // setPublications(res.data.publications);
+      setProfileImageCompany(res.data.profileImage);
+    } else {
+      console.log(res);
+      setErrors([[res.response.data.message]]);
+    }
+  }
 
   const signIn = async (user) => {
     const res = await loginRequest(user);
@@ -138,6 +160,45 @@ export const AuthProvider = ({ children }) => {
     }
     checkLogin();
   }, []);
+
+
+
+  useEffect(() => {
+    async function checkLoginCompany() {
+      const Token = localStorage.getItem("tokenCompany");
+      const TokenUser = localStorage.getItem("token");
+      if (!Token) {
+        setIsAuthenticatedCompany(false);
+        setLoadingCompany(false);
+        return setCompanyData(null);
+      } else {
+        try {
+          const res = await verityTokenRequestCompany();
+          console.log(res.data);
+          if (!res.data) {
+            setIsAuthenticatedCompany(false);
+            setLoadingCompany(false);
+            return;
+          } else {
+            // const getPublicationResponse = await getPublications();
+            // const getImageProfile = await getProfileImage();
+            // console.log(getPublicationResponse.data.publications);
+            // setPublications(getPublicationResponse.data.publications);
+            setProfileImageCompany(res.data.profileImage);
+            setIsAuthenticatedCompany(true);
+            setCompanyData(res.data);
+            setLoadingCompany(false);
+          }
+        } catch (error) {
+          console.log(error);
+          setIsAuthenticatedCompany(false);
+          setCompanyData(null);
+          setLoadingCompany(false);
+        }
+      }
+    }
+    checkLoginCompany();
+  }, []);
   return (
     <AuthContext.Provider
       value={{
@@ -146,7 +207,6 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         errors,
         signIn,
-        signupCompany,
         loading,
         logoutUsers,
         setUser,
@@ -156,6 +216,16 @@ export const AuthProvider = ({ children }) => {
         setProfileImage,
         profileData,
         setProfileData,
+
+        // company
+        signupCompany,
+        signInCompany,
+        isAuthenticatedCompany,
+        loadingCompany,
+        companyData,
+        setCompanyData,
+        profileImageCompany,
+        setProfileImageCompany
       }}
     >
       {children}

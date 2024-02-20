@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../common/context/AuthContext";
 
 export const UserSignUpForm = () => {
   const [className, setClassName] = useState("hidden")

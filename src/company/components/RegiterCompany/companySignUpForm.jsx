@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../../user/context/AuthContext.jsx";
+import { useAuth } from "../../../common/context/AuthContext";
 export const CompanySignUpForm = () => {
   const { register, handleSubmit, formState: {
     errors
@@ -12,7 +12,6 @@ export const CompanySignUpForm = () => {
   const onSubmit = handleSubmit(async (values) => {
     console.log(values);
     values.phoneNumber = parseInt(values.phoneNumber)
-    values.taxIdentity = parseInt(values.taxIdentity)
     signupCompany(values)
   })
 
@@ -54,26 +53,37 @@ export const CompanySignUpForm = () => {
           {...register('companyName', { required: true })}
         />
         {
-          errors.legalEntity && (
+          errors.userNameCompany && (
+            <p className="text-red-500">Usuario de la comñañia es requerido</p>
+          )
+        }
+        <label htmlFor="userNameCompany">Usuario de la compañía</label>
+        <input
+          className="form-styling"
+          type="text"
+          {...register('userNameCompany', { required: true })}
+        />
+        {
+          errors.email && (
             <p className="text-red-500">Correo electrónico es requerido</p>
           )
         }
-        <label htmlFor="legalEntity">orreo electrónico: </label>
+        <label htmlFor="email">Correo electrónico: </label>
         <input
           className="form-styling"
           type="text"
-          {...register('legalEntity', { required: true })}
+          {...register('email', { required: true })}
         />
         {
-          errors.activityDescription && (
+          errors.typeCompany && (
             <p className="text-red-500">Tipo de empresa es requerido</p>
           )
         }
-        <label htmlFor="activityDescription">Tipo de empresa:</label>
+        <label htmlFor="typeCompany">Tipo de empresa:</label>
         <input
           className="form-styling"
           type="text"
-          {...register('activityDescription', { required: true })}
+          {...register('typeCompany', { required: true })}
         />
         {
           errors.phoneNumber && (
@@ -109,7 +119,7 @@ export const CompanySignUpForm = () => {
           type="text"
           {...register('confirmpassword', { required: true })}
         />
-        <button onClick={ButtonOpenModal} ng-click="checked = !checked" className="btn-signup" type="submit">
+        <button  ng-click="checked = !checked" className="btn-signup">
           Registrarse
         </button>
       </form>
