@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./common/home/home.jsx";
 import "./App.css";
 import { AuthProvider } from "./common/context/AuthContext.jsx";
-import { ProtectedRouter, ProtectedRouterCompany} from "./ProtectedRouter.jsx";
+import { ProtectedRouter, ProtectedRouterCompany } from "./ProtectedRouter.jsx";
 import { PerfilUsuario } from "./user/pages/PerfilUsuario/PerfilUsuario.jsx";
 import { Start } from "./user/pages/Start/Start";
 import About from "./user/pages/About/About";
@@ -10,6 +10,8 @@ import About from "./user/pages/About/About";
 // Company
 
 import HomeCompany from "./company/pages/HomeCompany/HomeCompany.jsx";
+import router from "./mainEcommerce.jsx";
+import AuthProviderE from "./Ecommerce/src/contexts/AuthProviderE.jsx";
 const App = () => {
   return (
     <AuthProvider>
@@ -35,5 +37,14 @@ const App = () => {
     </AuthProvider>
   );
 };
+
+
+export const AppEccomerce = () => {
+  return (
+    <AuthProviderE>
+      <RouterProvider router={router} />
+    </AuthProviderE>
+  )
+}
 
 export default App;

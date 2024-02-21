@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./Publications.css";
-import {
-  reactionLike,
-  getAllPublications,
-  getProfile,
-  getPublications,
-} from "../../api/auth";
 import { NavLink, useLocation } from "react-router-dom";
-import React, { useEffect, useState } from 'react'
 import { reactionLike, getAllPublications, getProfile, getPublications } from '../../../common/api/auth';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useAuth } from "../../../common/context/AuthContext";
 
 export const Publications = () => {
   const location = useLocation();

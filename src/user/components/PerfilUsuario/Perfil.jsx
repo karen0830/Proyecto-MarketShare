@@ -1,20 +1,11 @@
 import React, {
-  createContext,
-  useContext,
   useState,
   useEffect,
   lazy,
   Suspense,
 } from "react";
 import "./Perfil.css";
-import {
-  getImage,
-  getPublications,
-  getUpdateUser,
-  sendPublications,
-} from "../../../common/api/auth.js";
 import { useAuth } from "../../../common/context/AuthContext.jsx";
-import Publications from "../Publications/Publications";
 import { Link } from "react-router-dom";
 import { Publicar } from "../Publications/Publicar/Publicar.jsx";
 import { Modal } from "../Publications/Publicar/Publicar.jsx";
@@ -22,14 +13,6 @@ import { ChangeProfile, ModalChangeProfile } from "./ChangeProfile.jsx";
 import Loader from "../Loaders/Loader";
 
 const Publications = lazy(() => import("../Publications/Publications.jsx"));
-export const sharedData = createContext();
-export const useShareData = () => {
-  const context = useContext(sharedData);
-  if (!context) {
-    throw new Error("useAuth must be ussed within an AutProvider");
-  }
-  return context;
-};
 
 export const Perfil = () => {
   const { user, profileImage, setProfileImage, profileData } = useAuth();
