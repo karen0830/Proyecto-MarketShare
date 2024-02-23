@@ -14,7 +14,6 @@ import {
   sendPublications,
 } from "../../../common/api/auth.js";
 import { useAuth } from "../../../common/context/AuthContext.jsx";
-import Publications from "../Publications/Publications";
 import { Link } from "react-router-dom";
 import { Publicar } from "../Publications/Publicar/Publicar.jsx";
 import { Modal } from "../Publications/Publicar/Publicar.jsx";
