@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import "./PerfilCompany.css";
 
 import { useAuth } from "../../../common/context/AuthContext.jsx";
-import { Link } from "react-router-dom";
 import { ChangeProfile, ModalChangeProfile } from "./ChangeProfile.jsx";
 import Publications from "../../../common/Publications/Publications.jsx";
 import { Publicar, Modal } from "../../../common/Publications/Publicar/Publicar.jsx";

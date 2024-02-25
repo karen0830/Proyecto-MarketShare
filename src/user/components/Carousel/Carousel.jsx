@@ -1,7 +1,7 @@
 import "./Carousel.css";
 import { useEffect, useState } from "react";
 
-const Carousel = () => {
+export const Carousel = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -35,5 +35,3 @@ const Carousel = () => {
     </div>
   );
 };
-
-export default Carousel;

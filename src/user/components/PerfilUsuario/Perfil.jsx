@@ -12,8 +12,8 @@ import { Link } from "react-router-dom";
 import { ChangeProfile, ModalChangeProfile } from "./ChangeProfile.jsx";
 import Loader from "../Loaders/Loader";
 import { Modal, Publicar } from "../../../common/Publications/Publicar/Publicar.jsx";
+import Publications from "../../../common/Publications/Publications.jsx";
 
-const Publications = lazy(() => import("../../../common/Publications/Publications.jsx"));
 export const sharedData = createContext();
 export const useShareData = () => {
   const context = useContext(sharedData);
