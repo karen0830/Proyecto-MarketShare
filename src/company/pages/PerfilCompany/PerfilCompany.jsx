@@ -1,12 +1,10 @@
 import React, { useState, lazy, Suspense } from "react";
-import "./PerfilUsuario.css";
+import "./PerfilCompany.css";
 import SideBar from "../../../common/sidebar/sidebar.jsx";
-import { Perfil } from "../../components/PerfilUsuario/Perfil";
-
+import { Perfil } from "../../components/PerfilCompany/Perfil.jsx";
 import TopBar from "../../../common/TopBar/TopBar.jsx";
 
-
-export const PerfilUsuario = () => {
+export const PerfilCompany = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
   const toggleSidebar = () => {

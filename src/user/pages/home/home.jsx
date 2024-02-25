@@ -1,8 +1,8 @@
 import React from "react";
 import "./home.css";
 import SideBar from "../../components/sidebar/sidebar.jsx";
-import Publications from "../../components/Publications/Publications.jsx";
 import LoginRegister from "../../components/Home/LoginRegister.jsx";
+import Publications from "../../../common/Publications/Publications.jsx";
 
 const Home = () => {
   return (

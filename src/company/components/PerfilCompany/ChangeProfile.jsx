@@ -1,4 +1,4 @@
-import "./Perfil.css";
+import "./PerfilCompany.css";
 import { useAuth } from "../../../common/context/AuthContext.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

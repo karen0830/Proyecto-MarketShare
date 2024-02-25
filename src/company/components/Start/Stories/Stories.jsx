@@ -1,17 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Stories.css";
 import { useAuth } from "../../../../common/context/AuthContext.jsx";
-import { getUpdateUser } from "../../../../common/api/auth.js";
 import { Link } from "react-router-dom";
-import {Modal, Publicar} from "../../../../common/Publications/Publicar/Publicar.jsx";
+import { Modal, Publicar } from "../../../../common/Publications/Publicar/Publicar.jsx";
 import Publications from "../../../../common/Publications/Publications.jsx";
-
+import { getUpdateCompany, getUpdateStories } from "../../../../common/api/auth.company.js";
 
 export const Stories = () => {
-  const { user, setUser, profileImage } = useAuth();
+  const { companyData, setCompanyData, profileImageCompany } = useAuth();
   const [selectedFileVideo, setSelectedFileVideo] = useState();
   const [selectedFileImage, setSelectedFileImage] = useState();
-  const [story, setStory] = useState(user.stories);
+  const [story, setStory] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
@@ -58,18 +57,20 @@ export const Stories = () => {
 
   async function checkLogin() {
     try {
-      const res = await getUpdateUser();
+      const res = await getUpdateCompany();
       console.log("Get LOGON", res.data);
-      setUser(res.data);
+      setCompanyData(res.data);
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    setStory(user.stories);
-    console.log(user);
-  }, [user]);
+    if (companyData && companyData.stories) {
+      setStory(companyData.stories);
+    }
+  }, [companyData]);
+  
 
   return (
     <>
@@ -82,8 +83,41 @@ export const Stories = () => {
               <div className="text">Watch all</div>
             </a>
           </div>
+          <div className="header-content">
+            <a href="#" className="btn" onClick={openModal}>
+              <i className="ri-add-circle-fill"></i>
+              <div className="btn-text">Add Photos</div>
+            </a>
+          </div>
         </div>
         <div className="stories">
+          <div className="stories-img color image-container">
+            <img src={profileImageCompany} alt="" className="image" />
+            <div className="overlay">
+              <label className="custom-file-input">
+                <input
+                  name="miArchivo"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInput}
+                />
+              </label>
+            </div>
+            {/* <video ref={selectedFile} controls /> */}
+          </div>
+          {
+            story.map((element) => (
+              <div className="stories-img color">
+                <img className="historyImageProfile" src={element.url} alt="" />
+              </div>
+            ))
+          }
+          <div className="stories-img color">
+            <img className="historyImageProfile" ref={imageRef} alt="" />
+          </div>
+          <button className="subir-historias" onClick={handleUploadImage}>
+            subir historia
+          </button>
         </div>
         <Modal onClose={closeModal} isOpen={modalIsOpen}>
           <Publicar />

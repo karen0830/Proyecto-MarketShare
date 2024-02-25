@@ -1,8 +1,9 @@
-.general-container {
+.profileCompany {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
+  grid-column: 2/4;
 }
 
 .banner {

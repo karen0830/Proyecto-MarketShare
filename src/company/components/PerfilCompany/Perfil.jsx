@@ -1,17 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import "./Perfil.css";
-import {
-  getImage,
-  getPublications,
-  getUpdateUser,
-  sendPublications,
-} from "../../../common/api/auth.js";
+import "./PerfilCompany.css";
+
 import { useAuth } from "../../../common/context/AuthContext.jsx";
-import Publications from "../Publications/Publications";
 import { Link } from "react-router-dom";
-import { Publicar } from "../Publications/Publicar/Publicar.jsx";
-import { Modal } from "../Publications/Publicar/Publicar.jsx";
 import { ChangeProfile, ModalChangeProfile } from "./ChangeProfile.jsx";
+import Publications from "../../../common/Publications/Publications.jsx";
+import { Publicar, Modal } from "../../../common/Publications/Publicar/Publicar.jsx";
 
 export const sharedData = createContext();
 export const useShareData = () => {
@@ -22,8 +16,8 @@ export const useShareData = () => {
   return context;
 };
 
-export const PerfilCompany = () => {
-  const { user, profileImage, setProfileImage, profileData } = useAuth();
+export const Perfil = () => {
+  const { companyData, profileImageCompany, setProfileImageCompany,isAuthenticatedCompany, profileData } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalChageProfileOpen, setModalChageProfileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -51,7 +45,7 @@ export const PerfilCompany = () => {
   };
 
   return (
-    <div className={"general-container"}>
+    <div className={"profileCompany"}>
       {profileData ? (
         <div className={loading ? "spinner hiddenInfo" : "profileUser"}>
           <div className="banner">
@@ -66,7 +60,7 @@ export const PerfilCompany = () => {
               />
             </div>
             <div className="info-usuarioData">
-              <h1>{profileData ? profileData.username : user.username}</h1>
+              <h1>{profileData ? profileData.username : companyData.userNameCompany}</h1>
               <div className="button-containerData">
                 <button>Seguir</button>
                 <button>Mensaje</button>
@@ -100,13 +94,13 @@ export const PerfilCompany = () => {
           <Publications />
         </div>
       ) : (
-        <div className={"general-container"}>
+        <div className={"profileCompany"}>
           <div className="banner">
             <img src="./img/banner.jpeg" alt="" />
           </div>
           <div className="floatData">
             <div className="profile-picture">
-              <img className="profileImageData" src={profileImage} alt="" />
+              <img className="profileImageData" src={profileImageCompany} alt="" />
               <button
                 onClick={openModalChageProfile}
                 htmlFor="fileInput"
@@ -122,7 +116,7 @@ export const PerfilCompany = () => {
               </ModalChangeProfile>
             </div>
             <div className="info-usuarioData">
-              <h1>{user.username}</h1>
+              <h1>{companyData.userNameCompany}</h1>
               <div className="button-containerData">
                 <div className="form-container">
                   <form

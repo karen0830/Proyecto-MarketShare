@@ -93,45 +93,10 @@ export const getProfileImage = async () => {
   }
 }
 
-export const getUpdateStories = async file => {
-  try {
-    const formData = new FormData();
-    formData.append('miArchivo', file); // Agregar el archivo al objeto FormData
-    const response = await ruta_protegida().post(`/addStories`, formData);
-    console.log(file);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export const getUpdateUser = async () => {
   try {
     const response = await ruta_protegida().get(`/profileUser`);
     return response;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export const sendPublications = async (file, Hola) => {
-  try {
-    const formData = new FormData();
-    formData.append('publication', file); // Agregar el archivo al objeto FormData
-    formData.append('Hola', Hola); // Agregar el texto al objeto FormData
-
-    const response = await ruta_protegida().post("/publications", formData);
-    console.log(file);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export const getPublications = async () => {
-  try {
-    const response = await ruta_protegida().get('/getPublications');
-    return response
   } catch (error) {
     console.log(error);
   }
@@ -149,6 +114,15 @@ const deleteStories = async () => {
 export const reactionLike = async (reaction) => {
   try {
     const response = await ruta_protegida().post('/reactionLike', reaction)
+    return response
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getPublications = async () => {
+  try {
+    const response = await ruta_protegida().get('/getPublications');
     return response
   } catch (error) {
     console.log(error);
@@ -181,16 +155,29 @@ export const getProfile = async username => {
   }
 }
 
-export const addPublicationsVideo = async (file, Hola) => {
-  try {
-    const formData = new FormData();
-    formData.append('publication', file); // Agregar el archivo al objeto FormData
-    formData.append('Hola', Hola); // Agregar el texto al objeto FormData
+export const shareData = async (contenido, link) => {
+  const data = {
+    contenido: contenido,
+    link: link
+  }
 
-    const response = await ruta_protegida().post("/addPublicationVideo", formData);
-    console.log(file);
+  try {
+    const response = await ruta_protegida().post("/sharePublication", data);
     return response;
   } catch (error) {
-    console.log(error);
+    console.error('Error en la solicitud:', error);
+    // Puedes manejar el error según tus necesidades
+    throw error; // Lanzar el error nuevamente o manejarlo de otra manera
+  }
+}
+
+export const getShareData = async () => {
+  try {
+    const response = await ruta_protegida().get("/getSharePublications");
+    return response;
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    // Puedes manejar el error según tus necesidades
+    throw error; // Lanzar el error nuevamente o manejarlo de otra manera
   }
 }

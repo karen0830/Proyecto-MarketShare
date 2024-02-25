@@ -7,20 +7,13 @@ import React, {
   Suspense,
 } from "react";
 import "./Perfil.css";
-import {
-  getImage,
-  getPublications,
-  getUpdateUser,
-  sendPublications,
-} from "../../../common/api/auth.js";
 import { useAuth } from "../../../common/context/AuthContext.jsx";
 import { Link } from "react-router-dom";
-import { Publicar } from "../Publications/Publicar/Publicar.jsx";
-import { Modal } from "../Publications/Publicar/Publicar.jsx";
 import { ChangeProfile, ModalChangeProfile } from "./ChangeProfile.jsx";
 import Loader from "../Loaders/Loader";
+import { Modal, Publicar } from "../../../common/Publications/Publicar/Publicar.jsx";
 
-const Publications = lazy(() => import("../Publications/Publications.jsx"));
+const Publications = lazy(() => import("../../../common/Publications/Publications.jsx"));
 export const sharedData = createContext();
 export const useShareData = () => {
   const context = useContext(sharedData);
@@ -141,9 +134,6 @@ export const Perfil = () => {
                   ></form>
                   <input type="file" name="avatar" className="input-button" />
                 </div>
-                <button type="submit" onClick={openModal}>
-                  Publicar
-                </button>
                 <Modal onClose={closeModal} isOpen={modalIsOpen}>
                   <Publicar />
                 </Modal>

@@ -4,12 +4,12 @@ import { adminApp } from "../firebase.js";
 import { ref, getStorage, deleteObject } from "firebase/storage";
 import { IncomingForm } from "formidable";
 import fs from "fs";
-import CompanyModel from "../models/company.models.js";
 import User from "../models/user.models.js";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
+import CompanyModel from "../models/company.models.js";
 
 
 export const registerUser = async (req, res) => {
@@ -99,7 +99,7 @@ export const loginUser = async (req, res) => {
             email: userFound.email,
             profileImage: userFound.profileImage,
             stories: userFound.stories,
-            publications: userFound.publications.reverse()
+            shares: userFound.shares
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -294,24 +294,24 @@ export const updateProfileReactionsLove = async (req, res) => {
         const url = "hdjhfjhsdfjfhjf";
         const authorizationHeader = req.headers['authorization'];
         const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-        
+
         if (token === 'null') {
             return res.status(401).json({ message: "Unauthorized 1" });
         }
 
         const decodedToken = jwt.decode(token);
         const userName = decodedToken.name;
-    
+
         // Busca las publicaciones de otros usuarios donde el usuario actual ha reaccionado
-        const otherUserPublications = await User.find({ 
+        const otherUserPublications = await User.find({
             "publications.reactions.like.user": userName
         });
-        
+
         if (!otherUserPublications) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        
+
 
         console.log(otherUserPublications);
         // Actualiza la foto de perfil en las reacciones de otros usuarios
@@ -382,178 +382,12 @@ export const verifyToken = async (req, res) => {
             stories: userFound.stories,
             imagen: userFound.profileImage,
             username: userFound.username,
-            publications: userFound.publications,
+            shares: userFound.shares
         });
     } catch (error) {
         console.error("Error al verificar el token:", error);
         return res.status(403).json({ message: "Invalid token" });
     }
-};
-
-export const addStories = async (req, res) => {
-    const form = new IncomingForm(); // Changed this line
-    form.parse(req, (err, fields, files) => {
-        const bucket = adminApp
-            .storage()
-            .bucket("gs://marketshare-c5720.appspot.com");
-        if (err) {
-            console.error("Error al procesar el formulario:", err);
-            res.status(500).send("Error al procesar el formulario");
-            return;
-        }
-
-        const archivo = files.miArchivo; // Asegúrate de que el nombre coincida con el campo de tu formulario
-        if (!archivo) {
-            res.status(400).send("No se ha subido ningún archivo");
-            return;
-        }
-
-        const storagePath = "stories/" + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
-        const file = bucket.file(storagePath);
-        const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
-        const stream = file.createWriteStream({
-            metadata: {
-                contentType: archivo.type,
-            },
-        });
-
-        stream.on("error", (err) => {
-            console.error("Error al subir el archivo a Firebase Storage:", err);
-            res.status(500).send("Error al subir el archivo a Firebase Storage");
-        });
-
-        stream.on("finish", () => {
-            console.log("Archivo subido exitosamente a Firebase Storage");
-            const config = {
-                action: "read",
-                expires: "03-01-2500",
-            };
-            file.getSignedUrl(config, (err, url) => {
-                if (err) {
-                    console.error("Error al obtener el enlace de la imagen:", err);
-                    res.status(500).send("Error al obtener el enlace de la imagen");
-                } else {
-                    const authorizationHeader = req.headers['authorization'];
-                    console.log("header", req.headers);
-
-                    if (!authorizationHeader) {
-                        return res.status(401).json({ message: "Unauthorized 1" });
-                    }
-
-                    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-                    // const token = req.cookies.token;
-                    const decodedToken = jwt.decode(token);
-                    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
-                    const fechaActual = new Date();
-                    const fechaLimite = new Date(
-                        fechaActual.getTime() + 24 * 60 * 60 * 1000
-                    );
-                    console.log(fechaLimite);
-
-                    const result = async () => {
-                        const email = decodedToken.email;
-                        const userFound = await User.findOne({ email });
-                        console.log(userFound);
-                        try {
-                            await User.updateOne(
-                                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-                                {
-                                    $push: {
-                                        stories: {
-                                            url: url,
-                                            fecha_create: fechaActual,
-                                            fecha_limit: fechaLimite,
-                                        }, // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
-                                    },
-                                }
-                            );
-                            console.log("Nuevo campo agregado correctamente:", result);
-                        } catch (err) {
-                            console.error("Error al agregar el nuevo campo:", err);
-                        }
-                    }
-
-                    result();
-                    let email = decodedToken.email;
-                    const userFoundM = async () => {
-                        const userFound = await User.findOne({ email });
-                        console.log(userFound);
-                        return res.json({
-                            id: userFound._id,
-                            email: userFound.email,
-                            tokens: token,
-                            imagen: userFound.profileImage,
-                            username: userFound.username,
-                            stories: userFound.stories,
-                        });
-                    };
-
-                    userFoundM();
-                }
-            });
-        });
-        localReadStream.pipe(stream);
-    });
-};
-
-export const archivedStories = async (req, res) => {
-    const authorizationHeader = req.headers['authorization'];
-    console.log("header", req.headers);
-
-    if (!authorizationHeader) {
-        return res.status(401).json({ message: "Unauthorized 1" });
-    }
-
-    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-    // const token = req.cookies.token;
-    const decodedToken = jwt.decode(token);
-    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
-
-    let email = decodedToken.email;
-    let userFound = await User.findOne({ email });
-
-    let stories = userFound.stories;
-    console.log(stories);
-    stories.forEach((element) => {
-        console.log(element);
-        if (element.fecha_create >= element.fecha_limit) {
-            console.log("entro");
-            User.updateOne(
-                { _id: decodedToken.id }, // Esto es el filtro, que selecciona el documento a actualizar basado en el _id
-                {
-                    $push: {
-                        archivedStory: {
-                            url: element.url,
-                        }, // Esto agrega el nuevo campo 'nuevoCampo' con el valor 'valor'
-                    },
-                    $pull: {
-                        stories: {
-                            url: element.url,
-                            fecha_create: element.fecha_create,
-                            fecha_limit: element.fecha_limit,
-                        },
-                    },
-                },
-                (err, result) => {
-                    // Esta es la función de callback que se ejecuta después de la operación de actualización
-                    if (err) {
-                        console.error("Error al agregar el nuevo campo:", err);
-                    } else {
-                        console.log("Nuevo campo agregado correctamente:", result);
-                    }
-                }
-            );
-        } else console.log("Menor");
-    });
-
-    let user = await User.findOne({ email });
-    return res.json({
-        id: user._id,
-        email: user.email,
-        tokens: token,
-        stories: user.stories,
-        publi: user.archivedStories,
-    });
 };
 
 export const deleteStories = async (req, res) => {
@@ -615,256 +449,6 @@ export const deleteStories = async (req, res) => {
         publi: user.archivedStories,
     });
 };
-
-export const addPublications = async (req, res) => {
-    const form = new IncomingForm(); // Changed this line
-    form.parse(req, (err, fields, files) => {
-        const contenido = fields.Hola[0];
-        console.log(contenido);
-        const bucket = adminApp
-            .storage()
-            .bucket("gs://marketshare-c5720.appspot.com");
-        if (err) {
-            console.error("Error al procesar el formulario:", err);
-            res.status(500).send("Error al procesar el formulario");
-            return;
-        }
-
-        const archivo = files.publication; // Asegúrate de que el nombre coincida con el campo de tu formulario
-        if (!archivo) {
-            res.status(400).send("No se ha subido ningún archivo");
-            return;
-        }
-        console.log(archivo[0]);
-        const storagePath = "publications/" + archivo[0].newFilename + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
-        const file = bucket.file(storagePath);
-        const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
-        const stream = file.createWriteStream({
-            metadata: {
-                contentType: archivo.type,
-            },
-        });
-
-        stream.on("error", (err) => {
-            console.error("Error al subir el archivo a Firebase Storage:", err);
-            res.status(500).send("Error al subir el archivo a Firebase Storage");
-        });
-
-        stream.on("finish", () => {
-            console.log("Archivo subido exitosamente a Firebase Storage");
-            const config = {
-                action: "read",
-                expires: "03-01-2500",
-            };
-            file.getSignedUrl(config, (err, url) => {
-                if (err) {
-                    console.error("Error al obtener el enlace de la imagen:", err);
-                    res.status(500).send("Error al obtener el enlace de la imagen");
-                } else {
-                    const authorizationHeader = req.headers['authorization'];
-                    console.log("header", req.headers);
-
-                    if (!authorizationHeader) {
-                        return res.status(401).json({ message: "Unauthorized 1" });
-                    }
-
-                    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-                    // const token = req.cookies.token;
-                    console.log(token);
-                    const decodedToken = jwt.decode(token);
-
-                    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
-
-                    const result = async () => {
-                        const email = decodedToken.email;
-                        const userFound = await User.findOne({ email });
-                        console.log(userFound);
-                        try {
-                            await User.updateOne(
-                                { _id: decodedToken.id },
-                                {
-                                    $push: {
-                                        publications: {
-                                            type: "img",
-                                            url: url,
-                                            contenido: contenido,
-                                            profileImage: userFound.profileImage,
-                                            user: userFound.username,
-                                            reactions: {
-                                                comments: [],
-                                                share: [],
-                                                like: [],
-                                            },
-                                        },
-                                    },
-                                }
-                            );
-                            console.log("Nuevo campo agregado correctamente:", result);
-                        } catch (err) {
-                            console.error("Error al agregar el nuevo campo:", err);
-                        }
-                    }
-
-                    result();
-
-                    let email = decodedToken.email;
-                    const userFoundM = async () => {
-                        const userFound = await User.findOne({ email });
-
-                        return res.json({
-                            publications: userFound.publications.reverse(),
-                        });
-                    };
-
-                    userFoundM();
-                }
-            });
-        });
-        localReadStream.pipe(stream);
-    });
-};
-
-
-//const path = require('path');
-
-// Función para subir el video a Firebase Storage y obtener la URL firmada
-const uploadVideoToStorage = (filePath, fileName) => {
-    const bucket = adminApp.storage().bucket();
-
-    // Subir el archivo a Firebase Storage
-    return bucket.upload(filePath, {
-        destination: `publications/${fileName}` // Especifica la ruta y el nombre del archivo en Firebase Storage
-    })
-        .then(() => {
-            // Generar una URL firmada para acceder al archivo
-            return bucket.file(`publications/${fileName}`).getSignedUrl({
-                action: 'read',
-                expires: '03-01-2500', // Fecha de expiración de la URL
-            });
-        })
-        .then((signedUrls) => {
-            // Devolver la URL firmada
-            return signedUrls[0];
-        })
-        .catch((error) => {
-            console.error('Error al subir el video a Firebase Storage:', error);
-            throw error;
-        });
-};
-
-// Función para procesar el formulario y subir el video a Firebase Storage
-export const addPublicationsVideo = (req, res) => {
-    const authorizationHeader = req.headers['authorization'];
-    console.log("header", req.headers);
-
-    if (!authorizationHeader) {
-        return res.status(401).json({ message: "Unauthorized 1" });
-    }
-
-    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-    // const token = req.cookies.token;
-    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
-    const decodedToken = jwt.decode(token);
-    const form = new IncomingForm();
-
-    form.parse(req, (err, fields, files) => {
-        const contenido = fields.Hola[0] ? fields.Hola[0] : "";
-        if (err) {
-            console.error('Error al procesar el formulario:', err);
-            res.status(500).send('Error al procesar el formulario');
-            return;
-        }
-        console.log(files);
-        // Obtener el nombre original del archivo de video
-        const originalFileName = files.publication ? files.publication[0].originalFilename : null;
-        console.log(originalFileName);
-        if (!originalFileName) {
-            res.status(400).send('No se ha subido ningún archivo de video');
-            return;
-        }
-
-        // Renombrar el archivo para eliminar caracteres especiales
-        const fileName = originalFileName.replace(/[^\w\s.-]/gi, '');
-
-        // Obtener la ruta del archivo del campo de formulario 'video'
-        const filePath = files.publication ? files.publication[0].filepath : null;
-        if (!filePath) {
-            res.status(400).send('No se ha subido ningún archivo de video');
-            return;
-        }
-
-        // Subir el video a Firebase Storage y obtener la URL firmada
-        uploadVideoToStorage(filePath, fileName)
-            .then((signedUrl) => {
-                // Enviar la URL firmada como respuesta
-                const result = async () => {
-                    const email = decodedToken.email;
-                    let userFound = await User.findOne({ email });
-                    console.log(userFound);
-                    try {
-                        await User.updateOne(
-                            { _id: decodedToken.id },
-                            {
-                                $push: {
-                                    publications: {
-                                        url: signedUrl,
-                                        type: "video/mp4",
-                                        contenido: contenido,
-                                        profileImage: userFound.profileImage,
-                                        user: userFound.username,
-                                        reactions: {
-                                            comments: [],
-                                            share: [],
-                                            like: [],
-                                        },
-                                    },
-                                },
-                            }
-                        );
-                        console.log("Nuevo campo agregado correctamente:", result);
-                        userFound = await User.findOne({ email });
-
-                        return res.json({
-                            publications: userFound.publications.reverse(),
-                        });
-                    } catch (err) {
-                        console.error("Error al agregar el nuevo campo:", err);
-                        res.status(500).send("Error al agregar el nuevo campo:", err);
-                    }
-                }
-
-                result();
-            })
-            .catch((error) => {
-                // Manejar errores
-                console.error('Error al subir el video a Firebase Storage:', error);
-                res.status(500).send('Error al subir el video a Firebase Storage');
-            });
-    });
-};
-
-
-
-
-export const getPublications = async (req, res) => {
-    const authorizationHeader = req.headers['authorization'];
-    console.log("header", req.headers);
-    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-    // const token = req.cookies.token;
-
-    if (token === 'null') {
-        return res.status(401).json({ message: "Unauthorized 1" });
-    }
-
-
-    // if (!token) return res.status(401).json({ message: "Unauthorized" });
-    const decodedToken = jwt.decode(token);
-    let email = decodedToken.email;
-    let user = await User.findOne({ email });
-    res.json({
-        publications: user.publications.reverse()
-    })
-}
 
 export const reactionLove = async (req, res) => {
     const { link, userName } = req.body;
@@ -993,9 +577,9 @@ export const comments = async (req, res) => {
             { username: userName, "publications.url": link },
             { "publications.$": 1 }
         );
-    
+
         console.log(publicationFound.publications[0].reactions);
-    
+
         return res.json({
             publications: publicationFound.publications[0]
         });
@@ -1095,21 +679,33 @@ export const getAllPublications = async (req, res) => {
         const decodedToken = jwt.decode(token);
         console.log(decodedToken);
         let publications;
-        if (token === 'null') {
-            publications = await User.find({}, 'publications');
-            return res.json({
-                publis: publications
-            })
-        } else {
-            publications = await User.find({ username: { $ne: decodedToken.name } }, 'publications');
-            console.log(publications);
-            res.json({
-                publis: publications
-            })
-        }
+        // if (token === 'null') {
+        publications = await CompanyModel.find({}, 'publications');
+        return res.json({
+            publis: publications
+        })
+        // } else {
+        //     publications = await CompanyModel.find({ username: { $ne: decodedToken.name } }, 'publications');
+        //     console.log(publications);
+        //     res.json({
+        //         publis: publications
+        //     })
+        // }
     } catch (error) {
         console.log(error);
     }
+}
+
+export const getPublications = async (req, res) => {
+    const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
+
+    // if (!token) return res.status(401).json({ message: "Unauthorized" });
+    const decodedToken = jwt.decode(token);
+    let id = decodedToken.id;
+    let user = await User.findOne({ _id: id });
+    res.json({
+        publications: user.publications
+    })
 }
 
 export const followPerson = async (req, res) => {
@@ -1150,7 +746,7 @@ export const getProfile = async (req, res) => {
             res.json({
                 id: userFound.hashedID,
                 username: userFound.username,
-                publications: userFound.publications,
+                shares: userFound.shares,
                 profileImage: userFound.profileImage
             });
         } else {
@@ -1252,7 +848,7 @@ export const postMessage = async (req, res) => {
             if (!verifyUserFrom || !verifyUserTo) return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
 
             await User.findOneAndUpdate(
-                { username: to},
+                { username: to },
                 {
                     $push: {
                         messages: {
@@ -1342,5 +938,53 @@ export const getMessage = async (req, res) => {
 };
 
 
+export const sharePublications = async (req, res) => {
+    const { link, contenido } = req.body;
+    const document = await CompanyModel.findOne({
+        "publications.url": link
+    }, { "publications.$": 1 });
+    console.log(link);
+    console.log(req);
+    const token = req.Token;
+    const decodedToken = jwt.decode(token)
+    console.log(token);
+    const result = async () => {
+        const id = decodedToken.id;
+        let userFound = await User.findOne({ _id: id });
+        console.log(userFound);
+        try {
+            await User.updateOne(
+                { _id: decodedToken.id },
+                {
+                    $push: {
+                        shares: {
+                            Publication: document.publications,
+                            contenido: contenido,
+                            profileImage: userFound.profileImage,
+                            user: userFound.username,
+                        },
+                    },
+                }
+            );
+            console.log("Nuevo campo agregado correctamente:", result);
+            const id = decodedToken.id;
+            userFound = await User.findOne({ _id: id });
+            res.json(userFound)
+        } catch (err) {
+            console.error("Error al agregar el nuevo campo:", err);
+        }
+    }
+    result();
+}
 
+export const getSharePublications = async (req, res) => {
+    const token = req.Token;
+    const decodedToken = jwt.decode(token)
+    console.log(token);
+    const id = decodedToken.id;
+    let userFound = await User.findOne({ _id: id });
+    res.json({
+        shares: userFound.shares
+    })
+}
 

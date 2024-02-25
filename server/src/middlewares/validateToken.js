@@ -14,7 +14,7 @@ export const authRequired = (req, res, next) => {
         const tok = jwt.decode(token);
         console.log("tok   ",tok);
         if(err) return  res.status(403).json({message: `Invalid token ${err}`})
-        req.user = user;
+        req.Token = token;
         next()
     })
 
@@ -32,7 +32,7 @@ export const authRequiredCompany = (req, res, next) => {
     jwt.verify(tokenCompany, TOKEN_SECRET, (err, company) => {
         if(err) return  res.status(403).json({message: "Invalid token"})
 
-        req.company = company;
+        req.Token = tokenCompany;
         next()
     })
 

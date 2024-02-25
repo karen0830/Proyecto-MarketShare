@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
     },
-    publications: {
+    shares: {
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
     },

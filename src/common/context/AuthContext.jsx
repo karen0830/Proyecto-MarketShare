@@ -4,12 +4,12 @@ import {
   loginRequest,
   verityTokenRequest,
   logoutUser,
-  getPublications,
   getProfileImage,
   getAllPublications,
+  getPublications,
+  getShareData
 } from "../api/auth";
-import { registerCompanyRequest, loginRequestCompany, verityTokenRequestCompany } from "../api/auth.company";
-
+import { registerCompanyRequest, loginRequestCompany, verityTokenRequestCompany, getAllPublicationsCompany, logoutCompany } from "../api/auth.company";
 export const AuthContext = createContext();
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -23,13 +23,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [publications, setPublications] = useState(null);
+  const [publications, setPublications] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [profileData, setProfileData] = useState(null);
   const [profileImageCompany, setProfileImageCompany] = useState(null);
   const [isAuthenticatedCompany, setIsAuthenticatedCompany] = useState(false);
   const [loadingCompany, setLoadingCompany] = useState(true);
   const [companyData, setCompanyData] = useState(null);
+  const [allPublications, setAllPublications] = useState([]);
 
   const signup = async (user) => {
     console.log(user);
@@ -72,9 +73,18 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("tokenCompany", res.data.token);
       const resverify = await verityTokenRequest();
       console.log(resverify);
+      const publications = [];
+      const response = await getAllPublicationsCompany();
+      console.log(response);
+      response.data.publis.forEach((element) => {
+        element.publications.forEach((publication) => {
+          publications.push(publication);
+        });
+      });
+      setAllPublications(publications);
       setIsAuthenticatedCompany(true);
       setCompanyData(res.data);
-      // setPublications(res.data.publications);
+      setPublications(res.data.publications);
       setProfileImageCompany(res.data.profileImage);
     } else {
       console.log(res);
@@ -92,12 +102,16 @@ export const AuthProvider = ({ children }) => {
       console.log(resverify);
       setIsAuthenticated(true);
       setUser(res.data);
-      setPublications(res.data.publications);
+      setPublications(res.data.shares);
       setProfileImage(res.data.profileImage);
     } else {
       setErrors([[res.response.data.message]]);
     }
   };
+
+  useEffect(() => {
+    console.log("Pgshdssdsd", publications);
+  }, [publications])
 
   const logoutUsers = async () => {
     try {
@@ -105,6 +119,21 @@ export const AuthProvider = ({ children }) => {
       getAllPublications();
       setIsAuthenticated(false);
       setUser(null);
+    } catch (error) {
+      console.log(error);
+      if (Array.isArray(error.response.data)) {
+        setErrors(error.response.data);
+        console.log(error.response.data);
+      }
+      setErrors([error.response.data.message]);
+    }
+  };
+
+  const logoutCompanyData = async () => {
+    try {
+      logoutCompany();
+      setIsAuthenticatedCompany(false);
+      setCompanyData(null);
     } catch (error) {
       console.log(error);
       if (Array.isArray(error.response.data)) {
@@ -141,12 +170,12 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             return;
           } else {
-            const getPublicationResponse = await getPublications();
+            const getShare = await getShareData();
+            console.log("Shareeee", getShare);
             const getImageProfile = await getProfileImage();
-            console.log(getPublicationResponse.data.publications);
-            setPublications(getPublicationResponse.data.publications);
             setProfileImage(getImageProfile.data.profileImage);
             setIsAuthenticated(true);
+            setPublications(getShare.data.shares.reverse())
             setUser(res.data);
             setLoading(false);
           }
@@ -159,8 +188,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
     checkLogin();
-  }, []);
-
+  }, [isAuthenticated]);
 
 
   useEffect(() => {
@@ -183,7 +211,7 @@ export const AuthProvider = ({ children }) => {
             // const getPublicationResponse = await getPublications();
             // const getImageProfile = await getProfileImage();
             // console.log(getPublicationResponse.data.publications);
-            // setPublications(getPublicationResponse.data.publications);
+            setPublications(res.data.publications.reverse());
             setProfileImageCompany(res.data.profileImage);
             setIsAuthenticatedCompany(true);
             setCompanyData(res.data);
@@ -198,7 +226,24 @@ export const AuthProvider = ({ children }) => {
       }
     }
     checkLoginCompany();
-  }, []);
+  }, [isAuthenticatedCompany]);
+
+  useEffect(() => {
+    async function allPublis() {
+      const publications = [];
+      const response = await getAllPublicationsCompany();
+      console.log("Publis", response);
+      response.data.publis.forEach((element) => {
+        element.publications.forEach((publication) => {
+          publications.push(publication);
+        });
+      });
+      setAllPublications(publications.reverse());
+    }
+
+    allPublis()
+  }, [isAuthenticated, isAuthenticatedCompany])
+
   return (
     <AuthContext.Provider
       value={{
@@ -225,7 +270,10 @@ export const AuthProvider = ({ children }) => {
         companyData,
         setCompanyData,
         profileImageCompany,
-        setProfileImageCompany
+        setProfileImageCompany,
+        setAllPublications,
+        allPublications,
+        logoutCompanyData
       }}
     >
       {children}

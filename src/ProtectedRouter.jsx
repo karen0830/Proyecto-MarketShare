@@ -2,6 +2,8 @@
 import React, { useEffect } from 'react'
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from './common/context/AuthContext'
+import Loader from './user/components/Loaders/Loader';
+
 export const ProtectedRouter = () => {
     const { loading, user, isAuthenticated } = useAuth()
     if (loading) return <Loader />;

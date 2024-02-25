@@ -1,13 +1,13 @@
 import "./publicar.css";
 import {
   sendPublications,
-  getPublications,
+  getPublicationsCompany,
   addPublicationsVideo,
-} from "../../../../common/api/auth";
-import { useAuth } from "../../../../common/context/AuthContext";
+} from "../../api/auth.company";
+import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { getPublications } from "../../api/auth";
 export const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) {
     return null;
@@ -30,7 +30,7 @@ export const Modal = ({ isOpen, onClose, children }) => {
 };
 
 export const Publicar = () => {
-  const { setPublications } = useAuth();
+  const { setPublications, isAuthenticatedCompany, isAuthenticated } = useAuth();
   const [postContent, setPostContent] = useState([]);
   const [imagePublication, setImagePublication] = useState(null);
   const [videoPublication, setVideoPublication] = useState(null);
@@ -93,17 +93,19 @@ export const Publicar = () => {
 
   async function sendPublication() {
     try {
+     if (isAuthenticatedCompany) {
       if (videoPublication) {
         const res = await addPublicationsVideo(videoPublication, postContent);
         console.log(res);
-        const getPublicationResponse = await getPublications();
+        const getPublicationResponse = await getPublicationsCompany();
         setPublications(getPublicationResponse.data.publications);
       } else {
         const res = await sendPublications(imagePublication, postContent);
         console.log(res);
-        const getPublicationResponse = await getPublications();
+        const getPublicationResponse = await getPublicationsCompany();
         setPublications(getPublicationResponse.data.publications);
       }
+     }
     } catch (error) {
       console.log(error);
     }

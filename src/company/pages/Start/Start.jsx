@@ -1,12 +1,10 @@
-import React, { useState, lazy, Suspense } from "react";
-import "./PerfilUsuario.css";
+import React, { useState } from "react";
 import SideBar from "../../../common/sidebar/sidebar.jsx";
-import { Perfil } from "../../components/PerfilUsuario/Perfil";
+import { Stories } from "../../components/Start/Stories/Stories";
 
 import TopBar from "../../../common/TopBar/TopBar.jsx";
 
-
-export const PerfilUsuario = () => {
+export const Start = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
   const toggleSidebar = () => {
@@ -19,7 +17,7 @@ export const PerfilUsuario = () => {
     >
       <TopBar toggleSidebar={toggleSidebar} />
       <SideBar />
-      <Perfil />
+      <Stories></Stories>
     </div>
   );
 };

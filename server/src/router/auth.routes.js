@@ -7,26 +7,22 @@ import {
     profileUser,
     imageProfile,
     verifyToken,
-    addStories,
-    archivedStories,
-    addPublications,
     reactionLove,
     deleteStories,
     comments,
     deleteComment,
     refreshToken,
-    getPublications,
     getProfileImage,
     getProfile,
     getAllPublications,
     postMessage,
     getMessage,
-    addPublicationsVideo,
-    updateProfileReactionsLove 
+    getPublications,
+    sharePublications,
+    getSharePublications
 } from "../controllers/auth.controller.js";
 import {
-    authRequired,
-    authRequiredCompany,
+    authRequired
 } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.js";
 import {
@@ -40,22 +36,19 @@ router.post("/msg", postMessage);
 router.post("/registerUser", validateSchema(registerSchema), registerUser);
 router.post("/loginUser", validateSchema(loginSchema), loginUser);
 router.post("/logoutUser", logoutUser);
-router.post("/publications", addPublications);
 router.post("/reactionLike", reactionLove);
 router.post("/imageProfile", imageProfile);
-router.post("/addStories", addStories);
 router.post("/comment", comments);
 router.post("/refreshToken", refreshToken);
-router.post("/addPublicationVideo", addPublicationsVideo)
+router.post("/sharePublication", authRequired, sharePublications);
 router.get("/profileUser", authRequired, profileUser);
 router.get("/verify", authRequired, verifyToken);
-router.get("/getPublications", getPublications);
+router.get("/getSharePublications", authRequired, getSharePublications);
 router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);
+router.get("/getPublications", authRequired, getPublications)
 router.get("/getMessages", getMessage)
 router.post("/getProfile", getProfile);
-router.put("/archivedStory", archivedStories);
 router.put("/deleteStories", deleteStories);
-router.put("/updateReactions", authRequired, updateProfileReactionsLove)
 router.delete("/deleteComment", deleteComment);
 export default router;
