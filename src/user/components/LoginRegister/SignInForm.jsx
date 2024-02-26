@@ -28,7 +28,7 @@ export const SignInForm = () => {
               ))
             }
             <form className="form-signin" onSubmit={onSubmit}>
-              <label htmlFor="email">Usuario</label>
+              <label htmlFor="email">user</label>
               <input className="form-styling" type="email"
                 {...register('email', { required: true })} />
               {
@@ -36,7 +36,7 @@ export const SignInForm = () => {
                   <p className="text-red-500">Email is required</p>
                 )
               }
-              <label htmlFor="password">Contraseña</label>
+              <label htmlFor="password">Password</label>
               <input
                 className="form-styling"
                 type="password"

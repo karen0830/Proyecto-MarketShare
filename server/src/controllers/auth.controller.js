@@ -15,9 +15,11 @@ import CompanyModel from "../models/company.models.js";
 export const registerUser = async (req, res) => {
     const { email, username, password } = req.body;
     const userFound = await User.findOne({ email });
-
-    if (userFound) {
-        return res.status(400).json({ message: "Email in use" });
+    const companyFound = await CompanyModel.findOne({ email });
+    const companyFoundUserName = await CompanyModel.findOne({ userNameCompany: username });
+    console.log(companyFoundUserName);
+    if (userFound || companyFound || companyFoundUserName) {
+        return res.status(400).json({ message: "Email or username in use" });
     }
     try {
         const hash = await bcrypt.hash(password, 10);

@@ -38,7 +38,7 @@ const LoginRegister = () => {
                 }
               >
                 <NavLink to="/loginUser" className="btn">
-                  Iniciar sesión
+                sign in
                 </NavLink>
               </li>
               <li
@@ -47,7 +47,7 @@ const LoginRegister = () => {
                 }
               >
                 <NavLink to="/registerUser" className="btn">
-                  Registrarse
+                  sign up
                 </NavLink>
               </li>
             </ul>

@@ -111,7 +111,7 @@ export const Share = ({ link, type }) => {
         <div className="input-publication">
           <label htmlFor="">Product Comment:</label>
           <input
-            placeholder="Describe tu producto"
+            placeholder="Describe the product"
             type="text"
             name="postContent"
             className="text-publication"

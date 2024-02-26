@@ -15,7 +15,6 @@ import { promisify } from "util";
 
 export const registerCompany = async (req, res) => {
     const {
-        companyName,
         userNameCompany,
         email,
         typeCompany,
@@ -26,21 +25,17 @@ export const registerCompany = async (req, res) => {
 
     try {
         // Verificar si ya existe una compañía con el mismo nombre de usuario
-        const existingCompanyByUsername = await CompanyModel.findOne({ userNameCompany });
-        if (existingCompanyByUsername) {
-            return res.status(400).json({ message: "El nombre de usuario de la compañía ya está en uso." });
+        const existingCompanyByUsername = await CompanyModel.findOne({ userNameCompany: userNameCompany });
+        const userFound = await User.findOne({ username: userNameCompany });
+        if (existingCompanyByUsername || userFound) {
+            return res.status(400).json({ message: "Email or username in use." });
         }
-
-        // Verificar si ya existe una compañía con el mismo nombre de compañía
-        const existingCompanyByName = await CompanyModel.findOne({ companyName });
-        if (existingCompanyByName) {
-            return res.status(400).json({ message: "El nombre de la compañía ya está en uso." });
-        }
-
+        
         // Verificar si ya existe una compañía con el mismo correo electrónico
         const existingCompanyByEmail = await CompanyModel.findOne({ email });
-        if (existingCompanyByEmail) {
-            return res.status(400).json({ message: "El correo electrónico ya está registrado." });
+        const existuserFound = await User.findOne({ email });
+        if (existingCompanyByEmail || existuserFound) {
+            return res.status(400).json({ message: "Email or username in use." });
         }
 
         // Hash de la contraseña
@@ -48,7 +43,6 @@ export const registerCompany = async (req, res) => {
 
         // Crear nueva compañía
         const newCompany = new CompanyModel({
-            companyName,
             userNameCompany,
             email,
             typeCompany,

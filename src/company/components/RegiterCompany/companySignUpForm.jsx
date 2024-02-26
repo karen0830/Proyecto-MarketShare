@@ -42,22 +42,11 @@ export const CompanySignUpForm = () => {
 
       <form className="form-signup" onSubmit={onSubmit}>
         {
-          errors.companyName && (
-            <p className="text-red-500">Nombre de la compañía es requerido</p>
-          )
-        }
-        <label htmlFor="companyName">Nombre de la compañía</label>
-        <input
-          className="form-styling"
-          type="text"
-          {...register('companyName', { required: true })}
-        />
-        {
           errors.userNameCompany && (
-            <p className="text-red-500">Usuario de la comñañia es requerido</p>
+            <p className="text-red-500">Company user is required</p>
           )
         }
-        <label htmlFor="userNameCompany">Usuario de la compañía</label>
+        <label htmlFor="userNameCompany">company user</label>
         <input
           className="form-styling"
           type="text"
@@ -65,10 +54,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.email && (
-            <p className="text-red-500">Correo electrónico es requerido</p>
+            <p className="text-red-500">Email is required</p>
           )
         }
-        <label htmlFor="email">Correo electrónico: </label>
+        <label htmlFor="email">Email: </label>
         <input
           className="form-styling"
           type="text"
@@ -76,10 +65,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.typeCompany && (
-            <p className="text-red-500">Tipo de empresa es requerido</p>
+            <p className="text-red-500">Company type is required</p>
           )
         }
-        <label htmlFor="typeCompany">Tipo de empresa:</label>
+        <label htmlFor="typeCompany">Company type:</label>
         <input
           className="form-styling"
           type="text"
@@ -87,10 +76,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.phoneNumber && (
-            <p className="text-red-500">Número de telefono es requerido</p>
+            <p className="text-red-500">Telephone number is required</p>
           )
         }
-        <label htmlFor="phoneNumber">Telefono:</label>
+        <label htmlFor="phoneNumber">Phone number:</label>
         <input
           className="form-styling"
           type="number"
@@ -98,10 +87,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.password && (
-            <p className="text-red-500">Contraseña es requerida</p>
+            <p className="text-red-500">Password is required</p>
           )
         }
-        <label htmlFor="password">Contraseña</label>
+        <label htmlFor="password">Password:</label>
         <input
           className="form-styling"
           type="password"
@@ -110,10 +99,10 @@ export const CompanySignUpForm = () => {
 
         {
           errors.confirmpassword && (
-            <p className="text-red-500">Confirmar contraseña es requerida</p>
+            <p className="text-red-500">Confirm password is required</p>
           )
         }
-        <label htmlFor="confirmpassword">Confirmar contraseña</label>
+        <label htmlFor="confirmpassword">Confirm password:</label>
         <input
           className="form-styling"
           type="text"

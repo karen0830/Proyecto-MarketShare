@@ -116,7 +116,7 @@ export const Stories = () => {
             <img className="historyImageProfile" ref={imageRef} alt="" />
           </div>
           <button className="subir-historias" onClick={handleUploadImage}>
-            subir historia
+          upload stories
           </button>
         </div>
         <Modal onClose={closeModal} isOpen={modalIsOpen}>

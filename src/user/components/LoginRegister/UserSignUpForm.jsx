@@ -29,7 +29,7 @@ export const UserSignUpForm = () => {
       }
 
       <form className="form-signup" onSubmit={onSubmit}>
-        <label htmlFor="fullname">Full name</label>
+        <label htmlFor="fullname">username</label>
         <input
           className="form-styling"
           type="text"

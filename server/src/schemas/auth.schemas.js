@@ -1,9 +1,6 @@
 import {z} from "zod";
 
 export const CompanyShema = z.object({
-    companyName: z.string({
-        required_error: 'companyName is required'
-    }),
     userNameCompany: z.string({
         required_error: 'userName Company is required'
     }),

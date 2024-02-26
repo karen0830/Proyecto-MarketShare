@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const companySchema = new mongoose.Schema({
-    companyName: {
-        type: String,
-        required: true,
-        trim: true
-    },
     userNameCompany: {
         type: String,
         required: true,

@@ -61,8 +61,8 @@ export const Perfil = () => {
             <div className="info-usuarioData">
               <h1>{profileData ? profileData.username : companyData.userNameCompany}</h1>
               <div className="button-containerData">
-                <button>Seguir</button>
-                <button>Mensaje</button>
+                <button>Follow</button>
+                <button>Message</button>
               </div>
             </div>
           </div>
@@ -126,12 +126,12 @@ export const Perfil = () => {
                   <input type="file" name="avatar" className="input-button" />
                 </div>
                 <button type="submit" onClick={openModal}>
-                  Publicar
+                Add photos/videos
                 </button>
                 <Modal onClose={closeModal} isOpen={modalIsOpen}>
                   <Publicar />
                 </Modal>
-                <button>Mensaje</button>
+                <button>Message</button>
               </div>
             </div>
           </div>
@@ -139,15 +139,15 @@ export const Perfil = () => {
             <div className="popularidad">
               <div>
                 <h3>100</h3>
-                <p>publicaciones</p>
+                <p>publications</p>
               </div>
               <div>
                 <h3>500</h3>
-                <p>seguidores</p>
+                <p>Followers</p>
               </div>
               <div>
                 <h3>200</h3>
-                <p>seguidos</p>
+                <p>Followed</p>
               </div>
             </div>
             <div className="form-container">

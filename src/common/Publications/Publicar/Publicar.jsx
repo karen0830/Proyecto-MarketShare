@@ -17,7 +17,7 @@ export const Modal = ({ isOpen, onClose, children }) => {
     <div className="modal-overlay">
       <div className="modal">
         <div className="closeModalChangeProfile">
-          <h4>Crear Publicación</h4>
+          <h4>Create post</h4>
           <button className="modal-close" onClick={onClose}>
             <i className="ri-chat-delete-line"></i>
           </button>
@@ -115,9 +115,9 @@ export const Publicar = () => {
     <div className="publicar">
       <form action="">
         <div className="input-publication">
-          <label htmlFor="">Describe tu producto:</label>
+          <label htmlFor="">Describe your product:</label>
           <input
-          placeholder="Describe tu producto"
+          placeholder="DESCRIBE YOUR PRODUCT"
             type="text"
             name="postContent"
             className="text-publication"
@@ -131,7 +131,7 @@ export const Publicar = () => {
           <label htmlFor="publication" className="file-publication">
             <span>
               <i className="ri-add-line"></i>
-              Agregar fotos/videos
+              Add photos/videos
             </span>
             <input id="publication" name="miArchivo" type="file" onChange={handleFilePublication} />
           </label>

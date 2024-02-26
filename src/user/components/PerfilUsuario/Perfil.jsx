@@ -76,17 +76,17 @@ export const Perfil = () => {
           </div>
           <div className="user-actionsData">
             <div className="popularidad">
-              <div>
+            <div>
                 <h3>100</h3>
-                <p>publicaciones</p>
+                <p>publications</p>
               </div>
               <div>
                 <h3>500</h3>
-                <p>seguidores</p>
+                <p>Followers</p>
               </div>
               <div>
                 <h3>200</h3>
-                <p>seguidos</p>
+                <p>Followed</p>
               </div>
             </div>
             <div className="form-container">
@@ -137,23 +137,23 @@ export const Perfil = () => {
                 <Modal onClose={closeModal} isOpen={modalIsOpen}>
                   <Publicar />
                 </Modal>
-                <button>Mensaje</button>
+                <button>Menssage</button>
               </div>
             </div>
           </div>
           <div className="user-actionsData">
             <div className="popularidad">
-              <div>
+            <div>
                 <h3>100</h3>
-                <p>publicaciones</p>
+                <p>publications</p>
               </div>
               <div>
                 <h3>500</h3>
-                <p>seguidores</p>
+                <p>Followers</p>
               </div>
               <div>
                 <h3>200</h3>
-                <p>seguidos</p>
+                <p>Followed</p>
               </div>
             </div>
             <div className="form-container">
