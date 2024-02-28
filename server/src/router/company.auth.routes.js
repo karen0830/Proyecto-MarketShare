@@ -18,8 +18,10 @@ import {
 import { validateSchemaCompany } from "../middlewares/validator.js";
 import { CompanyShema, loginCompanyShema } from "../schemas/auth.schemas.js";
 import { authRequiredCompany } from "../middlewares/validateToken.js";
+import { addProduct } from "../controllers/products.auth.controller.js";
 
 routerCompany.post("/addpublications",authRequiredCompany, addPublications);
+routerCompany.post("/addproducts",authRequiredCompany, addProduct);
 routerCompany.post("/addPublicationVideo", authRequiredCompany,  addPublicationsVideo)
 routerCompany.post("/registerCompany", validateSchemaCompany(CompanyShema), registerCompany);
 routerCompany.post("/loginCompany", validateSchemaCompany(loginCompanyShema), loginCompany);

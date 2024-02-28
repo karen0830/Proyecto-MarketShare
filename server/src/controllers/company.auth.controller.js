@@ -123,6 +123,8 @@ export const verifyTokenCompany = async (req, res) => {
     }
 };
 
+
+
 export const addPublications = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {

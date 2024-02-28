@@ -49,7 +49,7 @@ const companySchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
     },
-    publicationsVisits: {
+    products: {
         type: [mongoose.Schema.Types.Mixed], // Un array de objetos genéricos
         default: []
     },
