@@ -5,13 +5,13 @@ import cookieParser from 'cookie-parser';
 import cors from "cors";
 import routerCompany from './router/company.auth.routes.js';
 import routerShared from './router/Shared.routes.js';
-
+import routerProduct from './router/products.auth.routes.js';
 
 const app = express();
 // http://localhost:5173
-// https://marketshare.netlify.app
+// 'https://main--marketshare.netlify.app
 app.use(cors({
-    origin: 'https://main--marketshare.netlify.app',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use("/api", Router);
 app.use("/api", routerCompany)
 app.use("/api", routerShared)
-
+app.use("/api", routerProduct)
 // Redirigir desde la raíz '/' a '/login'
 app.get('/', (req, res) => {
     res.redirect('/api/loginUser'); // Cambia '/api/login' por la ruta correcta de inicio de sesión

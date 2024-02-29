@@ -11,10 +11,23 @@ import CompanyModel from "../models/company.models.js";
 export const addProduct = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
     form.parse(req, (err, fields, files) => {
-        const nameProduct = fields.productName[0];
+        // "category": "Men's Sneaker",
+        // "name": "ULTRABOOST 22 SHOES",
+        // "seller": "Addidas",
+        // "price": 420,
+        // "stock": 20,
+        // "ratings": 4,
+        // "ratingsCount": 3725,
+        // "img": "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg",
+        // "shipping": 1,
+        // "quantity": 0
+        const category = fields.category[0];
+        const stock = fields.stock[0];
         const description = fields.description[0];
         const price = fields.price[0];
-        console.log("fields " ,fields);
+        const nameProduct = fields.nameProduct[0];
+        const img = fields.img[0];
+        console.log("fields ", fields);
         console.log(nameProduct, " ", description, " ", price);
         const bucket = adminApp
             .storage()
@@ -81,15 +94,12 @@ export const addProduct = async (req, res) => {
                                     $push: {
                                         products: {
                                             type: "img",
-                                            url: url,
+                                            url: img,
                                             nameProduct: nameProduct,
                                             description: description,
+                                            category: category,
                                             price: price,
-                                            reactions: {
-                                                comments: [],
-                                                share: [],
-                                                like: [],
-                                            },
+                                            stock: stock
                                         },
                                     },
                                 }
@@ -119,3 +129,13 @@ export const addProduct = async (req, res) => {
     });
 };
 
+export const getAllProductCompany = async (req, res) => {
+    try {
+        const products = await CompanyModel.find({}, 'products');
+        return res.json({
+           products: products
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
