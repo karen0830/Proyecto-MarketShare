@@ -3,11 +3,10 @@
 import React from "react";
 import "./sidebar.css";
 import { useAuth } from "../context/AuthContext.jsx";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SideBar = () => {
-  const { isAuthenticated, logoutUsers, isAuthenticatedCompany, logoutCompanyData } = useAuth();
-
+  const { isAuthenticated, logoutUsers, isAuthenticatedCompany, logoutCompanyData, user } = useAuth();
   return (
     <div
       className={`sidebar-container ${isAuthenticated ? "authenticated" : "unauthenticated"
@@ -61,11 +60,11 @@ const SideBar = () => {
                     </span>
                     <span className="text">Direct</span>
                   </NavLink>
-                  <NavLink to="/Categories">
+                  <NavLink  to={`http://localhost:5173/:${user.id}`}>
                     <span className="icon">
                       <i className="ri-align-justify"></i>
                     </span>
-                    <span className="text">Categories</span>
+                    <span className="text">Ecommerce</span>
                   </NavLink>
                   <NavLink to="/Settings">
                     <span className="icon">
@@ -129,11 +128,11 @@ const SideBar = () => {
                       </span>
                       <span className="text">Direct</span>
                     </NavLink>
-                    <NavLink to="/Categories">
+                    <NavLink to="http://localhost:5173">
                       <span className="icon">
                         <i className="ri-align-justify"></i>
                       </span>
-                      <span className="text">Categories</span>
+                      <span className="text">Ecommerce</span>
                     </NavLink>
                     <NavLink to="/Settings">
                       <span className="icon">
@@ -185,11 +184,11 @@ const SideBar = () => {
                   </span>
                   <span className="text">Search</span>
                 </NavLink>
-                <NavLink to="/Categories">
+                <NavLink to="http://localhost:5173">
                   <span className="icon">
                     <i className="ri-align-justify"></i>
                   </span>
-                  <span className="text">Categories</span>
+                  <span className="text">Ecommerce</span>
                 </NavLink>
                 <NavLink to="/Settings">
                   <span className="icon">

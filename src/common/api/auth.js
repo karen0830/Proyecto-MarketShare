@@ -11,7 +11,7 @@ const ruta_protegida = () => {
       }
     });
     return clienteAxios;
-  }else{
+  } else {
     const clienteAxios = instance.create({
       headers: {
         'authorization': `Bearer null`
