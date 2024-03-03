@@ -19,7 +19,12 @@ import {
     getMessage,
     getPublications,
     sharePublications,
-    getSharePublications
+    getSharePublications,
+    addShopCart,
+    deleteCart,
+    getAllShoppingCarts,
+    decrementQuantityCart,
+    getTokenSocialNetwork
 } from "../controllers/auth.controller.js";
 import {
     authRequired
@@ -41,6 +46,8 @@ router.post("/imageProfile", imageProfile);
 router.post("/comment", comments);
 router.post("/refreshToken", refreshToken);
 router.post("/sharePublication", authRequired, sharePublications);
+router.post("/addShoppingCart", authRequired, addShopCart)
+router.post("/getTokenSocialNetwork", getTokenSocialNetwork);
 router.get("/profileUser", authRequired, profileUser);
 router.get("/verify", authRequired, verifyToken);
 router.get("/getSharePublications", authRequired, getSharePublications);
@@ -48,7 +55,10 @@ router.get("/getProfileImage", getProfileImage);
 router.get("/getAllPublications", getAllPublications);
 router.get("/getPublications", authRequired, getPublications)
 router.get("/getMessages", getMessage)
+router.get("/getAllShoppingCarts", authRequired, getAllShoppingCarts)
 router.post("/getProfile", getProfile);
 router.put("/deleteStories", deleteStories);
+router.put("/decrementQuantityCart", authRequired, decrementQuantityCart)
 router.delete("/deleteComment", deleteComment);
+router.post("/deleteShoppingCart", authRequired, deleteCart)
 export default router;

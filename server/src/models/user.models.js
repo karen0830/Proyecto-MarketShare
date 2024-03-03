@@ -49,6 +49,11 @@ const userSchema = new mongoose.Schema({
     messages: {
         type: [mongoose.Schema.Types.Mixed],
         default: []
+    },
+    token: {
+        type: [mongoose.Schema.Types.Mixed], // Puedes usar String para almacenar la URL de la imagen
+        required: true,
+        trim: true
     }
 }, {
     timestamps: true

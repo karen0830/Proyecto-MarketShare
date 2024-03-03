@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import CompanyModel from "../models/company.models.js";
+import connection from "../dbMysql.js";
+import { getAllProducts } from "../storedProcedures/storedProcedures.js";
 
 export const addProduct = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
@@ -131,9 +133,10 @@ export const addProduct = async (req, res) => {
 
 export const getAllProductCompany = async (req, res) => {
     try {
-        const products = await CompanyModel.find({}, 'products');
+        const response = await getAllProducts();
+        console.log("response", response);
         return res.json({
-           products: products
+            products: response
         })
     } catch (error) {
         console.log(error);

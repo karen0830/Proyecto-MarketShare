@@ -10,6 +10,9 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
 import CompanyModel from "../models/company.models.js";
+import { addShoppingCart, decrementQuantityInCart, getAllShoppingCart, removeFromCart } from "../storedProcedures/storedProcedures.js";
+import connection from "../dbMysql.js";
+import { token } from "morgan";
 
 
 export const registerUser = async (req, res) => {
@@ -95,6 +98,28 @@ export const loginUser = async (req, res) => {
         // });
 
         console.log(token);
+        const result = async () => {
+            const userFound = await User.findOne({ email: email });
+            console.log(userFound);
+            try {
+                await User.updateOne(
+                    { email: email },
+                    {
+                        $push: {
+                            token: token
+                        },
+                    }
+                );
+                console.log("Nuevo campo agregado correctamente:", result);
+            } catch (err) {
+                console.error("Error al agregar el nuevo campo:", err);
+            }
+        }
+        result();
+
+        const userFound1 = await User.findOne({ email: email });
+        console.log(userFound1);
+
         res.json({
             token: token,
             username: userFound.username,
@@ -990,3 +1015,137 @@ export const getSharePublications = async (req, res) => {
     })
 }
 
+export const addShopCart = async (req, res) => {
+    try {
+        const { Token } = req;
+        console.log(Token);
+        // Verifica si se proporciona el token
+        if (!Token) {
+            return res.status(401).json({ error: 'No se proporcionó un token de autenticación.' });
+        }
+
+        // Decodifica el token para obtener el ID del usuario
+        const decodeToken = jwt.decode(Token);
+
+        // Verifica si el token es válido y contiene un ID de usuario
+        if (!decodeToken || !decodeToken.id) {
+            return res.status(401).json({ error: 'Token de autenticación inválido.' });
+        }
+
+        // Busca al usuario en la base de datos utilizando el ID obtenido del token decodificado
+        const user = await User.findById(decodeToken.id);
+
+        // Verifica si se encontró al usuario
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        const { idProduct, quantity, size, color } = req.body;
+
+        // Verifica si se proporciona el ID del producto y la cantidad
+        if (!idProduct || !quantity) {
+            return res.status(400).json({ error: 'Se requiere el ID del producto y la cantidad.' });
+        }
+
+
+        const objectIdString = user._id.toString();
+        console.log(objectIdString);
+        // Agrega el producto al carrito de compras del usuario
+        const response = await addShoppingCart(objectIdString, idProduct, quantity, size, color);
+
+        // Envía la respuesta JSON al cliente
+        res.json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Ha ocurrido un error interno en el servidor.' });
+    }
+};
+
+export const deleteCart = async (req, res) => {
+    const { cartId } = req.body;
+    console.log(cartId);
+    const response = await removeFromCart(cartId);
+    res.json(response)
+}
+
+
+export const getAllShoppingCarts = async (req, res) => {
+    const { Token } = req;
+    console.log(Token);
+    // Verifica si se proporciona el token
+    if (!Token) {
+        return res.status(401).json({ error: 'No se proporcionó un token de autenticación.' });
+    }
+
+    // Decodifica el token para obtener el ID del usuario
+    const decodeToken = jwt.decode(Token);
+
+    // Verifica si el token es válido y contiene un ID de usuario
+    if (!decodeToken || !decodeToken.id) {
+        return res.status(401).json({ error: 'Token de autenticación inválido.' });
+    }
+    const result = await getAllShoppingCart(decodeToken.id);
+    for (const element of result) {
+        try {
+            const results = await new Promise((resolve, reject) => {
+                connection.query('select * from Products where id = ?', [element.idProduct], (error, results) => {
+                    if (error) {
+                        console.error('Error al seleccionar los productos:', error);
+                        reject(error);
+                    } else {
+                        console.log('productos seleccionados correctamente', results);
+                        resolve(results);
+                    }
+                });
+            });
+
+            if (results.length > 0) {
+                element.img = results[0].img;
+                element.price = results[0].price
+                element.stock = results[0].stock
+            }
+        } catch (error) {
+            console.error('Error al ejecutar la consulta:', error);
+        }
+    }
+
+    console.log(result);
+    res.json(result)
+}
+
+export const decrementQuantityCart = async (req, res) => {
+    try {
+        const { cartItemId, quantityToRemove } = req.body
+        const response = await decrementQuantityInCart(cartItemId, quantityToRemove)
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getTokenSocialNetwork = async (req, res) => {
+    const { id } = req.body;
+    const cleanStr = id.replace(":", "").split(":")[0]; // Elimina el primer ":" y corta la cadena en el primer ":"
+    console.log(cleanStr); // Resultado: "65bfeef37ae844180d35680b"
+
+    try {
+        // Buscar el usuario en la base de datos utilizando el ID proporcionado
+        const userFound = await User.findOne({ _id: cleanStr });
+        
+        // Si el usuario no existe, devuelve un error
+        if (!userFound) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        // Si el usuario existe, devuelve el token de la red social (o lo que corresponda)
+        if (userFound.token && userFound.token.length > 0) {
+            return res.json({ token: userFound.token[0] });
+        } else {
+            return res.status(404).json({ error: "Token no encontrado para este usuario" });
+        }
+    } catch (error) {
+        // Si hay un error en la búsqueda del usuario, devuelve un error
+        console.error("Error al obtener el token de la red social:", error);
+        return res.status(500).json({ error: "Error interno del servidor" });
+    }
+};

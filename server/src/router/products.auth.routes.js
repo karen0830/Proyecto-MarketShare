@@ -3,6 +3,6 @@ import { authRequired } from "../middlewares/validateToken.js";
 import { getAllProductCompany } from "../controllers/products.auth.controller.js";
 const routerProduct = Router();
 
-routerProduct.get("/getAllProductsCompany", authRequired, getAllProductCompany)
+routerProduct.get("/getAllProductsCompany", getAllProductCompany)
 
 export default routerProduct;
