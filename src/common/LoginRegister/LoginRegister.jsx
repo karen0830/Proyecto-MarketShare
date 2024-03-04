@@ -19,7 +19,7 @@ const LoginRegister = () => {
 
   useEffect(() => {
     if (isAuthenticatedCompany) {
-      navigate("/HomeCompany");
+      navigate("/homeCompany");
     } else if (isAuthenticated) {
       navigate("/start");
     } else if (!isAuthenticated && !isAuthenticatedCompany) {
@@ -38,7 +38,7 @@ const LoginRegister = () => {
                 }
               >
                 <NavLink to="/loginUser" className="btn">
-                sign in
+                Iniciar sesión
                 </NavLink>
               </li>
               <li
@@ -47,7 +47,7 @@ const LoginRegister = () => {
                 }
               >
                 <NavLink to="/registerUser" className="btn">
-                  sign up
+                  Registrarse
                 </NavLink>
               </li>
             </ul>

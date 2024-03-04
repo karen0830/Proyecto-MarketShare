@@ -10,15 +10,15 @@ export const sharedData = createContext();
 export const useShareData = () => {
   const context = useContext(sharedData);
   if (!context) {
-    throw new Error("useAuth must be ussed within an AutProvider");
+    throw new Error("useAuth debe ser utilizado dentro de un AutProvider");
   }
   return context;
 };
 
 export const Perfil = () => {
-  const { companyData, profileImageCompany, setProfileImageCompany,isAuthenticatedCompany, profileData } = useAuth();
+  const { companyData, profileImageCompany, setProfileImageCompany, isAuthenticatedCompany, profileData } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalChageProfileOpen, setModalChageProfileOpen] = useState(false);
+  const [modalChangeProfileOpen, setModalChangeProfileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,12 +35,12 @@ export const Perfil = () => {
     setModalIsOpen(false);
   };
 
-  const closeModalChageProfile = () => {
-    setModalChageProfileOpen(false);
+  const closeModalChangeProfile = () => {
+    setModalChangeProfileOpen(false);
   };
 
-  const openModalChageProfile = () => {
-    setModalChageProfileOpen(true);
+  const openModalChangeProfile = () => {
+    setModalChangeProfileOpen(true);
   };
 
   return (
@@ -61,8 +61,8 @@ export const Perfil = () => {
             <div className="info-usuarioData">
               <h1>{profileData ? profileData.username : companyData.userNameCompany}</h1>
               <div className="button-containerData">
-                <button>Follow</button>
-                <button>Message</button>
+                <button>Seguir</button>
+                <button>Mensaje</button>
               </div>
             </div>
           </div>
@@ -101,15 +101,15 @@ export const Perfil = () => {
             <div className="profile-picture">
               <img className="profileImageData" src={profileImageCompany} alt="" />
               <button
-                onClick={openModalChageProfile}
+                onClick={openModalChangeProfile}
                 htmlFor="fileInput"
                 className="file-input-label"
               >
                 <i className="ri-camera-line camera-icon"></i>
               </button>
               <ModalChangeProfile
-                onClose={closeModalChageProfile}
-                isOpen={modalChageProfileOpen}
+                onClose={closeModalChangeProfile}
+                isOpen={modalChangeProfileOpen}
               >
                 <ChangeProfile />
               </ModalChangeProfile>
@@ -126,12 +126,12 @@ export const Perfil = () => {
                   <input type="file" name="avatar" className="input-button" />
                 </div>
                 <button type="submit" onClick={openModal}>
-                Add photos/videos
+                  Agregar fotos/videos
                 </button>
                 <Modal onClose={closeModal} isOpen={modalIsOpen}>
                   <Publicar />
                 </Modal>
-                <button>Message</button>
+                <button>Mensaje</button>
               </div>
             </div>
           </div>
@@ -139,15 +139,15 @@ export const Perfil = () => {
             <div className="popularidad">
               <div>
                 <h3>100</h3>
-                <p>publications</p>
+                <p>publicaciones</p>
               </div>
               <div>
                 <h3>500</h3>
-                <p>Followers</p>
+                <p>Seguidores</p>
               </div>
               <div>
                 <h3>200</h3>
-                <p>Followed</p>
+                <p>Seguidos</p>
               </div>
             </div>
             <div className="form-container">

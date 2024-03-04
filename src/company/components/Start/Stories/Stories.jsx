@@ -26,24 +26,18 @@ export const Stories = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.type.startsWith("video/")) {
-        // Es un archivo de video
         setSelectedFileVideo(e.target.files[0]);
-        // Realiza acciones específicas para videos
       } else if (file.type.startsWith("image/")) {
         setSelectedFileImage(e.target.files[0]);
         const imageURL = URL.createObjectURL(file);
         imageRef.current.src = imageURL;
-        // Es un archivo de imagen
-        // Realiza acciones específicas para imágenes
       } else {
         // El archivo no es ni video ni imagen
-        // Puedes mostrar un mensaje de error o tomar otras medidas
       }
     }
   };
 
   const handleUploadImage = async () => {
-    console.log("hola");
     try {
       const response = await getUpdateStories(selectedFileImage);
       if (response) {
@@ -58,7 +52,6 @@ export const Stories = () => {
   async function checkLogin() {
     try {
       const res = await getUpdateCompany();
-      console.log("Get LOGON", res.data);
       setCompanyData(res.data);
     } catch (error) {
       console.log(error);
@@ -71,7 +64,6 @@ export const Stories = () => {
     }
   }, [companyData]);
   
-
   return (
     <>
       <div className="Stories">
@@ -80,13 +72,13 @@ export const Stories = () => {
           <div className="stories-title">
             <a href="#" className="btn">
               <i className="ri-play-circle-line"></i>
-              <div className="text">Watch all</div>
+              <div className="text">Ver todo</div>
             </a>
           </div>
           <div className="header-content">
             <a href="#" className="btn" onClick={openModal}>
               <i className="ri-add-circle-fill"></i>
-              <div className="btn-text">Add Photos</div>
+              <div className="btn-text">Agregar Fotos</div>
             </a>
           </div>
         </div>
@@ -103,11 +95,10 @@ export const Stories = () => {
                 />
               </label>
             </div>
-            {/* <video ref={selectedFile} controls /> */}
           </div>
           {
-            story.map((element) => (
-              <div className="stories-img color">
+            story.map((element, index) => (
+              <div key={index} className="stories-img color">
                 <img className="historyImageProfile" src={element.url} alt="" />
               </div>
             ))
@@ -116,7 +107,7 @@ export const Stories = () => {
             <img className="historyImageProfile" ref={imageRef} alt="" />
           </div>
           <button className="subir-historias" onClick={handleUploadImage}>
-          upload stories
+            Subir historias
           </button>
         </div>
         <Modal onClose={closeModal} isOpen={modalIsOpen}>
@@ -127,24 +118,3 @@ export const Stories = () => {
     </>
   );
 };
-
-{
-  /* // import React, { useState } from 'react';
-
-// function App() {
-//   const [selectedFile, setSelectedFile] = useState();
-
-//   const handleFileInput = (e) => {
-//     setSelectedFile(e.target.files[0]);
-//   }
-
-//   return (
-//     <div>
-//       <input type="file" onChange={handleFileInput} />
-//       {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
-//     </div>
-//   );
-// }
-
-// export default App; */
-}

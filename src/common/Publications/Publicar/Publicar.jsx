@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "./publicar.css";
 import {
   sendPublications,
@@ -5,9 +6,9 @@ import {
   addPublicationsVideo,
 } from "../../api/auth.company";
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPublications } from "../../api/auth";
+
 export const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) {
     return null;
@@ -17,7 +18,7 @@ export const Modal = ({ isOpen, onClose, children }) => {
     <div className="modal-overlay">
       <div className="modal">
         <div className="closeModalChangeProfile">
-          <h4>Create post</h4>
+          <h4>Crear publicación</h4>
           <button className="modal-close" onClick={onClose}>
             <i className="ri-chat-delete-line"></i>
           </button>
@@ -52,8 +53,8 @@ export const Publicar = () => {
   };
 
   const goBack = () => {
-    // Navegar a la ruta '/otra-pagina'
-    navigate("/profileUser");
+    // Navegar a la ruta '/profileUser'
+    navigate("/profileCompany");
   };
 
   const handleFilePublication = (event) => {
@@ -61,7 +62,7 @@ export const Publicar = () => {
     if (selectedFile) {
       if (selectedFile.type.startsWith("image/")) {
         console.log("Es una imagen");
-        setImagePublication(selectedFile); // Asignar el archivo de imagen
+        setImagePublication(selectedFile);
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreviewImage(reader.result);
@@ -75,37 +76,36 @@ export const Publicar = () => {
         };
         reader.readAsDataURL(selectedFile);
         console.log("Es un video");
-        setVideoPublication(selectedFile); // Asignar el archivo de video
+        setVideoPublication(selectedFile);
         setImagePublication(null);
       } else {
         console.log("Tipo de archivo no válido");
         setPreviewImage(null);
-        // Manejar otros tipos de archivo
       }
     }
   };
 
   const handlePostSubmit = (e) => {
-    setPostContent(e.target.value); // Actualiza el estado con el contenido del textarea
+    setPostContent(e.target.value);
   };
 
   console.log(postContent);
 
   async function sendPublication() {
     try {
-     if (isAuthenticatedCompany) {
-      if (videoPublication) {
-        const res = await addPublicationsVideo(videoPublication, postContent);
-        console.log(res);
-        const getPublicationResponse = await getPublicationsCompany();
-        setPublications(getPublicationResponse.data.publications);
-      } else {
-        const res = await sendPublications(imagePublication, postContent);
-        console.log(res);
-        const getPublicationResponse = await getPublicationsCompany();
-        setPublications(getPublicationResponse.data.publications);
+      if (isAuthenticatedCompany) {
+        if (videoPublication) {
+          const res = await addPublicationsVideo(videoPublication, postContent);
+          console.log(res);
+          const getPublicationResponse = await getPublicationsCompany();
+          setPublications(getPublicationResponse.data.publications);
+        } else {
+          const res = await sendPublications(imagePublication, postContent);
+          console.log(res);
+          const getPublicationResponse = await getPublicationsCompany();
+          setPublications(getPublicationResponse.data.publications);
+        }
       }
-     }
     } catch (error) {
       console.log(error);
     }
@@ -115,9 +115,9 @@ export const Publicar = () => {
     <div className="publicar">
       <form action="">
         <div className="input-publication">
-          <label htmlFor="">Describe your product:</label>
+          <label htmlFor="">Describe tu producto:</label>
           <input
-          placeholder="DESCRIBE YOUR PRODUCT"
+            placeholder="DESCRIBE TU PRODUCTO"
             type="text"
             name="postContent"
             className="text-publication"
@@ -131,18 +131,11 @@ export const Publicar = () => {
           <label htmlFor="publication" className="file-publication">
             <span>
               <i className="ri-add-line"></i>
-              Add photos/videos
+              Agregar fotos/videos
             </span>
             <input id="publication" name="miArchivo" type="file" onChange={handleFilePublication} />
           </label>
         </div>
-
-        {/* <input
-              name="publication"
-              accept="video/*,image/*"
-              type="file"
-              onChange={handleFilePublication}
-            /> */}
         {imagePublication && (
           <img
             src={previewImage}

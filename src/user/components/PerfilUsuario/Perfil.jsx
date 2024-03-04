@@ -18,7 +18,7 @@ export const sharedData = createContext();
 export const useShareData = () => {
   const context = useContext(sharedData);
   if (!context) {
-    throw new Error("useAuth must be ussed within an AutProvider");
+    throw new Error("useAuth debe usarse dentro de un AutProvider");
   }
   return context;
 };
@@ -78,15 +78,15 @@ export const Perfil = () => {
             <div className="popularidad">
             <div>
                 <h3>100</h3>
-                <p>publications</p>
+                <p>publicaciones</p>
               </div>
               <div>
                 <h3>500</h3>
-                <p>Followers</p>
+                <p>Seguidores</p>
               </div>
               <div>
                 <h3>200</h3>
-                <p>Followed</p>
+                <p>Siguiendo</p>
               </div>
             </div>
             <div className="form-container">
@@ -137,7 +137,7 @@ export const Perfil = () => {
                 <Modal onClose={closeModal} isOpen={modalIsOpen}>
                   <Publicar />
                 </Modal>
-                <button>Menssage</button>
+                <button>Mensaje</button>
               </div>
             </div>
           </div>
@@ -145,15 +145,15 @@ export const Perfil = () => {
             <div className="popularidad">
             <div>
                 <h3>100</h3>
-                <p>publications</p>
+                <p>publicaciones</p>
               </div>
               <div>
                 <h3>500</h3>
-                <p>Followers</p>
+                <p>Seguidores</p>
               </div>
               <div>
                 <h3>200</h3>
-                <p>Followed</p>
+                <p>Siguiendo</p>
               </div>
             </div>
             <div className="form-container">

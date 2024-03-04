@@ -1,18 +1,17 @@
-import { React, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../common/context/AuthContext";
 
 export const UserSignUpForm = () => {
-  const [className, setClassName] = useState("hidden")
+  const [className, setClassName] = useState("hidden");
 
-  const { register, handleSubmit, formState: {
-    errors
-  } } = useForm()
-  const { signup, errors: registerErrors } = useAuth()
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { signup, errors: registerErrors } = useAuth();
 
   const onSubmit = handleSubmit(async (values) => {
-    signup(values)
-  })
+    signup(values);
+  });
+
   return (
     <>
       {
@@ -20,7 +19,7 @@ export const UserSignUpForm = () => {
           <div key={i} className="errors">
             {error.map((line, j) => (
               <p key={j}>
-                <p class="bullet"></p>
+                <p className="bullet"></p>
                 {line}
               </p>
             ))}
@@ -29,7 +28,7 @@ export const UserSignUpForm = () => {
       }
 
       <form className="form-signup" onSubmit={onSubmit}>
-        <label htmlFor="fullname">username</label>
+        <label htmlFor="fullname">Nombre de usuario</label>
         <input
           className="form-styling"
           type="text"
@@ -38,18 +37,18 @@ export const UserSignUpForm = () => {
         />
         {
           errors.username && (
-            <p className="bg-black">Username is required</p>
+            <p className="bg-black">El nombre de usuario es obligatorio</p>
           )
         }
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Correo electrónico</label>
         <input className="form-styling" type="email"
           {...register('email', { required: true })} />
         {
           errors.email && (
-            <p className="text-red-500">Email is required</p>
+            <p className="text-red-500">El correo electrónico es obligatorio</p>
           )
         }
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Contraseña</label>
         <input
           className="form-styling"
           type="password"
@@ -57,11 +56,11 @@ export const UserSignUpForm = () => {
         />
         {
           errors.password && (
-            <p className="text-red-500">password is required</p>
+            <p className="text-red-500">La contraseña es obligatoria</p>
           )
         }
 
-        <label htmlFor="confirmpassword">Confirm password</label>
+        <label htmlFor="confirmpassword">Confirmar contraseña</label>
         <input
           className="form-styling"
           type="password"
@@ -69,12 +68,12 @@ export const UserSignUpForm = () => {
         />
         {
           errors.confirmpassword && (
-            <p className="text-red-500">confirmpassword is required</p>
+            <p className="text-red-500">La confirmación de la contraseña es obligatoria</p>
           )
         }
 
         <button type="submit" ng-click="checked = !checked" className="btn-signup">
-          Sign Up
+          Registrarse
         </button>
       </form>
 

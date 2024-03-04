@@ -1,13 +1,9 @@
+import React from "react";
 import "./Share.css";
-import {
-  sendPublications,
-  getPublicationsCompany,
-  addPublicationsVideo,
-} from "../../api/auth.company";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPublications, getShareData, shareData } from "../../api/auth";
+import { getShareData, shareData } from "../../api/auth";
 
 export const ModalShare = ({ isOpen, onClose, children }) => {
   if (!isOpen) {
@@ -18,7 +14,7 @@ export const ModalShare = ({ isOpen, onClose, children }) => {
     <div className="modal-overlay">
       <div className="modal">
         <div className="closeModalChangeProfile">
-          <h4>Share</h4>
+          <h4>Compartir</h4>
           <button className="modal-close" onClick={onClose}>
             <i className="ri-chat-delete-line"></i>
           </button>
@@ -38,20 +34,6 @@ export const Share = ({ link, type }) => {
   const [videoPublication, setVideoPublication] = useState(null);
   const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState(null);
-
-  const handleFileChangeAndPreview = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewImage(null);
-    }
-  };
 
   const goBack = () => {
     // Navegar a la ruta '/otra-pagina'
@@ -109,9 +91,9 @@ export const Share = ({ link, type }) => {
     <div className="publicar">
       <form action="">
         <div className="input-publication">
-          <label htmlFor="">Product Comment:</label>
+          <label htmlFor="">Comentario del Producto:</label>
           <input
-            placeholder="Describe the product"
+            placeholder="Describe el producto"
             type="text"
             name="postContent"
             className="text-publication"
@@ -121,23 +103,6 @@ export const Share = ({ link, type }) => {
             value={postContent}
           />
         </div>
-
-        {/* <input
-              name="publication"
-              accept="video/*,image/*"
-              type="file"
-              onChange={handleFilePublication}
-            /> */}
-        {/* {imagePublication && (
-          <img
-            src={previewImage}
-            alt="Vista Previa"
-            className="preview-image"
-          />
-        )}
-        {videoPublication && (
-          <video src={previewImage} controls className="preview-image" />
-        )} */}
         {
           type === "video/mp4" ? (
             <video className="video" src={link} controls></video>
@@ -150,7 +115,7 @@ export const Share = ({ link, type }) => {
             sendPublicationShare(postContent, link)
             goBack()
           }}>
-            Share
+            Compartir
           </button>
         </div> : null
       }

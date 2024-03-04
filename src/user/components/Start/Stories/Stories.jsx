@@ -79,15 +79,13 @@ export const Stories = () => {
           <div className="stories-title">
             <a href="#" className="btn">
               <i className="ri-play-circle-line"></i>
-              <div className="text">Watch all</div>
+              <div className="text">Ver todo</div>
             </a>
           </div>
         </div>
         <div className="stories">
         </div>
-        <Modal onClose={closeModal} isOpen={modalIsOpen}>
-          <Publicar />
-        </Modal>
+        
         <Publications />
       </div>
     </>

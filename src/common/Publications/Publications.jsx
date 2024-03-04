@@ -297,10 +297,10 @@ export const Publications = () => {
                   </button>
                   <span>{element.reactions.comments.length}</span>
                 </div>
-                <button name="comments" className="comment-button">
+                {/* <button name="comments" className="comment-button">
                   <i className="ri-download-cloud-2-line"></i>
                   <span>{200000}k</span>
-                </button>
+                </button> */}
                 <button name="comments" className="comment-button" onClick={() => { openModalShare(element.url, element.type) }}>
                   <i class="ri-stackshare-line"></i>
                 </button>
@@ -453,10 +453,10 @@ export const Publications = () => {
                   </button>
                   <span>{element.Publication[0].reactions.comments.length}</span>
                 </div>
-                <button className="" name="comments">
+                {/* <button className="" name="comments">
                   <i className="ri-download-cloud-2-line"></i>
                   <span>{200000}k</span>
-                </button>
+                </button> */}
               </div>
             </div>
           ))
@@ -588,10 +588,10 @@ export const Publications = () => {
                   </button>
                   <span>{element.reactions.comments.length}</span>
                 </div>
-                <button className="" name="comments">
+                {/* <button className="" name="comments">
                   <i className="ri-download-cloud-2-line"></i>
                   <span>{200000}k</span>
-                </button>
+                </button> */}
               </div>
             </div>
           ))
@@ -709,10 +709,10 @@ export const Publications = () => {
                   </button>
                   <span>{element.reactions.comments.length}</span>
                 </div>
-                <button name="comments" className="comment-button">
+                {/* <button name="comments" className="comment-button">
                   <i className="ri-download-cloud-2-line"></i>
                   <span>{200000}k</span>
-                </button>
+                </button> */}
               </div>
             </div>
           ))

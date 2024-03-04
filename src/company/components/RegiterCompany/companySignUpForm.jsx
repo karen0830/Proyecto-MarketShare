@@ -2,24 +2,23 @@ import React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../common/context/AuthContext";
+
 export const CompanySignUpForm = () => {
-  const { register, handleSubmit, formState: {
-    errors
-  } } = useForm()
-  const { signupCompany, isAuthenticated, errors: registerErrors } = useAuth()
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { signupCompany, isAuthenticated, errors: registerErrors } = useAuth();
   const [classNameModal, setClassNameModal] = useState("hidden");
 
   const onSubmit = handleSubmit(async (values) => {
     console.log(values);
-    values.phoneNumber = parseInt(values.phoneNumber)
-    signupCompany(values)
-  })
+    values.phoneNumber = parseInt(values.phoneNumber);
+    signupCompany(values);
+  });
 
   function ButtonOpenModal() {
     if (isAuthenticated) {
       if (classNameModal == "hidden") {
-        setClassNameModal("visible")
-      } else setClassNameModal("hidden")
+        setClassNameModal("visible");
+      } else setClassNameModal("hidden");
     }
   }
 
@@ -39,14 +38,13 @@ export const CompanySignUpForm = () => {
         ))
       }
 
-
       <form className="form-signup" onSubmit={onSubmit}>
         {
           errors.userNameCompany && (
-            <p className="text-red-500">Company user is required</p>
+            <p className="text-red-500">El usuario de la empresa es obligatorio</p>
           )
         }
-        <label htmlFor="userNameCompany">company user</label>
+        <label htmlFor="userNameCompany">Usuario de la empresa</label>
         <input
           className="form-styling"
           type="text"
@@ -54,10 +52,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.email && (
-            <p className="text-red-500">Email is required</p>
+            <p className="text-red-500">El correo electrónico es obligatorio</p>
           )
         }
-        <label htmlFor="email">Email: </label>
+        <label htmlFor="email">Correo electrónico: </label>
         <input
           className="form-styling"
           type="text"
@@ -65,10 +63,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.typeCompany && (
-            <p className="text-red-500">Company type is required</p>
+            <p className="text-red-500">El tipo de empresa es obligatorio</p>
           )
         }
-        <label htmlFor="typeCompany">Company type:</label>
+        <label htmlFor="typeCompany">Tipo de empresa:</label>
         <input
           className="form-styling"
           type="text"
@@ -76,10 +74,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.phoneNumber && (
-            <p className="text-red-500">Telephone number is required</p>
+            <p className="text-red-500">El número de teléfono es obligatorio</p>
           )
         }
-        <label htmlFor="phoneNumber">Phone number:</label>
+        <label htmlFor="phoneNumber">Número de teléfono:</label>
         <input
           className="form-styling"
           type="number"
@@ -87,10 +85,10 @@ export const CompanySignUpForm = () => {
         />
         {
           errors.password && (
-            <p className="text-red-500">Password is required</p>
+            <p className="text-red-500">La contraseña es obligatoria</p>
           )
         }
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password">Contraseña:</label>
         <input
           className="form-styling"
           type="password"
@@ -99,10 +97,10 @@ export const CompanySignUpForm = () => {
 
         {
           errors.confirmpassword && (
-            <p className="text-red-500">Confirm password is required</p>
+            <p className="text-red-500">Confirmar contraseña es obligatorio</p>
           )
         }
-        <label htmlFor="confirmpassword">Confirm password:</label>
+        <label htmlFor="confirmpassword">Confirmar contraseña:</label>
         <input
           className="form-styling"
           type="text"
