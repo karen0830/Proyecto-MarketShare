@@ -14,10 +14,6 @@ const SideBar = () => {
     >
       <div
         className="sidebar-logo__div"
-        style={{
-          marginTop: isAuthenticated || isAuthenticatedCompany ? "4.375em" : "0",
-          padding: "1.57em",
-        }}
       >
         <div className="sidebar-menu">
           {isAuthenticated ? (

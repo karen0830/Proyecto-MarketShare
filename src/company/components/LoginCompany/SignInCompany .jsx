@@ -8,6 +8,7 @@ export const SignInCompany = () => {
 
   const onSubmit = handleSubmit(data => {
     console.log(data);
+    signInCompany(data)
   })
 
   return (

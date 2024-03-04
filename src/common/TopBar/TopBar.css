@@ -41,8 +41,9 @@
 }
 
 .sidebar-logo__div {
-  margin-top: 4.375em; /* 70px en unidades em */
+  margin-top: 2.375em; /* 70px en unidades em */
   padding: 1.75em; /* 1.75rem en unidades em */
+  overflow-y: auto; /* Mostrar barra de desplazamiento vertical automáticamente si es necesario */
 }
 
 .sidebar-logo__div > img {
