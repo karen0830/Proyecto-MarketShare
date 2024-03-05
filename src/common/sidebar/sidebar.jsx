@@ -64,7 +64,9 @@ const SideBar = () => {
                     <span className="icon">
                       <i className="ri-profile-line"></i>
                     </span>
+
                     <span className="text">Acerca de</span>
+
                   </NavLink>
                   <NavLink to="/ProfileUser">
                     <span className="icon">

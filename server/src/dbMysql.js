@@ -27,6 +27,7 @@ connection.on('error', (err) => {
     console.error('Error en la conexión:', err);
     isConnected = false;
     // Si el error es una desconexión, intenta reconectar
+
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         console.log('Intentando reconectar a la base de datos...');
         setTimeout(connectDBMysql, 2000); // Intenta reconectar después de 2 segundos
