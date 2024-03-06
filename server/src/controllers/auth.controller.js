@@ -13,6 +13,7 @@ import CompanyModel from "../models/company.models.js";
 import { addShoppingCart, decrementQuantityInCart, getAllShoppingCart, removeFromCart } from "../storedProcedures/storedProcedures.js";
 import connection from "../dbMysql.js";
 import { token } from "morgan";
+import { classify_text } from "../IA/clasificacion/app.js";
 
 
 export const registerUser = async (req, res) => {
@@ -576,40 +577,42 @@ export const reactionLove = async (req, res) => {
 export const comments = async (req, res) => {
     try {
         const { comment, link, userName } = req.body;
-        const authorizationHeader = req.headers['authorization'];
-        console.log("header", req.headers);
-        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-        // const token = req.cookies.token;
-        if (token === 'null') {
-            return res.status(401).json({ message: "Unauthorized 1" });
-        }
-        const decodedToken = jwt.decode(token);
-        let email = decodedToken.email;
-        const user = await User.findOne({ email });
-        const userLink = await User.findOne({ username: userName });
-        await User.findOneAndUpdate(
-            { email: userLink.email, "publications.url": link },
-            {
-                $push: {
-                    "publications.$.reactions.comments": {
-                        _id: new ObjectId(),
-                        user: user.username,
-                        comment: comment,
-                        profileImage: user.profileImage
+        let producto = "Gelatina"
+        let prompt = `verifica si el siguiente comentario: ${comment} esta relacionado con el producto: ${producto}, manda true en minuscula si esta relacionado y manda false en minuscula si no esta relacionado`
+        await classify_text(comment, prompt, req, res);
+        console.log("MP", req.malasPalabras);
+        console.log("RN", req.relacion);
+        console.log("TOTOTOKEN", req.Token);
+        if (req.malasPalabras != true && req.relacion != false && req.malasPalabras != undefined && req.relacion != undefined) {
+            const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
+            const decodedToken = jwt.decode(token);
+            let id = decodedToken.id;
+            const user = await User.findOne({ _id: id });
+            const userLink = await CompanyModel.findOne({ username: userName });
+            await CompanyModel.findOneAndUpdate(
+                { email: userLink.email, "publications.url": link },
+                {
+                    $push: {
+                        "publications.$.reactions.comments": {
+                            _id: new ObjectId(),
+                            user: user.username,
+                            comment: comment,
+                            profileImage: user.profileImage
+                        },
                     },
-                },
-            }
-        );
-        const publicationFound = await User.findOne(
-            { username: userName, "publications.url": link },
-            { "publications.$": 1 }
-        );
+                }
+            );
+            const publicationFound = await CompanyModel.findOne(
+                { username: userName, "publications.url": link },
+                { "publications.$": 1 }
+            );
 
-        console.log(publicationFound.publications[0].reactions);
+            console.log(publicationFound.publications[0].reactions);
 
-        return res.json({
-            publications: publicationFound.publications[0]
-        });
+            return res.json({
+                publications: publicationFound.publications[0]
+            });
+        }else res.status(400).json("EL comentario es inadecuado o no coincide con el producto");
     } catch (error) {
         console.log(error);
     }
@@ -1131,7 +1134,7 @@ export const getTokenSocialNetwork = async (req, res) => {
     try {
         // Buscar el usuario en la base de datos utilizando el ID proporcionado
         const userFound = await User.findOne({ _id: cleanStr });
-        
+
         // Si el usuario no existe, devuelve un error
         if (!userFound) {
             return res.status(404).json({ error: "Usuario no encontrado" });

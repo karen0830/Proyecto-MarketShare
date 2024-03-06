@@ -11,6 +11,8 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
 import { promisify } from "util";
+import { upload } from "../IA/deteccion-de-objetos/multer.js";
+import { run } from "../IA/deteccion-de-objetos/app.js";
 
 
 export const registerCompany = async (req, res) => {
@@ -30,7 +32,7 @@ export const registerCompany = async (req, res) => {
         if (existingCompanyByUsername || userFound) {
             return res.status(400).json({ message: "Email or username in use." });
         }
-        
+
         // Verificar si ya existe una compañía con el mismo correo electrónico
         const existingCompanyByEmail = await CompanyModel.findOne({ email });
         const existuserFound = await User.findOne({ email });
@@ -481,7 +483,7 @@ export const addPublicationsVideo = (req, res) => {
         console.log(files);
         // Obtener el nombre original del archivo de video
         console.log(files);
-        const originalFileName = files.publication ?  files.publication[0].newFilename + files.publication[0].originalFilename : null;
+        const originalFileName = files.publication ? files.publication[0].newFilename + files.publication[0].originalFilename : null;
         console.log(originalFileName);
         if (!originalFileName) {
             res.status(400).send('No se ha subido ningún archivo de video');
@@ -925,5 +927,132 @@ export const reactionLoveCompany = async (req, res) => {
         return res.json({
             publications: publicationFound.publications[0]
         });
+    }
+};
+
+export const verifyProduct = async (req, res, next) => {
+    const { category } = req.body;
+    console.log(req.files);
+    const nameFile = req.nameFile;
+    try {
+        // Ejecutar la verificación de la imagen
+        const response = await run(`./src/IA/deteccion-de-objetos/images/${nameFile}`, category);
+        req.response = response;
+        // Verificar si la respuesta es "Sí"
+        req.files = req.files;
+        req.category = category;
+        req.Token = req.Token;
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json("Error en la verificación de la imagen.");
+    }
+}
+
+
+export const addPublicationsVerify = async (req, res) => {
+    try {
+        await verifyProduct(req, res);
+        if (req.response) {
+            console.log("reqq", req.files);
+            const contenido = req.category;
+            console.log(contenido);
+            const bucket = adminApp
+                .storage()
+                .bucket("gs://marketshare-c5720.appspot.com");
+
+            const archivo = req.files.publication; // Asegúrate de que el nombre coincida con el campo de tu formulario
+            if (!archivo) {
+                res.status(400).send("No se ha subido ningún archivo");
+                return;
+            }
+
+            const storagePath = "publications/" + archivo[0].filename; // Ruta en Firebase Storage donde se guardará el archivo
+            const filePath = archivo[0].path;
+            bucket.upload(filePath, {
+                destination: storagePath,
+                metadata: {
+                    contentType: archivo.mimetype
+                }
+            }, (err, uploadedFile) => {
+                if (err) {
+                    console.error('Error al subir el archivo:', err);
+                    // Manejar el error
+                } else {
+                    console.log('Archivo subido exitosamente a Firebase Storage');
+                    // Obtener el enlace de descarga del archivo subido
+                    uploadedFile.getSignedUrl({
+                        action: 'read',
+                        expires: '03-01-2500' // Definir la fecha de expiración del enlace si es necesario
+                    }, (err, url) => {
+                        if (err) {
+                            console.error('Error al obtener el enlace de descarga del archivo:', err);
+                            // Manejar el error
+                        } else {
+                            const decodedToken = jwt.decode(req.Token);
+                            console.log(req.Token);
+                            const id = decodedToken.id;
+                            const result = async () => {
+                                const userFound = await CompanyModel.findOne({ _id: id });
+                                console.log(userFound);
+                                try {
+                                    await CompanyModel.updateOne(
+                                        { _id: decodedToken.id },
+                                        {
+                                            $push: {
+                                                publications: {
+                                                    type: "img",
+                                                    url: url,
+                                                    contenido: contenido,
+                                                    profileImage: userFound.profileImage,
+                                                    user: userFound.userNameCompany,
+                                                    reactions: {
+                                                        comments: [],
+                                                        share: [],
+                                                        like: [],
+                                                    },
+                                                },
+                                            },
+                                        }
+                                    );
+                                    console.log("Nuevo campo agregado correctamente:", result);
+                                } catch (err) {
+                                    console.error("Error al agregar el nuevo campo:", err);
+                                }
+                            }
+
+                            result();
+                            const userFoundM = async () => {
+                                const userFound = await CompanyModel.findOne({ _id: id });
+                                fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
+                                    if (err) {
+                                        console.error('Error al eliminar el archivo:', err);
+                                    } else {
+                                        console.log('Archivo eliminado correctamente');
+                                    }
+                                });
+                                return res.json({
+                                    publications: userFound.publications.reverse(),
+                                });
+                            };
+
+                            userFoundM();
+                        }
+                    });
+                }
+            });
+
+        } else {
+            // Responder al cliente si la imagen no coincide con la categoría
+            fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
+                if (err) {
+                    console.error('Error al eliminar el archivo:', err);
+                } else {
+                    console.log('Archivo eliminado correctamente');
+                }
+            });
+            return res.status(400).json("La imagen no coincide con la categoría.");
+        }
+    } catch (error) {
+        console.log(error);
     }
 };
