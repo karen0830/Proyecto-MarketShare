@@ -32,9 +32,7 @@ import {
 import { validateSchema } from "../middlewares/validator.js";
 import {
     registerSchema,
-    loginSchema,
-    CompanyShema,
-    loginCompanyShema,
+    loginSchema
 } from "../schemas/auth.schemas.js";
 
 router.post("/msg", postMessage);
@@ -43,7 +41,7 @@ router.post("/loginUser", validateSchema(loginSchema), loginUser);
 router.post("/logoutUser", logoutUser);
 router.post("/reactionLike", reactionLove);
 router.post("/imageProfile", imageProfile);
-router.post("/comment", comments);
+router.post("/comment",authRequired, comments);
 router.post("/refreshToken", refreshToken);
 router.post("/sharePublication", authRequired, sharePublications);
 router.post("/addShoppingCart", authRequired, addShopCart)
@@ -60,5 +58,5 @@ router.post("/getProfile", getProfile);
 router.put("/deleteStories", deleteStories);
 router.put("/decrementQuantityCart", authRequired, decrementQuantityCart)
 router.delete("/deleteComment", deleteComment);
-router.post("/deleteShoppingCart", authRequired, deleteCart)
+router.post("/deleteShoppingCart", authRequired, deleteCart);
 export default router;
