@@ -1,0 +1,26 @@
+import IconButton from '@mui/material/IconButton';
+import { useDispatch } from 'react-redux';
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { toggleChatPanel } from './store/stateSlice';
+
+/**
+ * The chat panel toggle button.
+ */
+function MessengerPanelToggleButton(props) {
+	const { children } = props;
+	const dispatch = useDispatch();
+	return (
+		<IconButton
+			className="w-40 h-40"
+			onClick={() => dispatch(toggleChatPanel())}
+			size="large"
+		>
+			{children}
+		</IconButton>
+	);
+}
+
+MessengerPanelToggleButton.defaultProps = {
+	children: <FuseSvgIcon>heroicons-outline:chat</FuseSvgIcon>
+};
+export default MessengerPanelToggleButton;
