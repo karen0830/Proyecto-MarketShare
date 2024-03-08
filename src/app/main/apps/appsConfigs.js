@@ -1,6 +1,5 @@
 import AcademyAppConfig from "./academy/AcademyAppConfig";
 import MessengerAppConfig from "./messenger/MessengerAppConfig";
-import ContactsAppConfig from "./contacts/ContactsAppConfig";
 import ECommerceAppConfig from "./e-commerce/ECommerceAppConfig";
 import FileManagerAppConfig from "./file-manager/FileManagerAppConfig";
 import HelpCenterAppConfig from "./help-center/HelpCenterAppConfig";
@@ -13,10 +12,10 @@ import NotificationsAppConfig from "./notifications/NotificationsAppConfig";
 /**
  * The list of application configurations.
  */
+
 const appsConfigs = [
   AcademyAppConfig,
   MessengerAppConfig,
-  ContactsAppConfig,
   ECommerceAppConfig,
   FileManagerAppConfig,
   HelpCenterAppConfig,

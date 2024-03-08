@@ -27,14 +27,6 @@ const navigationConfig = [
         translate: "MESSENGER",
       },
       {
-        id: "apps.contacts",
-        title: "Contacts",
-        type: "item",
-        icon: "heroicons-outline:user-group",
-        url: "/apps/contacts",
-        translate: "CONTACTS",
-      },
-      {
         id: "apps.ecommerce",
         title: "ECommerce",
         type: "collapse",

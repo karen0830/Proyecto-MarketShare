@@ -34,7 +34,7 @@ const routes = [
   ),
   {
     path: "/",
-    element: <Navigate to="/dashboards/messenger" />,
+    element: <Navigate to="/apps/messenger" />,
     auth: settingsConfig.defaultAuth,
   },
   {
