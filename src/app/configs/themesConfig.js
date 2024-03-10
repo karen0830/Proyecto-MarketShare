@@ -21,7 +21,7 @@ export const themesConfig = {
   default: {
     palette: {
       mode: "light",
-      divider: "#e2e8f0",
+      divider: "#2f3336",
       text: lightPaletteText,
       common: {
         black: "rgb(17, 24, 39)",
@@ -29,7 +29,7 @@ export const themesConfig = {
       },
       primary: {
         light: "#64748b",
-        main: "#262626",
+        main: "#242424",
         dark: "#0f172a",
         contrastText: darkPaletteText.primary,
       },
@@ -41,7 +41,7 @@ export const themesConfig = {
       },
       background: {
         paper: "#FFFFFF",
-        default: "#262626",
+        default: "#242424",
       },
       error: {
         light: "#ffcdd2",
@@ -73,8 +73,8 @@ export const themesConfig = {
         contrastText: darkPaletteText.primary,
       },
       background: {
-        paper: "#262626",
-        default: "#262626",
+        paper: "#ffff",
+        default: "#1c1c1c",
       },
       error: {
         light: "#ffcdd2",

@@ -80,12 +80,6 @@ const navigationConfig = [
             type: "item",
             url: "/apps/help-center/faqs",
           },
-          {
-            id: "apps.help-center.support",
-            title: "Support",
-            type: "item",
-            url: "/apps/help-center/support",
-          },
         ],
       },
       {

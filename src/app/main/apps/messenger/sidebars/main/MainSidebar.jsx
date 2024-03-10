@@ -37,18 +37,10 @@ function MainSidebar() {
   return (
     <div
       className="flex flex-col flex-auto h-full"
-      style={{ background: "#262626" }}
+      style={{ background: "#242424" }}
     >
-      <Box
-        className="py-16 px-32 border-b-1"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === ""
-              ? lighten(theme.palette.background.default, 0.4)
-              : lighten(theme.palette.background.default, 0.02),
-        }}
-      >
-        <div className="flex justify-between items-center mb-16">
+      <Box className="py-16 px-32 border-b-1">
+        <div className="flex justify-between items-center mb-16 ">
           {user && (
             <div
               className="flex items-center cursor-pointer"
@@ -146,7 +138,7 @@ function MainSidebar() {
                   <motion.div variants={item}>
                     <Typography
                       className="font-medium text-20 px-32 py-24"
-                      color="secondary.main"
+                      color="#287bff"
                     >
                       Chats
                     </Typography>
@@ -170,7 +162,7 @@ function MainSidebar() {
                   <motion.div variants={item}>
                     <Typography
                       className="font-medium text-20 px-32 py-24"
-                      color="secondary.main"
+                      color="#287bff"
                     >
                       Contacts
                     </Typography>
@@ -181,7 +173,8 @@ function MainSidebar() {
                   <motion.div variants={item} key={contact.id}>
                     <div
                       className={clsx(
-                        filteredContacts.length !== index + 1 && "border-b-1"
+                        filteredContacts.length !== index + 1 &&
+                          "border-b-1 text-white"
                       )}
                     >
                       <ContactListItem item={contact} />

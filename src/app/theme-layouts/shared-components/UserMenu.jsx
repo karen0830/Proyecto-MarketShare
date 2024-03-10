@@ -39,12 +39,16 @@ function UserMenu() {
         color="inherit"
       >
         <div className="mx-4 hidden flex-col items-end md:flex">
-          <Typography component="span" className="flex font-semibold">
+          <Typography
+            component="span"
+            className="flex font-semibold"
+            color="white"
+          >
             {user.data.displayName}
           </Typography>
           <Typography
             className="text-11 font-medium capitalize"
-            color="text.secondary"
+            color="#287bff"
           >
             {user.role?.toString()}
             {(!user.role ||
