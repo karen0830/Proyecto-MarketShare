@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import connection from "../dbMysql.js";
 
 // Función para llamar al procedimiento almacenado
@@ -84,7 +85,7 @@ export const getAllShoppingCart = (idUser) => {
     });
 }
 
-export const decrementQuantityInCart = (cartItemId, quantityToRemove ) => {
+export const decrementQuantityInCart = (cartItemId, quantityToRemove) => {
     return new Promise((resolve, reject) => {
         connection.query('CALL sp_decrementQuantityInCart(?,?)', [cartItemId, quantityToRemove], (error, results) => {
             if (error) {
@@ -97,3 +98,78 @@ export const decrementQuantityInCart = (cartItemId, quantityToRemove ) => {
     })
 }
 
+
+// CREATE PROCEDURE sp_insert_review(
+//     IN p_comment VARCHAR(4000),
+//     IN p_idUser VARCHAR(200),
+//     IN p_stars INT
+// )
+
+export const sp_insert_reviews = (comment, idUser, starts, idProducts) => {
+    return new Promise((resolve, reject) => {
+        connection.query('CALL sp_insert_review(?,?,?,?)', [comment, idUser, starts, idProducts], (error, results) => {
+            if (error) {
+                console.error('Error al insertar la reseña:', error);
+                reject('Error al insertar la reseña:', error);
+            }
+            console.log(results);
+            resolve(results);
+        })
+    })
+}
+
+export const getCategory = async (idProduct) => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from Products where id = ?', [idProduct], (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar los productos:', error);
+                reject(error);
+            } else {
+                console.log('productos seleccionados correctamente', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const typeCategory = async (idCategory) => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from Category where idCategory = ?', [idCategory], (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar los productos:', error);
+                reject(error);
+            } else {
+                console.log('productos seleccionados correctamente', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const getReviewsIdUser = async (idProduct)  => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from Reviews where idProduct = ?', [idProduct], (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar los productos:', error);
+                reject(error);
+            } else {
+                console.log('reviews seleccionados correctamente', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const deleteReview = async (idReview)  => {
+    return await new Promise((resolve, reject) => {
+        connection.query('CALL sp_delete_review(?)', [idReview], (error, results) => {
+            if (error) {
+                console.error('Error al eliminar la reseña:', error);
+                reject(error);
+            } else {
+                console.log('review eliminada corretamente', results);
+                resolve(results);
+            }
+        });
+    });
+}

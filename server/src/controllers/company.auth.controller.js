@@ -13,6 +13,7 @@ import SHA256 from 'crypto-js/sha256.js';
 import { promisify } from "util";
 import { upload } from "../IA/deteccion-de-objetos/multer.js";
 import { run } from "../IA/deteccion-de-objetos/app.js";
+import connection from "../dbMysql.js";
 
 
 export const registerCompany = async (req, res) => {
@@ -98,11 +99,9 @@ export const logoutCompany = (req, res) => {
 };
 
 export const verifyTokenCompany = async (req, res) => {
-    const authorizationHeader = req.headers['authorization'];
-    console.log("headerVerryfy token company", req.headers);
-    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
+    const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
     // const token = req.cookies.token;
-
+    console.log(token);
     if (token === 'null') {
         return res.status(401).json({ message: "Unauthorized 1" });
     }
@@ -1056,3 +1055,25 @@ export const addPublicationsVerify = async (req, res) => {
         console.log(error);
     }
 };
+
+export const productsId = async (req, res) => {
+    try {
+        const token = req.Token;
+        const decodedToken = jwt.decode(token);
+        const results = await new Promise((resolve, reject) => {
+            connection.query('select * from Products where id = ?', [decodedToken.id], (error, results) => {
+                if (error) {
+                    console.error('Error al seleccionar los productos:', error);
+                    reject(error);
+                } else {
+                    console.log('productos seleccionados correctamente', results);
+                    resolve(results);
+                }
+            });
+        });
+
+        res.json()
+    } catch (error) {
+        console.error('Error al ejecutar la consulta:', error);
+    }
+}

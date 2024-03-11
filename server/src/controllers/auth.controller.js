@@ -10,10 +10,11 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
 import CompanyModel from "../models/company.models.js";
-import { addShoppingCart, decrementQuantityInCart, getAllShoppingCart, removeFromCart } from "../storedProcedures/storedProcedures.js";
+import { addShoppingCart, decrementQuantityInCart, deleteReview, getAllShoppingCart, getCategory, getReviewsIdUser, removeFromCart, sp_insert_reviews, typeCategory } from "../storedProcedures/storedProcedures.js";
 import connection from "../dbMysql.js";
 import { token } from "morgan";
 import { classify_text } from "../IA/clasificacion/app.js";
+import { userInfo } from "os";
 
 
 export const registerUser = async (req, res) => {
@@ -612,7 +613,7 @@ export const comments = async (req, res) => {
             return res.json({
                 publications: publicationFound.publications[0]
             });
-        }else res.status(400).json("EL comentario es inadecuado o no coincide con el producto");
+        } else res.status(400).json("EL comentario es inadecuado o no coincide con el producto");
     } catch (error) {
         console.log(error);
     }
@@ -1152,3 +1153,58 @@ export const getTokenSocialNetwork = async (req, res) => {
         return res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+
+export const commentsProducts = async (req, res) => {
+    try {
+        const { comment, start, idProduct } = req.body;
+        console.log(comment, start, idProduct);
+        const categoryId = await getCategory(idProduct);
+        console.log(categoryId[0].name , " juyu");
+        let prompt = `Por favor, evalúa el siguiente comentario: "${comment}". Si el comentario está a favor o en contra y está relacionado el producto "${categoryId[0].name}", por favor responde con "true". Si el comentario no está relacionado o no tiene sentido, por favor responde con "false".`;
+        await classify_text(comment, prompt, req, res);
+        console.log("MP", req.malasPalabras);
+        console.log("RN", req.relacion);
+        console.log("TOTOTOKEN", req.Token);
+        if (req.malasPalabras != true && req.relacion != false && req.malasPalabras != undefined && req.relacion != undefined) {
+            const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
+            const decodedToken = jwt.decode(token);
+            let id = decodedToken.id;
+            const result = await sp_insert_reviews(comment, id, start, idProduct);
+            return res.json(result)
+        } else res.status(400).json("EL comentario es inadecuado o no coincide con el producto");
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getReviews = async (req, res) => {
+    try {
+        const { idProduct } = req.body;
+        const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
+        const decodedToken = jwt.decode(token);
+        let id = decodedToken.id;
+        const result = await getReviewsIdUser(idProduct);
+        for (const element of result) {
+            const user = await User.findOne({ _id: element.idUser });
+            console.log(element);
+            console.log(user);
+            element.imgUrl = user.profileImage;
+            element.name = user.username;
+        }
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const DeleteReview = async (req, res) => {
+    try {
+        const { idReview } = req.body;
+        const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
+        const decodedToken = jwt.decode(token);
+        const result = await deleteReview(idReview);
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+    }
+}

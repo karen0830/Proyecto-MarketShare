@@ -24,7 +24,10 @@ import {
     deleteCart,
     getAllShoppingCarts,
     decrementQuantityCart,
-    getTokenSocialNetwork
+    getTokenSocialNetwork,
+    commentsProducts,
+    getReviews,
+    DeleteReview
 } from "../controllers/auth.controller.js";
 import {
     authRequired
@@ -46,6 +49,9 @@ router.post("/refreshToken", refreshToken);
 router.post("/sharePublication", authRequired, sharePublications);
 router.post("/addShoppingCart", authRequired, addShopCart)
 router.post("/getTokenSocialNetwork", getTokenSocialNetwork);
+router.post("/commentProduct", authRequired, commentsProducts);
+router.post("/getReviews", authRequired, getReviews);
+router.post("/deleteReview", authRequired, DeleteReview);
 router.get("/profileUser", authRequired, profileUser);
 router.get("/verify", authRequired, verifyToken);
 router.get("/getSharePublications", authRequired, getSharePublications);
