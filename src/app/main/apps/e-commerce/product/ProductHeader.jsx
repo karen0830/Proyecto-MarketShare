@@ -94,10 +94,10 @@ function ProductHeader() {
             animate={{ x: 0, transition: { delay: 0.3 } }}
           >
             <Typography className="text-16 sm:text-20 truncate font-semibold text-white">
-              {name || "New Product"}
+              {name || "Nuevo Producto"}
             </Typography>
             <Typography variant="caption" className="font-medium text-blue-700">
-              Product Detail
+              Detalle del producto
             </Typography>
           </motion.div>
         </div>
@@ -120,7 +120,7 @@ function ProductHeader() {
                 </FuseSvgIcon>
               }
             >
-              Remove
+              Quitar
             </Button>
             <Button
               className="whitespace-nowrap mx-4"
@@ -129,7 +129,7 @@ function ProductHeader() {
               onClick={handleSaveProduct}
               style={{ color: "#287bff" }}
             >
-              Save
+              Guardar
             </Button>
           </>
         ) : (
@@ -140,7 +140,7 @@ function ProductHeader() {
             disabled={_.isEmpty(dirtyFields) || !isValid}
             style={{ color: "white" }}
           >
-            Add
+            Añadir
           </Button>
         )}
       </motion.div>

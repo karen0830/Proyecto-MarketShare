@@ -189,7 +189,7 @@ function MessengerPanel() {
                 </IconButton>
                 {selectedContactId === "" && (
                   <Typography className="text-16" color="inherit">
-                    Team Chat
+                    Chat de equipo
                   </Typography>
                 )}
               </div>
@@ -227,7 +227,7 @@ function MessengerPanel() {
                 className="px-16 pb-24 mt-24 text-center"
                 color="text.secondary"
               >
-                Select a contact to start a conversation.
+                Seleccione un contacto para iniciar una conversación.
               </Typography>
             </div>
           )}

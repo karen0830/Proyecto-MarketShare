@@ -67,7 +67,7 @@ export const themesConfig = {
         contrastText: darkPaletteText.primary,
       },
       secondary: {
-        light: "#818cf8",
+        light: "#287bff",
         main: "#4f46e5",
         dark: "#3730a3",
         contrastText: darkPaletteText.primary,

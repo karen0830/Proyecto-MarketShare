@@ -76,7 +76,7 @@ function ProfileApp() {
                   className="text-sm font-medium"
                   color="text.secondary"
                 >
-                  FOLLOWERS
+                  SEGUIDORES
                 </Typography>
               </div>
               <div className="flex flex-col items-center">
@@ -85,7 +85,7 @@ function ProfileApp() {
                   className="text-sm font-medium"
                   color="text.secondary"
                 >
-                  FOLLOWING
+                  SIGUIENDO
                 </Typography>
               </div>
             </div>

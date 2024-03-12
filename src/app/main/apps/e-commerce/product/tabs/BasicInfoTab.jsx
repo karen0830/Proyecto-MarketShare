@@ -19,7 +19,7 @@ function BasicInfoTab() {
             {...field}
             className="mt-8 mb-16"
             required
-            label="Name"
+            label="Nombre"
             autoFocus
             id="name"
             variant="outlined"
@@ -38,7 +38,7 @@ function BasicInfoTab() {
             {...field}
             className="mt-8 mb-16"
             id="description"
-            label="Description"
+            label="Descripción"
             type="text"
             multiline
             rows={5}
@@ -66,7 +66,7 @@ function BasicInfoTab() {
               <TextField
                 {...params}
                 placeholder="Select multiple categories"
-                label="Categories"
+                label="Categorias"
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true,
@@ -95,7 +95,7 @@ function BasicInfoTab() {
               <TextField
                 {...params}
                 placeholder="Select multiple tags"
-                label="Tags"
+                label="Etiquetas"
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true,

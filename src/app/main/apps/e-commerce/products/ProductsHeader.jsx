@@ -32,7 +32,7 @@ function ProductsHeader() {
         animate={{ x: 0, transition: { delay: 0.2 } }}
       >
         <Typography className="text-24 md:text-32 font-extrabold tracking-tight text-white">
-          Products
+          Productos
         </Typography>
       </motion.span>
 
@@ -46,7 +46,7 @@ function ProductsHeader() {
           <FuseSvgIcon color="disabled">heroicons-solid:search</FuseSvgIcon>
 
           <Input
-            placeholder="Search products"
+            placeholder="Buscar Productos"
             className="flex flex-1"
             disableUnderline
             fullWidth
@@ -70,7 +70,7 @@ function ProductsHeader() {
             to="/apps/e-commerce/products/new"
           >
             <FuseSvgIcon size={20}>heroicons-outline:plus</FuseSvgIcon>
-            <span className="hidden sm:flex mx-8">Add</span>
+            <span className="hidden sm:flex mx-8">Añadir</span>
           </Button>
         </motion.div>
       </div>

@@ -140,7 +140,7 @@ function MainSidebar() {
                       className="font-medium text-20 px-32 py-24"
                       color="#287bff"
                     >
-                      Chats
+                      Mensajes
                     </Typography>
                   </motion.div>
                 )}
@@ -164,7 +164,7 @@ function MainSidebar() {
                       className="font-medium text-20 px-32 py-24"
                       color="#287bff"
                     >
-                      Contacts
+                      Contactos
                     </Typography>
                   </motion.div>
                 )}

@@ -103,13 +103,13 @@ function UserMenu() {
               <ListItemIcon className="min-w-40">
                 <FuseSvgIcon>heroicons-outline:lock-closed</FuseSvgIcon>
               </ListItemIcon>
-              <ListItemText primary="Sign In" />
+              <ListItemText primary="Ingresar" />
             </MenuItem>
             <MenuItem component={Link} to="/sign-up" role="button">
               <ListItemIcon className="min-w-40">
                 <FuseSvgIcon>heroicons-outline:user-add </FuseSvgIcon>
               </ListItemIcon>
-              <ListItemText primary="Sign up" />
+              <ListItemText primary="Ingresar" />
             </MenuItem>
           </>
         ) : (
@@ -123,7 +123,7 @@ function UserMenu() {
               <ListItemIcon className="min-w-40">
                 <FuseSvgIcon>heroicons-outline:user-circle</FuseSvgIcon>
               </ListItemIcon>
-              <ListItemText primary="My Profile" />
+              <ListItemText primary="Mi perfil" />
             </MenuItem>
             <MenuItem
               onClick={() => {
@@ -133,7 +133,7 @@ function UserMenu() {
               <ListItemIcon className="min-w-40">
                 <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
               </ListItemIcon>
-              <ListItemText primary="Sign out" />
+              <ListItemText primary="Salir" />
             </MenuItem>
           </>
         )}

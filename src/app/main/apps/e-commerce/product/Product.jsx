@@ -125,11 +125,11 @@ function Product() {
               scrollButtons="auto"
               classes={{ root: "w-full h-64 border-b-1" }}
             >
-              <Tab className="h-64" label="Basic Info" />
-              <Tab className="h-64" label="Product Images" />
-              <Tab className="h-64" label="Pricing" />
-              <Tab className="h-64" label="Inventory" />
-              <Tab className="h-64" label="Shipping" />
+              <Tab className="h-64" label="Información básica" />
+              <Tab className="h-64" label="Imágenes del producto" />
+              <Tab className="h-64" label="Precios" />
+              <Tab className="h-64" label="Inventario" />
+              <Tab className="h-64" label="Envío" />
             </Tabs>
             <div className="p-16 sm:p-24 max-w-3xl">
               <div className={tabValue !== 0 ? "hidden" : ""}>

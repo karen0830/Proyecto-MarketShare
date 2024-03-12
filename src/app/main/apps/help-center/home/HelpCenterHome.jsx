@@ -33,7 +33,7 @@ function HelpCenterHome() {
               animate={{ opacity: 1, transition: { delay: 0 } }}
             >
               <Typography color="inherit" className="text-18 font-semibold">
-                HELP CENTER
+                CENTRO DE AYUDA
               </Typography>
             </motion.div>
             <motion.div
@@ -41,7 +41,7 @@ function HelpCenterHome() {
               animate={{ opacity: 1, transition: { delay: 0 } }}
             >
               <Typography className="mt-4 text-32 sm:text-48 font-extrabold tracking-tight leading-tight text-center">
-                How can we help you today?
+                ¿Como podemos ayudarte hoy?
               </Typography>
             </motion.div>
             <motion.div
@@ -52,8 +52,9 @@ function HelpCenterHome() {
                 color="text.secondary"
                 className="mt-12 sm:text-20 text-center tracking-tight"
               >
-                Search for a topic or question, check out our FAQs and guides,
-                contact us for detailed support
+                Busque un tema o pregunta, consulte nuestras preguntas
+                frecuentes y guías, contáctenos para obtener asistencia
+                detallada
               </Typography>
             </motion.div>
             <motion.div
@@ -62,7 +63,7 @@ function HelpCenterHome() {
             >
               <OutlinedInput
                 className="flex flex-1 items-center px-16 mx-8 rounded-full h-44 w-full max-w-320 sm:max-w-480 mt-40 sm:mt-80"
-                placeholder="Enter a question, topic or keyword"
+                placeholder="Ingrese una pregunta, tema o palabra clave"
                 fullWidth
                 startAdornment={
                   <InputAdornment position="start">
@@ -103,15 +104,15 @@ function HelpCenterHome() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-32 md:gap-y-0 md:gap-x-24 w-full max-w-sm md:max-w-4xl -mt-64 sm:-mt-96"></div>
       </div>
 
-      <Typography className="mt-96 px-16 text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight text-center">
-        Most frequently asked questions
+      <Typography className="mt-96 px-16 text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight text-center ">
+        Preguntas más frecuentes
       </Typography>
       <Typography
         className="mt-8 px-16 text-xl text-center"
         color="text.secondary"
       >
-        Here are the most frequently asked questions you may check before
-        getting started
+        Aquí están las preguntas más frecuentes que puede consultar antes de
+        empezar
       </Typography>
 
       <div className="flex flex-col w-full px-16 items-center my-48">

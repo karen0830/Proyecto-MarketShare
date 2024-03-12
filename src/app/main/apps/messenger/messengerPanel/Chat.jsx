@@ -185,7 +185,7 @@ function Chat(props) {
               className="px-16 pb-24 text-center"
               color="text.secondary"
             >
-              Start a conversation by typing your message below.
+              Inicie una conversación escribiendo su mensaje a continuación.
             </Typography>
           </div>
         )}
@@ -216,7 +216,7 @@ function Chat(props) {
                   autoFocus={false}
                   id="message-input"
                   className="flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-8"
-                  placeholder="Type your message"
+                  placeholder="Escribe tu mensaje"
                   onChange={onInputChange}
                   value={messageText}
                 />

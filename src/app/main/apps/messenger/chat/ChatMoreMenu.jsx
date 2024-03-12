@@ -43,7 +43,7 @@ function MainSidebarMoreMenu(props) {
             handleMoreMenuClose();
           }}
         >
-          Contact info
+          Informacion De Contacto
         </MenuItem>
       </Menu>
     </div>
