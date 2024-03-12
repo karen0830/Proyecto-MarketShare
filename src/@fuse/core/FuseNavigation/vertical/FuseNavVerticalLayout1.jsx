@@ -6,7 +6,10 @@ import FuseNavItem from '../FuseNavItem';
 const StyledList = styled(List)(({ theme }) => ({
 	'& .fuse-list-item': {
 		'&:hover': {
-			backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,.04)'
+			backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,.04)',
+			'& .fuse-list-item-text-primary': {
+				color: theme.palette.primary.main === 'dark' ? 'rgba(37,123,255,255)' : 'rgba(37,123,255,255)' 
+			}
 		},
 		'&:focus:not(.active)': {
 			backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0,0,0,.05)'

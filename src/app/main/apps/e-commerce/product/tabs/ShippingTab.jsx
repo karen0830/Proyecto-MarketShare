@@ -79,8 +79,8 @@ function ShippingTab() {
           <TextField
             {...field}
             className="mt-8 mb-16"
-            label="Extra Shipping Fee"
-            id="Tarifa de envío adicional"
+            label="Tarifa de envío adicional"
+            id="extraShippingFee"
             variant="outlined"
             InputProps={{
               startAdornment: (

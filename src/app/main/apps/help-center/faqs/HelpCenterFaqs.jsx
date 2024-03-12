@@ -39,7 +39,7 @@ function HelpCenterFaqs() {
             Regresar Al Centro De Ayuda
           </Button>
         </div>
-        <div className="mt-8 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+        <div className="mt-8 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight text-white">
           Preguntas Frecuentes
         </div>
 

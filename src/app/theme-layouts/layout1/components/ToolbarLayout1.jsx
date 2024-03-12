@@ -30,7 +30,7 @@ function ToolbarLayout1(props) {
         color="default"
         position="static"
         elevation={0}
-        style={{ backgroundColor: "#1c1c1c " }}
+        style={{ backgroundColor: "#1c1c1c ", borderBottom: '1px solid rgba(47, 51, 54, 1)' }}
       >
         <Toolbar className="min-h-48 p-0 md:min-h-64">
           <div className="flex flex-1 px-16">

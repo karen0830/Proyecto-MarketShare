@@ -64,7 +64,7 @@ function ProductHeader() {
                 ? "heroicons-outline:arrow-sm-left"
                 : "heroicons-outline:arrow-sm-right"}
             </FuseSvgIcon>
-            <span className="flex mx-4 font-medium text-white">Products</span>
+            <span className="flex mx-4 font-medium text-white">Productos</span>
           </Typography>
         </motion.div>
 

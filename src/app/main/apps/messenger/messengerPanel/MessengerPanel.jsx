@@ -174,7 +174,7 @@ function MessengerPanel() {
           className="shadow-md"
           style={{ backgroundColor: "#1c1c1c" }}
         >
-          <Toolbar className="px-4 bg  hover:bg-blue-400 ">
+          <Toolbar className="px-4 bg  hover:bg-[#287bf1] ">
             {(!state || selectedContactId === "") && (
               <div className="flex flex-1 items-center px-8 space-x-12">
                 <IconButton
@@ -214,7 +214,7 @@ function MessengerPanel() {
           </Toolbar>
         </AppBar>
         <Paper className="flex flex-1 flex-row min-h-px shadow-0 ">
-          <ContactList className="flex shrink-0" />
+          <ContactList className="flex shrink-0 bg-[#1c1c1c]" />
 
           {state && selectedContact ? (
             <Chat className="flex flex-1 z-10 " />
