@@ -85,7 +85,7 @@ function Product() {
         className="flex flex-col flex-1 items-center justify-center h-full"
       >
         <Typography color="text.secondary" variant="h5">
-          There is no such product!
+          No hay tal producto!
         </Typography>
         <Button
           className="mt-24"
@@ -94,7 +94,7 @@ function Product() {
           to="/apps/e-commerce/products"
           color="inherit"
         >
-          Go to Products Page
+          Ir a la página de productos
         </Button>
       </motion.div>
     );

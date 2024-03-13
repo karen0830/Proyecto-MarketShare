@@ -117,15 +117,12 @@ function Chat(props) {
     setMessageText(ev.target.value);
   };
   return (
-    <Paper
-      className={clsx("flex flex-col relative pb-64 shadow", className)}
-      sx={{ background: (theme) => theme.palette.background.default }}
-    >
+    <Paper className={clsx("flex flex-col relative pb-64 shadow", className)}>
       <div
         ref={chatScroll}
-        className="flex flex-1 flex-col overflow-y-auto overscroll-contain"
+        className="flex flex-1 flex-col overflow-y-auto overscroll-contain bg-[#1c1c1c1]"
       >
-        <div className="flex flex-col pt-16">
+        <div className="flex flex-col pt-16 bg-[#2e2e2e]">
           {useMemo(() => {
             function isFirstMessageOfGroup(item, i) {
               return (
@@ -176,13 +173,13 @@ function Chat(props) {
 
         {chat?.length === 0 && (
           <div className="flex flex-col flex-1">
-            <div className="flex flex-col flex-1 items-center justify-center">
+            <div className="flex flex-col flex-1 items-center justify-center bg-[#2e2e2e]">
               <FuseSvgIcon size={128} color="disabled">
                 heroicons-outline:chat
               </FuseSvgIcon>
             </div>
             <Typography
-              className="px-16 pb-24 text-center"
+              className="px-16 pb-24 text-center bg-[#2e2e2e]"
               color="text.secondary"
             >
               Inicie una conversación escribiendo su mensaje a continuación.
@@ -209,9 +206,9 @@ function Chat(props) {
           chat && (
             <form
               onSubmit={onMessageSubmit}
-              className="pb-16 px-8 absolute bottom-0 left-0 right-0"
+              className="pb-16 px-8 absolute bottom-0 left-0 right-0 bg-[#242424]"
             >
-              <Paper className="rounded-24 flex items-center relative shadow">
+              <Paper className="rounded-24 flex items-center relative shadow mt-12">
                 <InputBase
                   autoFocus={false}
                   id="message-input"

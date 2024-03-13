@@ -198,7 +198,7 @@ function Chat(props) {
         <div className={clsx("flex flex-1 z-10 flex-col relative", className)}>
           <div ref={chatRef} className="flex flex-1 flex-col overflow-y-auto">
             {chat?.length > 0 && (
-              <div className="flex flex-col pt-16 px-16 pb-40">
+              <div className="flex flex-col pt-16 px-16 pb-40 bg-[#2e2e2e]">
                 {chat.map((item, i) => {
                   return (
                     <StyledMessageRow
@@ -211,7 +211,7 @@ function Chat(props) {
                         i + 1 === chat.length && "pb-96"
                       )}
                     >
-                      <div className="bubble flex relative items-center justify-center p-12 max-w-full">
+                      <div className="bubble flex relative items-center justify-center p-12 max-w-full ">
                         <div className="leading-tight whitespace-pre-wrap">
                           {item.value}
                         </div>
@@ -235,8 +235,7 @@ function Chat(props) {
               square
               component="form"
               onSubmit={onMessageSubmit}
-              className="absolute border-t-1 bottom-0 right-0 left-0 py-16 px-16"
-              style={{ backgroundColor: "#1c1c1c" }}
+              className="absolute border-t-1 bottom-0 right-0 left-0 py-16 px-16 bg-[#1c1c1c]"
             >
               <div className="flex items-center relative">
                 <IconButton type="submit" size="large">

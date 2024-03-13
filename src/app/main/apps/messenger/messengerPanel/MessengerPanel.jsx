@@ -174,7 +174,7 @@ function MessengerPanel() {
           className="shadow-md"
           style={{ backgroundColor: "#1c1c1c" }}
         >
-          <Toolbar className="px-4 bg  hover:bg-[#287bf1] ">
+          <Toolbar className="px-4 bg  hover:bg-[#287bff] ">
             {(!state || selectedContactId === "") && (
               <div className="flex flex-1 items-center px-8 space-x-12">
                 <IconButton
@@ -219,7 +219,7 @@ function MessengerPanel() {
           {state && selectedContact ? (
             <Chat className="flex flex-1 z-10 " />
           ) : (
-            <div className="flex flex-col flex-1 items-center justify-center p-24 bg-gray-900">
+            <div className="flex flex-col flex-1 items-center justify-center p-24 bg-[#2e2e2e]">
               <FuseSvgIcon size={128} color="disabled">
                 heroicons-outline:chat
               </FuseSvgIcon>

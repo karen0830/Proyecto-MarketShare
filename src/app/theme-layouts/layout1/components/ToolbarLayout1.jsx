@@ -30,15 +30,18 @@ function ToolbarLayout1(props) {
         color="default"
         position="static"
         elevation={0}
-        style={{ backgroundColor: "#1c1c1c ", borderBottom: '1px solid rgba(47, 51, 54, 1)' }}
+        style={{
+          backgroundColor: "#1c1c1c ",
+          borderBottom: "1px solid rgba(47, 51, 54, 1)",
+        }}
       >
         <Toolbar className="min-h-48 p-0 md:min-h-64">
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === "left" && (
               <>
-                <Hidden lgDown>
-                  {<NavbarToggleButton className="mx-0 h-40 w-40 p-0 " />}
-                </Hidden>
+                {
+                  <NavbarToggleButton className="mx-0 h-40 w-40 p-0 hover:bg-[#287bff]" />
+                }
               </>
             )}
 

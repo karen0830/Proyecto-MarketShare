@@ -75,16 +75,16 @@ function OrderDetailsTab() {
               <thead>
                 <tr>
                   <th>
-                    <Typography className="font-semibold">Name</Typography>
+                    <Typography className="font-semibold">Nombre</Typography>
                   </th>
                   <th>
-                    <Typography className="font-semibold">Email</Typography>
+                    <Typography className="font-semibold">Correo</Typography>
                   </th>
                   <th>
-                    <Typography className="font-semibold">Phone</Typography>
+                    <Typography className="font-semibold">Telefono</Typography>
                   </th>
                   <th>
-                    <Typography className="font-semibold">Company</Typography>
+                    <Typography className="font-semibold">Compañia</Typography>
                   </th>
                 </tr>
               </thead>
@@ -128,7 +128,7 @@ function OrderDetailsTab() {
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className="font-semibold">
-                  Shipping Address
+                  Dirección de envío
                 </Typography>
               </AccordionSummary>
               <AccordionDetails className="flex flex-col md:flex-row">
@@ -167,7 +167,7 @@ function OrderDetailsTab() {
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className="font-semibold">
-                  Invoice Address
+                  dirección de facturación
                 </Typography>
               </AccordionSummary>
               <AccordionDetails className="flex flex-col md:flex-row -mx-8">
@@ -202,7 +202,7 @@ function OrderDetailsTab() {
         <div className="pb-16 flex items-center">
           <FuseSvgIcon color="action">heroicons-outline:clock</FuseSvgIcon>
           <Typography className="h2 mx-12 font-medium" color="text.secondary">
-            Order Status
+            estado del pedido
           </Typography>
         </div>
 
@@ -238,7 +238,7 @@ function OrderDetailsTab() {
             heroicons-outline:currency-dollar
           </FuseSvgIcon>
           <Typography className="h2 mx-12 font-medium" color="text.secondary">
-            Payment
+            Pago
           </Typography>
         </div>
 
@@ -248,19 +248,19 @@ function OrderDetailsTab() {
               <tr>
                 <th>
                   <Typography className="font-semibold">
-                    TransactionID
+                    TransacciónID
                   </Typography>
                 </th>
                 <th>
                   <Typography className="font-semibold">
-                    Payment Method
+                    Método de pago
                   </Typography>
                 </th>
                 <th>
-                  <Typography className="font-semibold">Amount</Typography>
+                  <Typography className="font-semibold">Cantidad</Typography>
                 </th>
                 <th>
-                  <Typography className="font-semibold">Date</Typography>
+                  <Typography className="font-semibold">Fecha</Typography>
                 </th>
               </tr>
             </thead>
@@ -290,7 +290,7 @@ function OrderDetailsTab() {
         <div className="pb-16 flex items-center">
           <FuseSvgIcon color="action">heroicons-outline:truck</FuseSvgIcon>
           <Typography className="h2 mx-12 font-medium" color="text.secondary">
-            Shipping
+            envío
           </Typography>
         </div>
 
@@ -300,20 +300,22 @@ function OrderDetailsTab() {
               <tr>
                 <th>
                   <Typography className="font-semibold">
-                    Tracking Code
+                    Codigo de localización
                   </Typography>
                 </th>
                 <th>
-                  <Typography className="font-semibold">Carrier</Typography>
+                  <Typography className="font-semibold">
+                    Transportadora
+                  </Typography>
                 </th>
                 <th>
                   <Typography className="font-semibold">Weight</Typography>
                 </th>
                 <th>
-                  <Typography className="font-semibold">Fee</Typography>
+                  <Typography className="font-semibold">Tarifa</Typography>
                 </th>
                 <th>
-                  <Typography className="font-semibold">Date</Typography>
+                  <Typography className="font-semibold">Fecha</Typography>
                 </th>
               </tr>
             </thead>
