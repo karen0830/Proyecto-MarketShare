@@ -24,6 +24,7 @@ export const setUser = createAsyncThunk('user/setUser', async (user) => {
  * Reset the user state.
  */
 export const resetUser = createAsyncThunk('user/resetUser', async () => {
+	console.log("bebebebebe");
 	return true;
 });
 /**

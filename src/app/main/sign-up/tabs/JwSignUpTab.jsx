@@ -9,6 +9,8 @@ import _ from '@lodash';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../../auth/AuthRouteProvider';
+import { registerCompanyRequest } from '@mock-api/api/api/auth.company';
+
 /**
  * Form Validation Schema
  */
@@ -44,13 +46,11 @@ function JwtSignUpTab() {
 	});
 	const { isValid, dirtyFields, errors } = formState;
 
-	function onSubmit(formData) {
-		const { displayName, email, password } = formData;
+	const onSubmit = handleSubmit(async (values) => {
+		console.log(values);
 		jwtService
 			.signUp({
-				displayName,
-				password,
-				email
+				values
 			})
 			.then(() => {
 				// No need to do anything, registered user data will be set at app/auth/AuthRouteProvider
@@ -60,7 +60,7 @@ function JwtSignUpTab() {
 					setError(type, { type: 'manual', message });
 				});
 			});
-	}
+	});
 
 	return (
 		<form
@@ -69,18 +69,18 @@ function JwtSignUpTab() {
 			className="mt-32 flex w-full flex-col justify-center"
 			onSubmit={handleSubmit(onSubmit)}
 		>
+
 			<Controller
-				name="displayName"
+				name="userNameCompany"
 				control={control}
 				render={({ field }) => (
 					<TextField
 						{...field}
 						className="mb-24"
-						label="Display name"
-						autoFocus
-						type="name"
-						error={!!errors.displayName}
-						helperText={errors?.displayName?.message}
+						label="Usuario de la empresa"
+						type="text"
+						// error={!!errors.password}
+						// helperText={errors?.password?.message}
 						variant="outlined"
 						required
 						fullWidth
@@ -95,10 +95,59 @@ function JwtSignUpTab() {
 					<TextField
 						{...field}
 						className="mb-24"
-						label="Email"
+						label="Correo electrónico:"
 						type="email"
 						error={!!errors.email}
 						helperText={errors?.email?.message}
+						variant="outlined"
+						required
+						fullWidth
+					/>
+				)}
+			/>
+			{/* {
+				registerErrors.map((error, i) => (
+					<div key={i} className="errors">
+						{Array.isArray(error) ? (
+							error.map((line, j) => (
+								<p key={j}>{line}</p>
+							))
+						) : (
+							<p key={i}>{error}</p>
+						)}
+					</div>
+				))
+			} */}
+
+			<Controller
+				name="typeCompany"
+				control={control}
+				render={({ field }) => (
+					<TextField
+						{...field}
+						className="mb-24"
+						label="Tipo de empresa"
+						type="text"
+						// error={!!errors.password}
+						// helperText={errors?.password?.message}
+						variant="outlined"
+						required
+						fullWidth
+					/>
+				)}
+			/>
+
+			<Controller
+				name="phoneNumber"
+				control={control}
+				render={({ field }) => (
+					<TextField
+						{...field}
+						className="mb-24"
+						label="Número de teléfono"
+						type="number"
+						// error={!!errors.password}
+						// helperText={errors?.password?.message}
 						variant="outlined"
 						required
 						fullWidth
@@ -113,7 +162,7 @@ function JwtSignUpTab() {
 					<TextField
 						{...field}
 						className="mb-24"
-						label="Password"
+						label="Contraseña"
 						type="password"
 						error={!!errors.password}
 						helperText={errors?.password?.message}
@@ -131,7 +180,7 @@ function JwtSignUpTab() {
 					<TextField
 						{...field}
 						className="mb-24"
-						label="Password (Confirm)"
+						label="Confirmar contraseña"
 						type="password"
 						error={!!errors.passwordConfirm}
 						helperText={errors?.passwordConfirm?.message}
@@ -169,9 +218,10 @@ function JwtSignUpTab() {
 				color="secondary"
 				className="mt-24 w-full"
 				aria-label="Register"
-				disabled={_.isEmpty(dirtyFields) || !isValid}
-				type="submit"
+				// disabled={_.isEmpty(dirtyFields) || !isValid}
+				// type="submit"
 				size="large"
+				onClick={onSubmit}
 			>
 				Create your free account
 			</Button>

@@ -56,7 +56,7 @@ function SignInPage() {
             </Link>
           </div>
 
-          <Alert
+          {/* <Alert
             icon={false}
             severity="info"
             className="mt-24 px-16 text-13 leading-relaxed"
@@ -86,7 +86,7 @@ function SignInPage() {
                 label={item.title}
               />
             ))}
-          </Tabs>
+          </Tabs> */}
 
           {selectedTabId === "jwt" && <JwtLoginTab />}
           {selectedTabId === "firebase" && <FirebaseSignInTab />}

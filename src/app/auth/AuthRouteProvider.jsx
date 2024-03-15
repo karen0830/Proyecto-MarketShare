@@ -45,6 +45,7 @@ function AuthRoute(props) {
       updateTokenFromHeader: true,
     },
     onSignedIn: (user) => {
+      console.log("user: ", user);
       dispatch(setUser(user));
       setAuthService("jwt");
     },
