@@ -171,3 +171,13 @@ export const logoutCompany = async () => {
     console.log("error.status:", ex);
   }
 }
+
+export const getAllProductsId = async () => {
+  try {
+    // Eliminar el token del localStorage
+    const response = await ruta_protegida().get('/getProductsId');
+    return response;
+  } catch (ex) {
+    console.log("error.status:", ex);
+  }
+}

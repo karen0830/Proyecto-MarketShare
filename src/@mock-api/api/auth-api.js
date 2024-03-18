@@ -9,11 +9,10 @@ import Utf8 from 'crypto-js/enc-utf8';
 import jwtDecode from 'jwt-decode';
 import UserModel from 'src/app/auth/user/models/UserModel';
 import axios from 'axios';
-import mockApi from '../mock-api.json';
-import { loginRequestCompany } from './api/auth.company';
+import { getAllProductsId, loginRequestCompany, verityTokenRequestCompany } from './api/auth.company';
 
 
-let usersApi =  JSON.parse(localStorage.getItem("users")) || [];
+let usersApi = JSON.parse(localStorage.getItem("users")) || [];
 
 const signInCompany = async (user) => {
 	try {
@@ -30,12 +29,48 @@ export const authApiMocks = (mock) => {
 		const data = JSON.parse(config.data);
 		const { email, password } = data;
 		const response = await signInCompany({ email: email, password: password });
-
 		if (response.data) {
 			// Verificar si el usuario ya existe en el arreglo de usuarios
 			const existingUserIndex = usersApi.findIndex(user => user.data.email === email);
 			// localStorage.setItem("userLogin", response.data.user)
 			localStorage.setItem("userLogin", JSON.stringify(response.data.user));
+			localStorage.setItem("tokenCompany", response.data.token);
+			const products = await getAllProductsId();
+			let p = []
+			products.data.forEach(element => {
+				p.push(
+					{
+						"id": element.id,
+						"name": element.name,
+						"handle": "",
+						"description": "Duis anim est non exercitation consequat. Ullamco ut ipsum dolore est elit est ea elit ad fugiat exercitation. Adipisicing eu ad sit culpa sint. Minim irure Lorem eiusmod minim nisi sit est consectetur.",
+						"categories": [],
+						"featuredImageId": "2",
+						"images": [
+							{
+								"id": "0",
+								"url": element.img,
+								"type": "image"
+							}
+						],
+						"priceTaxExcl": element.price,
+						"priceTaxIncl": element.price,
+						"taxRate": 10,
+						"comparedPrice": 29.9,
+						"quantity": 92,
+						"sku": "A445BV",
+						"width": "22cm",
+						"height": "24cm",
+						"depth": "15cm",
+						"weight": "3kg",
+						"extraShippingFee": 3,
+						"active": true
+					},
+				)
+			})
+
+			localStorage.setItem("Products", JSON.stringify(p))
+
 			if (existingUserIndex === -1) {
 				// El usuario no existe en el arreglo, agregarlo
 				usersApi.push({
@@ -69,11 +104,11 @@ export const authApiMocks = (mock) => {
 		// const usersApiString = usersApi;
 		// usersApi = JSON.parse(usersApiString);
 
-		console.log("users ", usersApi);
+
 		let user = null;
 		usersApi.forEach(element => {
 			if (element.data.email == email) {
-				console.log("es igual");
+
 				user = element;
 			}
 		});
@@ -103,7 +138,6 @@ export const authApiMocks = (mock) => {
 			const access_token = generateJWTToken({ id: user.uid });
 			console.log(user.uid);
 			// const access_token = response.data.token;
-			console.log(access_token);
 			const response = {
 				user,
 				access_token
@@ -124,10 +158,10 @@ export const authApiMocks = (mock) => {
 		const error = 'Invalid access token detected or user not found';
 		return [401, { data: error }];
 	});
-	mock.onGet('/auth/user').reply((config) => {
+	mock.onGet('/auth/user').reply(async (config) => {
 		const newTokenResponse = generateAccessToken(config);
-		console.log("VerifyToken", newTokenResponse);
-		if (newTokenResponse) {
+		const verifyTokenCompany = await verityTokenRequestCompany();
+		if (newTokenResponse && verifyTokenCompany.data) {
 			const { access_token, user } = newTokenResponse;
 			return [200, user, { 'New-Access-Token': access_token }];
 		}
@@ -151,7 +185,6 @@ export const authApiMocks = (mock) => {
 
 		if (verifyJWTToken(access_token)) {
 			const { id } = jwtDecode(access_token);
-			console.log("id", id);
 			// const user = _.cloneDeep(usersApi.find((_user) => _user.uid === id));
 			let userAuth = JSON.parse(localStorage.getItem("userLogin"));
 			let user = null;
@@ -164,9 +197,7 @@ export const authApiMocks = (mock) => {
 			try {
 				if (user) {
 					// delete user.password;
-					console.log(user);
 					const access_token = generateJWTToken({ id: id });
-					console.log(access_token);
 					return { access_token, user };
 				}
 			} catch (error) {
@@ -219,7 +250,6 @@ export const authApiMocks = (mock) => {
 	mock.onPut('/auth/user').reply((config) => {
 		const access_token = config?.headers?.Authorization;
 		const userData = jwtDecode(access_token);
-		console.log("Data", userData);
 		const uid = userData.id;
 		const user = JSON.parse(config.data);
 		let updatedUser;

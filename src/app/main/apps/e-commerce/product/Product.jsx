@@ -77,7 +77,7 @@ function Product() {
   /**
    * Show Message if the requested products is not exists
    */
-  if (isError && productId !== "new") {
+  if (isError && productId != "new") {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -106,8 +106,8 @@ function Product() {
   if (
     _.isEmpty(form) ||
     (product &&
-      routeParams.productId !== product.id &&
-      routeParams.productId !== "new")
+      routeParams.productId != product.id &&
+      routeParams.productId != "new")
   ) {
     return <FuseLoading />;
   }

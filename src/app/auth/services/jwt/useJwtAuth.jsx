@@ -39,6 +39,10 @@ const useJwtAuth = (props) => {
 	}, []);
 	const resetSession = useCallback(() => {
 		localStorage.removeItem(authConfig.tokenStorageKey);
+		localStorage.removeItem("Products");
+		localStorage.removeItem("userLogin");
+		localStorage.removeItem("tokenCompany");
+		localStorage.removeItem("users");
 		delete axios.defaults.headers.common.Authorization;
 	}, []);
 	/**

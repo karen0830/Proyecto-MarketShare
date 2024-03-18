@@ -158,19 +158,14 @@ function ProductsTable(props) {
                       scope="row"
                       padding="none"
                     >
-                      {n?.images?.length > 0 && n.featuredImageId ? (
+                      {console.log(n)}
+                      
                         <img
                           className="w-full block rounded"
-                          src={_.find(n.images, { id: n.featuredImageId })?.url}
+                          src={n?.images[0].url}
                           alt={n.name}
                         />
-                      ) : (
-                        <img
-                          className="w-full block rounded"
-                          src="assets/images/apps/ecommerce/product-image-placeholder.png"
-                          alt={n.name}
-                        />
-                      )}
+                     
                     </TableCell>
 
                     <TableCell

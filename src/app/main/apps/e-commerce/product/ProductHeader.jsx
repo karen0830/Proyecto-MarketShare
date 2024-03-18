@@ -74,19 +74,14 @@ function ProductHeader() {
             initial={{ scale: 0 }}
             animate={{ scale: 1, transition: { delay: 0.3 } }}
           >
-            {images && images.length > 0 && featuredImageId ? (
+            {console.log("Images", images)}
+            {images.length > 0 ? (
               <img
                 className="w-32 sm:w-48 rounded"
-                src={_.find(images, { id: featuredImageId })?.url}
+                src={images[0].url}
                 alt={name}
               />
-            ) : (
-              <img
-                className="w-32 sm:w-48 rounded"
-                src="assets/images/apps/ecommerce/product-image-placeholder.png"
-                alt={name}
-              />
-            )}
+            ) : null}
           </motion.div>
           <motion.div
             className="flex flex-col min-w-0 mx-8 sm:mx-16"
