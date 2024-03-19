@@ -47,64 +47,7 @@ function BasicInfoTab() {
           />
         )}
       />
-
-      <Controller
-        name="categories"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Autocomplete
-            className="mt-8 mb-16"
-            multiple
-            freeSolo
-            options={[]}
-            value={value}
-            onChange={(event, newValue) => {
-              onChange(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Select multiple categories"
-                label="Categorias"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            )}
-          />
-        )}
-      />
-
-      <Controller
-        name="tags"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Autocomplete
-            className="mt-8 mb-16"
-            multiple
-            freeSolo
-            options={[]}
-            value={value}
-            onChange={(event, newValue) => {
-              onChange(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Select multiple tags"
-                label="Etiquetas"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            )}
-          />
-        )}
-      />
+      <button>Mejorar Descripcion</button>
     </div>
   );
 }

@@ -8,7 +8,6 @@ import { selectFuseCurrentLayoutConfig } from "@fuse/core/FuseSettings/store/fus
 import FuseSuspense from "@fuse/core/FuseSuspense";
 import FooterLayout1 from "./components/FooterLayout1";
 import LeftSideLayout1 from "./components/LeftSideLayout1";
-import RightSideLayout1 from "./components/RightSideLayout1";
 import NavbarWrapperLayout1 from "./components/NavbarWrapperLayout1";
 import ToolbarLayout1 from "./components/ToolbarLayout1";
 
@@ -75,11 +74,13 @@ function Layout1(props) {
           )}
         </main>
 
-        {config.navbar.display && config.navbar.position === "right" && (
+        {/*
+               {config.navbar.display && config.navbar.position === "right" && (
           <NavbarWrapperLayout1 />
-        )}
+                {config.rightSidePanel.display && <RightSideLayout1 />}
+              */}
       </div>
-      {config.rightSidePanel.display && <RightSideLayout1 />}
+
       <FuseMessage />
     </Root>
   );

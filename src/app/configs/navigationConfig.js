@@ -81,13 +81,6 @@ const navigationConfig = [
           },
         ],
       },
-      {
-        id: "apps.profile",
-        title: "Perfil",
-        type: "item",
-        icon: "heroicons-outline:user-circle",
-        url: "/apps/profile",
-      },
     ],
   },
   {
