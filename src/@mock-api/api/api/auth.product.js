@@ -20,7 +20,7 @@ const ruta_protegida = () => {
     }
 }
 
-const addProduct = async dataProduct => {
+export const addProduct = async dataProduct => {
    try {
     const response = ruta_protegida().push("/addProducts", dataProduct);
     return response
@@ -28,3 +28,13 @@ const addProduct = async dataProduct => {
     console.log(error);
    }
 }
+
+export const updateProductId = async dataProduct => {
+    try {
+        console.log("dataP", dataProduct);
+     const response = ruta_protegida().put("/updateProduct", dataProduct);
+     return response
+    } catch (error) {
+     console.log(error);
+    }
+ }

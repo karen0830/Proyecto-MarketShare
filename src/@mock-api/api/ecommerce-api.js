@@ -1,6 +1,7 @@
 import _ from '@lodash';
 import FuseUtils from '@fuse/utils';
 import mockApi from '../mock-api.json';
+import { updateProductId } from './api/auth.product';
 let products = JSON.parse(localStorage.getItem("Products"));
 if (products) {
 	products.forEach(element => {
@@ -78,20 +79,24 @@ export const eCommerceApiMocks = (mock) => {
 
 		return [404, 'Requested product does not exist.'];
 	});
-
-	mock.onPut('/ecommerce/products/:id').reply((config) => {
+	
+	mock.onPut('/ecommerce/products/:id').reply(async (config) => {
 		const { id } = config.params;
 		const newData = JSON.parse(config.data);
+		console.log("new Data ", newData);
 		let updatedProduct = null;
-		productsDB.forEach((product, index) => {
+		for (let index = 0; index < productsDB.length; index++) {
+			const product = productsDB[index];
 			if (product.id == id) {
+				const res = await updateProductId(id, newData);
 				productsDB[index] = { ...product, ...newData };
 				updatedProduct = productsDB[index];
+				break; // Se encontró el producto, no es necesario seguir iterando
 			}
-		});
+		}
 		return updatedProduct ? [200, updatedProduct] : [404, 'Product not found'];
-	});
-	
+	});	
+
 	mock.onDelete('/ecommerce/products/:id').reply((config) => {
 		const { id } = config.params;
 		let deletedProductId = null;
@@ -103,7 +108,7 @@ export const eCommerceApiMocks = (mock) => {
 		});
 		return deletedProductId ? [200, deletedProductId] : [404, 'Product not found'];
 	});
-	
+
 	mock.onGet('/ecommerce/orders').reply(() => {
 		return [200, ordersDB];
 	});
