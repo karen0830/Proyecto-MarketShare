@@ -152,9 +152,11 @@ export const updateProduct = async (req, res) => {
     try {
         const result = req.body;
         console.log(result);
-        const response = await updateProducts(result.id, result.name, result.quantity, result.description, result.seller, result.ratings, result.ratingsCount, result.shipping, result.quantity, result.images[0].url, result.idCompany, result.idCategory, result.sku, result.width, result.height, result.depth, result.weight, )
+        const response = await updateProducts(result.id, result.name, result.quantity, result.description, result.seller, result.ratings, result.ratingsCount, result.shipping, result.quantity, result.images[0].url, result.idCompany, result.idCategory, result.sku, result.width, result.height, result.depth, result.weight, 5, result.active,  result.priceTaxExcl, result.priceTaxIncl, result.taxRate, result.comparedPrice)
+        console.log(response);
+        console.log("jeje");
         res.json(result);
     } catch (error) {
-        
+        console.log(error);
     }
 }

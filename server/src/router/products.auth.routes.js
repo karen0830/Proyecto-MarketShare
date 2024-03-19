@@ -6,5 +6,5 @@ const routerProduct = Router();
 
 routerProduct.get("/getAllProductsCompany", getAllProductCompany)
 routerProduct.get("/getProductsId", authRequiredCompany, getProductsId)
-routerProduct.post("/updateProduct", authRequiredCompany, updateProduct);
+routerProduct.put("/updateProduct", authRequiredCompany, updateProduct);
 export default routerProduct;

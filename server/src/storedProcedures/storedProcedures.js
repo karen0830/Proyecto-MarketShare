@@ -16,20 +16,67 @@ export const insertPurchase = (idProduct, quantity, unitPrice, purchaseDate, idU
     );
 };
 
-export const insertProduct = (nameProduct, stock, description, price, url, idCompany, idCategory) => {
+export const insertProduct = (
+    p_name,
+    p_stock,
+    p_description,
+    p_seller,
+    p_ratings,
+    p_ratingsCount,
+    p_shipping,
+    p_quantity,
+    p_img,
+    p_idCompany,
+    p_idCategory,
+    p_sku,
+    p_width,
+    p_height,
+    p_depth,
+    p_weight,
+    p_extraShippingFee,
+    p_active,
+    p_priceTaxExcl,
+    p_priceTaxIncl,
+    p_taxRate,
+    p_comparedPrice
+) => {
     return new Promise((resolve, reject) => {
-        'CALL sp_save_PRODUCT(?,?,?,?,?,?,?)',
-            [nameProduct, stock, description, price, url, idCompany, idCategory],
-            (error, results) => {
-                if (error) {
-                    console.error('Error al insertar el Product:', error);
-                    reject('Error al insertar el Product:', error)
-                }
-                console.log('producto insertado correctamente', results);
+        const query = 'CALL sp_save_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+        connection.query(query, [
+            p_name,
+            p_stock,
+            p_description,
+            p_seller,
+            p_ratings,
+            p_ratingsCount,
+            p_shipping,
+            p_quantity,
+            p_img,
+            p_idCompany,
+            p_idCategory,
+            p_sku,
+            p_width,
+            p_height,
+            p_depth,
+            p_weight,
+            p_extraShippingFee,
+            p_active,
+            p_priceTaxExcl,
+            p_priceTaxIncl,
+            p_taxRate,
+            p_comparedPrice
+        ], (error, results) => {
+            if (error) {
+                console.error('Error al insertar el Producto:', error);
+                reject('Error al insertar el Producto:', error);
+            } else {
+                console.log('Producto insertado correctamente:', results);
                 resolve(results);
             }
+        });
     });
 }
+
 
 export const updateProducts = (
     p_id,
@@ -57,38 +104,15 @@ export const updateProducts = (
     p_comparedPrice
 ) => {
     return new Promise((resolve, reject) => {
-        'CALL sp_edit_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-            [p_id,
-                p_name,
-                p_stock,
-                p_description,
-                p_seller,
-                p_ratings,
-                p_ratingsCount,
-                p_shipping,
-                p_quantity,
-                p_img,
-                p_idCompany,
-                p_idCategory,
-                p_sku,
-                p_width,
-                p_height,
-                p_depth,
-                p_weight,
-                p_extraShippingFee,
-                p_active,
-                p_priceTaxExcl,
-                p_priceTaxIncl,
-                p_taxRate,
-                p_comparedPrice],
-            (error, results) => {
-                if (error) {
-                    console.error('Error al editar producto:', error);
-                    reject('Error al editar producto:', error)
-                }
-                console.log('producto editado correctamente', results);
-                resolve(results);
+        const query = 'CALL sp_edit_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+        connection.query(query, [p_id, p_name, p_stock, p_description, p_seller, p_ratings, p_ratingsCount, p_shipping, p_quantity, p_img, p_idCompany, p_idCategory, p_sku, p_width, p_height, p_depth, p_weight, p_extraShippingFee, p_active, p_priceTaxExcl, p_priceTaxIncl, p_taxRate, p_comparedPrice], (error, results) => {
+            if (error) {
+                console.error('Error al editar producto:', error);
+                reject('Error al editar producto:', error)
             }
+            console.log('producto editado correctamente', results);
+            resolve(results);
+        });        
     });
 }
 
