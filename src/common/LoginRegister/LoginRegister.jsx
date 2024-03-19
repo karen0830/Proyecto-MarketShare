@@ -37,7 +37,7 @@ const LoginRegister = () => {
                   registerLocation ? "signup-inactive" : "signup-active"
                 }
               >
-                <NavLink to="/loginUser" className="btn">
+                <NavLink to="/" className="btn">
                 Iniciar sesión
                 </NavLink>
               </li>
@@ -54,9 +54,7 @@ const LoginRegister = () => {
           </div>
           <div ng-init="checked = false">
             {location.pathname === "/registerUser" && <UserorCompany />}
-            {location.pathname === "/registerCompany" && <UserorCompany />}
-            {location.pathname === "/loginUser" && < SignInUserorCompany />}
-            {location.pathname === "/loginCompany" && < SignInUserorCompany />}
+           
             {location.pathname === "/" && <SignInUserorCompany />}
           </div>
         </div>

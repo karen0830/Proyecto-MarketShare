@@ -41,7 +41,7 @@ import {
 router.post("/msg", postMessage);
 router.post("/registerUser", validateSchema(registerSchema), registerUser);
 router.post("/loginUser", validateSchema(loginSchema), loginUser);
-router.post("/logoutUser", logoutUser);
+router.post("/logoutUser", authRequired, logoutUser);
 router.post("/reactionLike", reactionLove);
 router.post("/imageProfile", imageProfile);
 router.post("/comment",authRequired, comments);

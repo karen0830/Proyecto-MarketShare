@@ -11,18 +11,7 @@ export const SignInUserorCompany = () => {
 
     return (
         <div className="companyorUser">
-            <div className='options'>
-                <NavLink className={locationRegister === false ? 'signUpUserCompany-active' : 'signupUserCompany-inactive'} to="/loginCompany">
-                    Empresa
-                </NavLink>
-                <p>o</p>
-                <NavLink className={locationRegister ? 'signUpUserCompany-active' : 'signupUserCompany-inactive'} to="/loginUser">
-                    Usuario
-                </NavLink>
-            </div>
-            {location.pathname === "/loginCompany" && <SignInCompany />}
-            {location.pathname === "/loginUser" && <SignInForm />}
-            {location.pathname === "/" && <SignInCompany/>}
+          <SignInForm />
         </div>
     );
 };

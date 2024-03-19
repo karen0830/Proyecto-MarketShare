@@ -14,7 +14,7 @@ const TopBar = ({ toggleSidebar }) => {
     <div>
       {!(location.pathname === "/HomeCompany") ? (
         <div className="top-bar">
-          <NavLink to="/ProfileUser">
+          <NavLink to="/">
             <img src="./img/2.png" alt="" className="img-top-bar" />
           </NavLink>
 

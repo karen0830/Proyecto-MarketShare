@@ -14,7 +14,7 @@ const app = express();
 
  // origin: ['https://main--marketshare-ecommerce.netlify.app/', "https://main--marketshare.netlify.app"],
 app.use(cors({
-    origin: ['http://localhost:5173', "http://localhost:5174"],
+    origin: ['http://localhost:5173', "http://localhost:5174", "http://localhost:3000"],
     // origin: ['https://main--marketshare-ecommerce.netlify.app', "https://main--marketshare.netlify.app"],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -36,7 +36,11 @@ app.use("/api", Router);
 app.use("/api", routerCompany);
 app.use("/api", routerShared);
 app.use("/api", routerProduct);
-
+app.get('/:token', (req, res) => {
+  const token = req.params.token;
+  // Aquí puedes manejar el token y enviar una respuesta
+  res.send(`Token recibido: ${token}`);
+});
 // Redirigir desde la raíz '/' a '/login'
 app.get("/", (req, res) => {
   res.redirect("/api/loginUser"); // Cambia '/api/login' por la ruta correcta de inicio de sesión

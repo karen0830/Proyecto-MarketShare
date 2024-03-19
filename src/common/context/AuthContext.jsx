@@ -115,8 +115,8 @@ export const AuthProvider = ({ children }) => {
 
   const logoutUsers = async () => {
     try {
-      logoutUser();
-      getAllPublications();
+      await logoutUser();
+      await getAllPublications();
       setIsAuthenticated(false);
       setUser(null);
     } catch (error) {

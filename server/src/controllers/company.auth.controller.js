@@ -14,6 +14,7 @@ import { promisify } from "util";
 import { upload } from "../IA/deteccion-de-objetos/multer.js";
 import { run } from "../IA/deteccion-de-objetos/app.js";
 import connection from "../dbMysql.js";
+import { getAllProductsId, typeCategory } from "../storedProcedures/storedProcedures.js";
 
 
 export const registerCompany = async (req, res) => {
@@ -1076,4 +1077,21 @@ export const productsId = async (req, res) => {
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
     }
+}
+
+export  const getProductsId = async (req, res) => {
+    try {
+        const {Token} = req;
+        const decodedToken = jwt.decode(Token);
+        const response = await getAllProductsId(decodedToken.id);
+        for(let data = 0; data < response.length; data++){
+            const category = await typeCategory(response[data].idCategory)
+            console.log(category);
+            response[data].nameCategory = category[0].nameCategory
+        }
+        console.log(response);
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+    } 
 }

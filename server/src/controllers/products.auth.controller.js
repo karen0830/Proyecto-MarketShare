@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import CompanyModel from "../models/company.models.js";
 import connection from "../dbMysql.js";
-import { getAllProducts } from "../storedProcedures/storedProcedures.js";
+import { getAllProducts, typeCategory, updateProducts } from "../storedProcedures/storedProcedures.js";
 
 export const addProduct = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
@@ -134,11 +134,27 @@ export const addProduct = async (req, res) => {
 export const getAllProductCompany = async (req, res) => {
     try {
         const response = await getAllProducts();
-        console.log("response", response);
+        for(let data = 0; data < response.length; data++){
+            const category = await typeCategory(response[data].idCategory)
+            console.log(category);
+            response[data].nameCategory = category[0].nameCategory
+        }
+        // console.log("response", response);
         return res.json({
             products: response
         })
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const updateProduct = async (req, res) => {
+    try {
+        const result = req.body;
+        console.log(result);
+        const response = await updateProducts(result.id, result.name, result.quantity, result.description, result.seller, result.ratings, result.ratingsCount, result.shipping, result.quantity, result.images[0].url, result.idCompany, result.idCategory, result.sku, result.width, result.height, result.depth, result.weight, )
+        res.json(result);
+    } catch (error) {
+        
     }
 }

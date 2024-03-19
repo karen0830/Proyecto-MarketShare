@@ -28,7 +28,7 @@ export const SignInForm = () => {
         ))
       }
       <form className="form-signin" onSubmit={onSubmit}>
-        <label htmlFor="email">Usuario</label>
+        <label htmlFor="email">Email</label>
         <input className="form-styling" type="email" {...register('email', { required: true })} />
         {
           errors.email && (

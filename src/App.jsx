@@ -17,18 +17,10 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/loginUser" element={<Home />}></Route>
-          <Route path="/loginCompany" element={<Home />}></Route>
           <Route path="/registerUser" element={<Home />}></Route>
-          <Route path="/registerCompany" element={<Home />}></Route>
           <Route element={<ProtectedRouter />}>
             <Route path="/profileUser" element={<PerfilUsuario />}></Route>
             <Route path="/start" element={<Start />}></Route>
-            {/* <Route path="/Publicar" element={<Publicar/>}></Route> */}
-          </Route>
-          <Route element={<ProtectedRouterCompany />}>
-            <Route path="/homeCompany" element={<HomeCompany />}></Route>
-            <Route path="/profileCompany" element={<PerfilCompany />}></Route>
             {/* <Route path="/Publicar" element={<Publicar/>}></Route> */}
           </Route>
           <Route path="/about" element={<About />}></Route>

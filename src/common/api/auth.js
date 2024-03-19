@@ -65,8 +65,8 @@ export const verityTokenRequest = async () => {
 export const logoutUser = async () => {
   try {
     // Eliminar el token del localStorage
-    localStorage.removeItem('token');
     const response = await ruta_protegida().post(`/logoutUser`);
+    localStorage.removeItem('token');
     return response
   } catch (ex) {
     console.log("error.status:", ex);

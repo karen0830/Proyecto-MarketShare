@@ -2,13 +2,15 @@ import API_KEY_GEMINI from "../config.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(API_KEY_GEMINI);
-async function malasPalabras(frase, req) {
+async function malasPalabras(frase) {
   try {
-    let prompt = `busca malas palabras en todos los paises (frase por frase) en la siguiente frase ${frase}, si las hay, manda true en minuscula y si no manda false en minuscula`
+    let prompt = `Evalúa si el siguiente comentario sobre un producto es relevante, respeta las normas de conducta sin utilizar malas palabras en esta parte evalua palabra por palabra. en ningún idioma, y está enfocado en la calidad, experiencia o características del producto, independientemente del idioma: "${frase}". Devuelve "true" en minúsculas si el comentario es apropiado y centrado en el producto, ya sea positivo o negativo, y "false" en minúsculas si el comentario es irrelevante, contiene malas palabras en cualquier idioma, no respeta las normas de conducta o no se centra en el producto.
+    `;
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
+    console.log(text, " text");
     const resultBoolean = text.trim().toLowerCase() === 'true';
     return resultBoolean;
   } catch (error) {
@@ -21,20 +23,10 @@ async function malasPalabras(frase, req) {
 }
 
 
-export async function classify_text(frase, msg, req) {
+export async function classify_text(frase, req) {
   try {
     const resultBoolean = await malasPalabras(frase);
-    console.log("Malas P", resultBoolean);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const result = await model.generateContent(msg);
-    const response = await result.response;
-    const text = response.text();
-    const resultBooleanRelacion = text.trim().toLowerCase() === 'true';
-    console.log("booleano", resultBooleanRelacion); // Salida: true o false según el texto devuelto
-    console.log("IA", text);
-    console.log("relacionado: ", text);
     req.malasPalabras = resultBoolean;
-    req.relacion = resultBooleanRelacion;
     req.Token = req.Token;
   } catch (error) {
     return error

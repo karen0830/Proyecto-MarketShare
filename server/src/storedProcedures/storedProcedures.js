@@ -31,9 +31,86 @@ export const insertProduct = (nameProduct, stock, description, price, url, idCom
     });
 }
 
+export const updateProducts = (
+    p_id,
+    p_name,
+    p_stock,
+    p_description,
+    p_seller,
+    p_ratings,
+    p_ratingsCount,
+    p_shipping,
+    p_quantity,
+    p_img,
+    p_idCompany,
+    p_idCategory,
+    p_sku,
+    p_width,
+    p_height,
+    p_depth,
+    p_weight,
+    p_extraShippingFee,
+    p_active,
+    p_priceTaxExcl,
+    p_priceTaxIncl,
+    p_taxRate,
+    p_comparedPrice
+) => {
+    return new Promise((resolve, reject) => {
+        'CALL sp_edit_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [p_id,
+                p_name,
+                p_stock,
+                p_description,
+                p_seller,
+                p_ratings,
+                p_ratingsCount,
+                p_shipping,
+                p_quantity,
+                p_img,
+                p_idCompany,
+                p_idCategory,
+                p_sku,
+                p_width,
+                p_height,
+                p_depth,
+                p_weight,
+                p_extraShippingFee,
+                p_active,
+                p_priceTaxExcl,
+                p_priceTaxIncl,
+                p_taxRate,
+                p_comparedPrice],
+            (error, results) => {
+                if (error) {
+                    console.error('Error al editar producto:', error);
+                    reject('Error al editar producto:', error)
+                }
+                console.log('producto editado correctamente', results);
+                resolve(results);
+            }
+    });
+}
+
+
+
 export const getAllProducts = () => {
     return new Promise((resolve, reject) => {
         connection.query('select * from Products', (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar los productos:', error);
+                reject('Error al seleccionar los productos:', error);
+            } else {
+                console.log('productos seleccionados correctamente', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const getAllProductsId = (idCompany) => {
+    return new Promise((resolve, reject) => {
+        connection.query('select * from Products where  idCompany=?', [idCompany], (error, results) => {
             if (error) {
                 console.error('Error al seleccionar los productos:', error);
                 reject('Error al seleccionar los productos:', error);
@@ -102,7 +179,7 @@ export const decrementQuantityInCart = (cartItemId, quantityToRemove) => {
 // CREATE PROCEDURE sp_insert_review(
 //     IN p_comment VARCHAR(4000),
 //     IN p_idUser VARCHAR(200),
-//     IN p_stars INT
+//     IN p_stars int
 // )
 
 export const sp_insert_reviews = (comment, idUser, starts, idProducts) => {
@@ -146,7 +223,7 @@ export const typeCategory = async (idCategory) => {
     });
 }
 
-export const getReviewsIdUser = async (idProduct)  => {
+export const getReviewsIdUser = async (idProduct) => {
     return await new Promise((resolve, reject) => {
         connection.query('select * from Reviews where idProduct = ?', [idProduct], (error, results) => {
             if (error) {
@@ -160,7 +237,7 @@ export const getReviewsIdUser = async (idProduct)  => {
     });
 }
 
-export const deleteReview = async (idReview)  => {
+export const deleteReview = async (idReview) => {
     return await new Promise((resolve, reject) => {
         connection.query('CALL sp_delete_review(?)', [idReview], (error, results) => {
             if (error) {
@@ -173,3 +250,4 @@ export const deleteReview = async (idReview)  => {
         });
     });
 }
+
