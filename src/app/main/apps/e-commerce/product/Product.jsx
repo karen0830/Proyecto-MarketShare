@@ -18,6 +18,7 @@ import InventoryTab from "./tabs/InventoryTab";
 import PricingTab from "./tabs/PricingTab";
 import ProductImagesTab from "./tabs/ProductImagesTab";
 import ShippingTab from "./tabs/ShippingTab";
+import FeedbackTab from "./tabs/FeedbackTab";
 import { useGetECommerceProductQuery } from "../ECommerceApi";
 import ProductModel from "./models/ProductModel";
 /**
@@ -130,6 +131,7 @@ function Product() {
               <Tab className="h-64" label="Precios" />
               <Tab className="h-64" label="Inventario" />
               <Tab className="h-64" label="Envío" />
+              <Tab className="h-64" label="Retroalimentación" />
             </Tabs>
             <div className="p-16 sm:p-24 max-w-3xl">
               <div className={tabValue !== 0 ? "hidden" : ""}>
@@ -150,6 +152,10 @@ function Product() {
 
               <div className={tabValue !== 4 ? "hidden" : ""}>
                 <ShippingTab />
+              </div>
+
+              <div className={tabValue !== 5 ? "hidden" : ""}>
+                <FeedbackTab />
               </div>
             </div>
           </>
