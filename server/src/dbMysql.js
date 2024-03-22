@@ -18,6 +18,7 @@ const connection = mysql.createConnection({
 let isConnected = false;
 
 // Establecer la conexión
+// Establecer la conexión
 export const connectDBMysql = () => {
     connection.connect((err) => {
         if (err) {
@@ -26,9 +27,13 @@ export const connectDBMysql = () => {
         }
         isConnected = true;
         console.log('Conexión establecida');
+        
+        // Agregar un ping a la base de datos cada hora para mantener la conexión viva
+        setInterval(() => {
+            connection.query('SELECT 1');
+        }, 600000); // 3600000 milisegundos = 1 hora
     });
 }
-
 
 connection.on('error', (err) => {
     console.error('Error en la conexión:', err);
@@ -43,8 +48,6 @@ connection.on('error', (err) => {
 
 // Intenta conectar al inicio
 connectDBMysql();
-
-
 
 // Ejecutar consultas u operaciones en la base de datos aquí
 export default connection;
