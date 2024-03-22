@@ -1,20 +1,20 @@
 import mysql from "mysql2";
 
 // Configuración de la conexión a la base de datos
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '12345678',
-//     database: 'marketshare'
-// });
-
-
 const connection = mysql.createConnection({
-    host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
-    user: 'uwzl1jw2ikcl4cvn',
-    password: 'oTDqfYQYi0PCIkKTWvUi',
-    database: 'bkotinfuaeft3kozxpjy'
+    host: 'localhost',
+    user: 'root',
+    password: '12345678',
+    database: 'marketshare'
 });
+
+
+// const connection = mysql.createConnection({
+//     host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
+//     user: 'uwzl1jw2ikcl4cvn',
+//     password: 'oTDqfYQYi0PCIkKTWvUi',
+//     database: 'bkotinfuaeft3kozxpjy'
+// });
 let isConnected = false;
 
 // Establecer la conexión

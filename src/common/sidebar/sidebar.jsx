@@ -49,7 +49,7 @@ const SideBar = () => {
                     </span>
                     <span className="text">Directo</span>
                   </NavLink> */}
-                  <NavLink target="_blank" to={`http://localhost:5174/token?token=${token}`}>
+                  <NavLink target="_blank" to={`https://main--marketshare-ecommerce.netlify.app/token?token=${token}`}>
                     <span className="icon">
                       <i className="ri-align-justify"></i>
                     </span>
@@ -107,7 +107,7 @@ const SideBar = () => {
                   </span>
                   <span className="text">Buscar</span>
                 </NavLink> */}
-              <NavLink target="_blank" to={`http://localhost:5174/token?token=${token}`}>
+              <NavLink target="_blank" to={`https://main--marketshare-ecommerce.netlify.app/token?token=${token}`}>
                 <span className="icon">
                   <i className="ri-align-justify"></i>
                 </span>
@@ -119,7 +119,7 @@ const SideBar = () => {
                 </span>
                 <span className="text">Acerca de</span>
               </NavLink>
-              <NavLink target="_blank" to="http://localhost:3000/sign-in">
+              <NavLink target="_blank" to="https://main--marketshare-dashboard.netlify.app/sign-in">
                 <span className="icon">
                   <i class="ri-community-line"></i>
                 </span>
