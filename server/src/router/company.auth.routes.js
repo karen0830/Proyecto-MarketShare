@@ -21,7 +21,6 @@ import { validateSchemaCompany } from "../middlewares/validator.js";
 import { CompanyShema, loginCompanyShema } from "../schemas/auth.schemas.js";
 import { authRequiredCompany } from "../middlewares/validateToken.js";
 import { addProduct } from "../controllers/products.auth.controller.js";
-import { upload } from "../IA/deteccion-de-objetos/multer.js";
 
 routerCompany.post("/addpublications",authRequiredCompany, addPublications);
 routerCompany.post("/addproducts",authRequiredCompany, addProduct);
@@ -37,5 +36,5 @@ routerCompany.put("/UpdateimageProfile", authRequiredCompany, imageProfile);
 routerCompany.post("/addStories",authRequiredCompany, addStories);
 routerCompany.get("/profileCompany", authRequiredCompany, profileCompany);
 routerCompany.post("/reactionLikeCompany", reactionLoveCompany);
-routerCompany.post('/verifyProduct', authRequiredCompany, upload.fields([{ name: 'category' }, { name: 'publication' }]),addPublicationsVerify);
+routerCompany.post('/verifyProduct',authRequiredCompany, addPublicationsVerify);
 export default routerCompany;

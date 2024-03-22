@@ -4,7 +4,7 @@ import multer from 'multer';
 
 const app = express();
 
-const storage = multer.diskStorage({
+export const storage = multer.diskStorage({
   destination: 'src/IA/deteccion-de-objetos/images/',
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

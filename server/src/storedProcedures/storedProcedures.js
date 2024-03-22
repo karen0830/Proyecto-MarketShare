@@ -125,7 +125,6 @@ export const getAllProducts = () => {
                 console.error('Error al seleccionar los productos:', error);
                 reject('Error al seleccionar los productos:', error);
             } else {
-                console.log('productos seleccionados correctamente', results);
                 resolve(results);
             }
         });
@@ -139,7 +138,6 @@ export const getAllProductsId = (idCompany) => {
                 console.error('Error al seleccionar los productos:', error);
                 reject('Error al seleccionar los productos:', error);
             } else {
-                console.log('productos seleccionados correctamente', results);
                 resolve(results);
             }
         });
@@ -226,7 +224,6 @@ export const getCategory = async (idProduct) => {
                 console.error('Error al seleccionar los productos:', error);
                 reject(error);
             } else {
-                console.log('productos seleccionados correctamente', results);
                 resolve(results);
             }
         });
@@ -236,6 +233,33 @@ export const getCategory = async (idProduct) => {
 export const typeCategory = async (idCategory) => {
     return await new Promise((resolve, reject) => {
         connection.query('select * from Category where idCategory = ?', [idCategory], (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar los productos:', error);
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const typeCategoryName = async (idCategory) => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from Category where nameCategory = ?', [idCategory], (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar los productos:', error);
+                reject(error);
+            } else {
+                console.log('productos seleccionados correctamente', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const getCategoryAll = async (idCategory) => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from Category', (error, results) => {
             if (error) {
                 console.error('Error al seleccionar los productos:', error);
                 reject(error);
@@ -275,3 +299,46 @@ export const deleteReview = async (idReview) => {
     });
 }
 
+
+
+export const insertImg = (imgProduct) => {
+    connection.query(
+        'CALL CreateImageForProduct(?)',
+        [imgProduct],
+        (error, results) => {
+            if (error) {
+                console.error('Error al insertar img:', error);
+                return;
+            }
+            console.log('img insertada correctamente:', results);
+        }
+    );
+};
+
+// Función para eliminar un producto por su ID
+export const eliminarProducto= (idProducto) => {
+    connection.query(
+        'DELETE FROM Products WHERE id = ?', [idProducto],
+        (error, results) => {
+            if (error) {
+                console.error('Error al insertar img:', error);
+                return;
+            }
+            console.log('img insertada correctamente:', results);
+        }
+    );
+}
+
+export const getIdP =async (idP) => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from Products where id = ?', [idP], (error, results) => {
+            if (error) {
+                console.error('Error al eliminar la reseña:', error);
+                reject(error);
+            } else {
+                console.log('review eliminada corretamente', results);
+                resolve(results);
+            }
+        });
+    });
+}

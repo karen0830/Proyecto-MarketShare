@@ -8,7 +8,7 @@ async function malasPalabras(frase) {
     `;
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     const text = response.text();
     console.log(text, " text");
     const resultBoolean = text.trim().toLowerCase() === 'true';
@@ -18,7 +18,7 @@ async function malasPalabras(frase) {
     console.error("Error en la búsqueda de malas palabras:", error);
     // Manejar el error y devolver un resultado adecuado
     // En este caso, podrías retornar true para indicar que el comentario no es adecuado
-    return true;
+    return false;
   }
 }
 
@@ -29,6 +29,7 @@ export async function classify_text(frase, req) {
     req.malasPalabras = resultBoolean;
     req.Token = req.Token;
   } catch (error) {
+    req.malasPalabras = false
     return error
   }
 }

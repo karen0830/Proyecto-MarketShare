@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
 dotenv.config();
 
-const API_KEY_GEMINI = "AIzaSyBiJl7Cfs4IQtKHKmmj6NCSRjod4vVkV6Q";
+const API_KEY_GEMINI = "AIzaSyB4--k3fR8Bf-Q0IY9ZKItsCIvULb54oPo";
 export default API_KEY_GEMINI;

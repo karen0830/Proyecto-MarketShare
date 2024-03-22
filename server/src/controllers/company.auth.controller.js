@@ -11,10 +11,11 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import SHA256 from 'crypto-js/sha256.js';
 import { promisify } from "util";
-import { upload } from "../IA/deteccion-de-objetos/multer.js";
+import { storage, upload } from "../IA/deteccion-de-objetos/multer.js";
 import { run } from "../IA/deteccion-de-objetos/app.js";
 import connection from "../dbMysql.js";
-import { getAllProductsId, typeCategory } from "../storedProcedures/storedProcedures.js";
+import { getAllProductsId, insertProduct, typeCategory, typeCategoryName } from "../storedProcedures/storedProcedures.js";
+import multer from "multer";
 
 
 export const registerCompany = async (req, res) => {
@@ -71,15 +72,15 @@ export const loginCompany = async (req, res) => {
     const { email, password } = req.body;
     console.log(req.body);
     try {
-        const companyFound = await CompanyModel.findOne({ email });
+        const companyFound = await CompanyModel.findOne({ email: email });
         console.log(companyFound);
         if (!companyFound) {
-            return res.status(400).json({ message: "User not found" });
+            return res.status(400).json({ message: "Usuario no encontrado" });
         }
 
         const isMatch = await bcrypt.compare(password, companyFound.password);
         if (!isMatch) {
-            return res.status(400).json({ message: "User or password incorrect" });
+            return res.status(400).json({ message: "Usuario o contraseña incorrectos" });
         }
 
         const tokenCompany = await createAcccessTokenCompany(companyFound._id);
@@ -930,128 +931,146 @@ export const reactionLoveCompany = async (req, res) => {
     }
 };
 
-export const verifyProduct = async (req, res, next) => {
-    const { category } = req.body;
-    console.log(req.files);
-    const nameFile = req.nameFile;
+export const verifyProduct = async (req, res, info) => {
     try {
-        // Ejecutar la verificación de la imagen
-        const response = await run(`./src/IA/deteccion-de-objetos/images/${nameFile}`, category);
-        req.response = response;
-        // Verificar si la respuesta es "Sí"
-        req.files = req.files;
-        req.category = category;
-        req.Token = req.Token;
+        //     // Ejecutar la verificación de la imagen
+        if (!info.categories) {
+            req.response = false;
+        } else {
+            if (info.categories) {
+                let status = true;
+
+                const response = await run(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, info.categories);
+                console.log(response);
+                if (response == false) {
+                    status = false
+                }
+
+                // Verificar si la respuesta es "Sí"
+                req.response = status;
+                req.category = info.categories;
+                req.Token = req.Token;
+            } else {
+                req.response = false
+            }
+        }
     } catch (error) {
         console.log(error);
-        return res.status(500).json("Error en la verificación de la imagen.");
+        // return res.status(500).json("Error en la verificación de la imagen.");
     }
 }
 
+const upload2 = multer({ storage }).single('imgProduct'); // 'imgProduct' debe coincidir con el nombre del campo de entrada en tu formulario
 
 export const addPublicationsVerify = async (req, res) => {
     try {
-        await verifyProduct(req, res);
-        if (req.response) {
-            console.log("reqq", req.files);
-            const contenido = req.category;
-            console.log(contenido);
-            const bucket = adminApp
-                .storage()
-                .bucket("gs://marketshare-c5720.appspot.com");
-
-            const archivo = req.files.publication; // Asegúrate de que el nombre coincida con el campo de tu formulario
-            if (!archivo) {
-                res.status(400).send("No se ha subido ningún archivo");
-                return;
+        upload2(req, res, async (err) => {
+            if (err) {
+                // Manejar errores de multer
+                console.error(err);
+                return res.status(400).json({ message: 'Error al cargar el archivo.' });
             }
 
-            const storagePath = "publications/" + archivo[0].filename; // Ruta en Firebase Storage donde se guardará el archivo
-            const filePath = archivo[0].path;
-            bucket.upload(filePath, {
-                destination: storagePath,
-                metadata: {
-                    contentType: archivo.mimetype
-                }
-            }, (err, uploadedFile) => {
-                if (err) {
-                    console.error('Error al subir el archivo:', err);
-                    // Manejar el error
-                } else {
-                    console.log('Archivo subido exitosamente a Firebase Storage');
-                    // Obtener el enlace de descarga del archivo subido
-                    uploadedFile.getSignedUrl({
-                        action: 'read',
-                        expires: '03-01-2500' // Definir la fecha de expiración del enlace si es necesario
-                    }, (err, url) => {
+            // Accede al archivo cargado a través de req.file
+            const file = req.file;
+            console.log('Archivo cargado:', file);
+
+            // Accede a la información adicional en el cuerpo de la solicitud
+            const info = JSON.parse(req.body.info);
+            console.log('Información adicional:', info);
+
+            // Realiza cualquier acción necesaria con el archivo cargado
+            console.log('Nombre del archivo:', file.filename);
+            req.nameFile = file.filename;
+            await verifyProduct(req, res, info);
+            console.log("Token", req.Token);
+            if (req.response) {
+                try {
+                    console.log("reqq", req.file);
+                    const bucket = adminApp
+                        .storage()
+                        .bucket("gs://marketshare-c5720.appspot.com");
+
+                    const archivo = req.file; // Asegúrate de que el nombre coincida con el campo de tu formulario
+                    console.log(archivo);
+                    if (!archivo) {
+                        res.status(400).send("No se ha subido ningún archivo");
+                        return;
+                    }
+
+                    const storagePath = "products/" + archivo.filename; // Ruta en Firebase Storage donde se guardará el archivo
+                    const filePath = archivo.path;
+                    bucket.upload(filePath, {
+                        destination: storagePath,
+                        metadata: {
+                            contentType: archivo.mimetype
+                        }
+                    }, (err, uploadedFile) => {
                         if (err) {
-                            console.error('Error al obtener el enlace de descarga del archivo:', err);
+                            console.error('Error al subir el archivo:', err);
                             // Manejar el error
                         } else {
-                            const decodedToken = jwt.decode(req.Token);
-                            console.log(req.Token);
-                            const id = decodedToken.id;
-                            const result = async () => {
-                                const userFound = await CompanyModel.findOne({ _id: id });
-                                console.log(userFound);
-                                try {
-                                    await CompanyModel.updateOne(
-                                        { _id: decodedToken.id },
-                                        {
-                                            $push: {
-                                                publications: {
-                                                    type: "img",
-                                                    url: url,
-                                                    contenido: contenido,
-                                                    profileImage: userFound.profileImage,
-                                                    user: userFound.userNameCompany,
-                                                    reactions: {
-                                                        comments: [],
-                                                        share: [],
-                                                        like: [],
-                                                    },
-                                                },
-                                            },
-                                        }
-                                    );
-                                    console.log("Nuevo campo agregado correctamente:", result);
-                                } catch (err) {
-                                    console.error("Error al agregar el nuevo campo:", err);
-                                }
-                            }
+                            console.log('Archivo subido exitosamente a Firebase Storage');
+                            // Obtener el enlace de descarga del archivo subido
+                            uploadedFile.getSignedUrl({
+                                action: 'read',
+                                expires: '03-01-2500' // Definir la fecha de expiración del enlace si es necesario
+                            }, (err, url) => {
+                                if (err) {
+                                    console.error('Error al obtener el enlace de descarga del archivo:', err);
+                                    // Manejar el error
 
-                            result();
-                            const userFoundM = async () => {
-                                const userFound = await CompanyModel.findOne({ _id: id });
-                                fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
-                                    if (err) {
-                                        console.error('Error al eliminar el archivo:', err);
-                                    } else {
-                                        console.log('Archivo eliminado correctamente');
+                                } else {
+                                    const decodedToken = jwt.decode(req.Token);
+                                    console.log(req.Token);
+                                    const id = decodedToken.id;
+                                    console.log(id);
+                                    const result = async () => {
+                                        const typeCategory = await typeCategoryName(info.categories)
+                                        console.log(typeCategory);
+                                        const res = await insertProduct(info.name, info.quantity,info.description, info.seller, info.ratings, info.ratingsCount, info.shipping,info.quantity, url, id, typeCategory[0].idCategory, info.sku, info.width, info.height, info.depth, info.weight, info.extraShippingFee, info.active, info.priceTaxExcl, info.priceTaxIncl, info.taxRate, info.comparedPrice);
+                                        console.log(res);
+                                        fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
+                                            if (err) {
+                                                console.error('Error al eliminar el archivo:', err);
+                                            } else {
+                                                console.log('Archivo eliminado correctamente');
+                                            }
+                                        });
+                        
                                     }
-                                });
-                                return res.json({
-                                    publications: userFound.publications.reverse(),
-                                });
-                            };
-
-                            userFoundM();
+                                    result();
+                                    res.json("ok")
+                                }
+                            });
                         }
                     });
+                } catch (error) {
+                    console.log(error);
                 }
-            });
 
-        } else {
-            // Responder al cliente si la imagen no coincide con la categoría
-            fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
-                if (err) {
-                    console.error('Error al eliminar el archivo:', err);
-                } else {
-                    console.log('Archivo eliminado correctamente');
-                }
-            });
-            return res.status(400).json("La imagen no coincide con la categoría.");
-        }
+            } else {
+                // Responder al cliente si la imagen no coincide con la categoría
+                fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
+                    if (err) {
+                        console.error('Error al eliminar el archivo:', err);
+                    } else {
+                        console.log('Archivo eliminado correctamente');
+                    }
+                });
+                return res.status(400).json("La imagen no coincide con la categoría.");
+            }
+        });
+
+
+
+
+        // Continuar con tu lógica de negocio aquí, utilizando req.body y req.nameFile
+        // Ejemplo:
+        // const nuevaPublicacion = { ...info, imagen: req.nameFile };
+        // Procesar la nuevaPublicacion...
+
+        // Devolver una respuesta adecuada
     } catch (error) {
         console.log(error);
     }
@@ -1079,12 +1098,12 @@ export const productsId = async (req, res) => {
     }
 }
 
-export  const getProductsId = async (req, res) => {
+export const getProductsId = async (req, res) => {
     try {
-        const {Token} = req;
+        const { Token } = req;
         const decodedToken = jwt.decode(Token);
         const response = await getAllProductsId(decodedToken.id);
-        for(let data = 0; data < response.length; data++){
+        for (let data = 0; data < response.length; data++) {
             const category = await typeCategory(response[data].idCategory)
             console.log(category);
             response[data].nameCategory = category[0].nameCategory
@@ -1093,5 +1112,5 @@ export  const getProductsId = async (req, res) => {
         res.json(response)
     } catch (error) {
         console.log(error);
-    } 
+    }
 }

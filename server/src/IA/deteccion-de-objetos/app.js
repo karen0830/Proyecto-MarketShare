@@ -18,7 +18,7 @@ export async function run(url, category) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
     let objeto = category;
-    let prompt = `Responde con true minuscula o con false minuscula en caso de que se encuentre o no se encuentre el objeto por el que te preguntan. ¿En la imagen hay un ${objeto}?`;
+    let prompt = `Responde con true minuscula o con false minuscula en caso de que se encuentre o no se encuentre el objeto por el que te preguntan. ¿En la imagen hay productos o un producto?`;
     const imageParts = [
       fileToGenerativePart(url, "image/jpeg")
     ];

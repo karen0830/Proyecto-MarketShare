@@ -7,6 +7,7 @@ import cors from "cors";
 import routerCompany from "./router/company.auth.routes.js";
 import routerShared from "./router/Shared.routes.js";
 import routerProduct from "./router/products.auth.routes.js";
+import bodyParser from "body-parser";
 
 const app = express();
 // http://localhost:5173
@@ -14,7 +15,7 @@ const app = express();
 
  // origin: ['https://main--marketshare-ecommerce.netlify.app/', "https://main--marketshare.netlify.app"],
 app.use(cors({
-    origin: ['http://localhost:5173', "http://localhost:5174", "http://localhost:3000"],
+    origin: ['hhttps://main--marketshare-ecommerce.netlify.app', "https://main--marketshare.netlify.app", "https://marketshare-dashboard.netlify.app"],
     // origin: ['https://main--marketshare-ecommerce.netlify.app', "https://main--marketshare.netlify.app"],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -27,6 +28,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(morgan("dev"));
+app.use(bodyParser.json({ limit: '50mb' })); // Ajusta el límite según tus necesidades
 app.use(express.json()); // Middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(cookieParser());
 

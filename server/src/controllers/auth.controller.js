@@ -1181,7 +1181,7 @@ export const commentsProducts = async (req, res) => {
         console.log(categoryId[0].name , " juyu");
         await classify_text(comment, req);
         console.log("MP", req.malasPalabras);
-        if (req.malasPalabras == true) {
+        if (req.malasPalabras === true) {
             const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
             const decodedToken = jwt.decode(token);
             let id = decodedToken.id;

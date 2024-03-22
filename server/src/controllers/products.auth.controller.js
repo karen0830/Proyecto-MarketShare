@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import CompanyModel from "../models/company.models.js";
 import connection from "../dbMysql.js";
-import { getAllProducts, typeCategory, updateProducts } from "../storedProcedures/storedProcedures.js";
+import { eliminarProducto, getAllProducts, getCategoryAll, getIdP, typeCategory, updateProducts } from "../storedProcedures/storedProcedures.js";
 
 export const addProduct = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
@@ -137,6 +137,7 @@ export const getAllProductCompany = async (req, res) => {
         for(let data = 0; data < response.length; data++){
             const category = await typeCategory(response[data].idCategory)
             console.log(category);
+            console.log(response[data]);
             response[data].nameCategory = category[0].nameCategory
         }
         // console.log("response", response);
@@ -156,6 +157,37 @@ export const updateProduct = async (req, res) => {
         console.log(response);
         console.log("jeje");
         res.json(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getAllCategory = async (req, res) => {
+    try {
+        const response = await getCategoryAll();
+        res.json(response);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteProduct = async (req, res) => {
+    try {
+        const {id} = req.body;
+        const resolve = await eliminarProducto(id)
+        console.log(id);
+        res.json("ok")
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getIdProduct = async (req, res) => {
+    try {
+        const {id} = req.body;
+        const response = await getIdP(id);
+        // console.log("response", response);
+        return res.json(response[0])
     } catch (error) {
         console.log(error);
     }
