@@ -31,7 +31,7 @@ export const connectDBMysql = () => {
         // Agregar un ping a la base de datos cada hora para mantener la conexión viva
         setInterval(() => {
             connection.query('SELECT 1');
-        }, 600000); // 3600000 milisegundos = 1 hora
+        }, 300000); // 3600000 milisegundos = 1 hora
     });
 }
 
