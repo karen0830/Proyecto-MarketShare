@@ -1,50 +1,53 @@
 import mysql from "mysql2";
+import path, { dirname, join } from "path";
+import fs from 'fs';
+import { fileURLToPath } from "url";
 
-// Configuración de la conexión a la base de datos
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const caCertPath = join(__dirname, 'ssl', 'DigiCertGlobalRootCA.crt.pem');
+const connection = mysql.createConnection({
+    host: 'mydatamysql.mysql.database.azure.com',
+    user: 'rooter',
+    password: '#K12345678',
+    port: 3306,
+    database: 'MarketShare',
+    ssl: {
+        ca: fs.readFileSync(caCertPath)
+    }
+});
+
+
+// const connection = mysql.createConnection({
+//     host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
+//     user: 'uwzl1jw2ikcl4cvn',
+//     password: 'oTDqfYQYi0PCIkKTWvUi',
+//     database: 'bkotinfuaeft3kozxpjy'
+// });
+
 // const connection = mysql.createConnection({
 //     host: 'localhost',
 //     user: 'root',
 //     password: '12345678',
-//     database: 'marketshare'
+//     database: 'MarketShare'
 // });
 
-
-const connection = mysql.createConnection({
-    host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
-    user: 'uwzl1jw2ikcl4cvn',
-    password: 'oTDqfYQYi0PCIkKTWvUi',
-    database: 'bkotinfuaeft3kozxpjy'
-});
-let isConnected = false;
-
 // Establecer la conexión
 // Establecer la conexión
-export const connectDBMysql = () => {
+export const connectDBMysql= () => {
     connection.connect((err) => {
         if (err) {
             console.error('Error de conexión:', err);
             return;
         }
-        isConnected = true;
-        console.log('Conexión establecida');
-        
-        // Agregar un ping a la base de datos cada hora para mantener la conexión viva
-        setInterval(() => {
-            connection.query('SELECT 1');
-        }, 300000); // 3600000 milisegundos = 1 hora
+        // connection.query('USE Marketshare', function(err) {
+        //     if (err) throw err;
+            console.log('Conexión establecida y base de datos seleccionada');
+        // });
     });
 }
 
-connection.on('error', (err) => {
-    console.error('Error en la conexión:', err);
-    isConnected = false;
-    // Si el error es una desconexión, intenta reconectar
-    if (err) {
-        connectDBMysql();
-    } else {
-        throw err; // Si el error no es una desconexión, lanza una excepción
-    }
-});
 
 // Intenta conectar al inicio
 connectDBMysql();
