@@ -15,7 +15,9 @@ import {
   Modal,
   Publicar,
 } from "../../../common/Publications/Publicar/Publicar.jsx";
-import Publications from "../../../common/Publications/Publications.jsx";
+// import Publications from "../../../common/Publications/Publications.jsx";
+const LazyLoadedPublications = React.lazy(() => import('../../../common/Publications/Publications.jsx'));
+
 
 export const sharedData = createContext();
 export const useShareData = () => {
@@ -27,16 +29,33 @@ export const useShareData = () => {
 };
 
 export const Perfil = () => {
-  const { user, profileImage, setProfileImage, profileData } = useAuth();
+  const { user, profileImage, setProfileImage, profileData, setProfileData, setPublications } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalChageProfileOpen, setModalChageProfileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [showPublications, setShowPublications] = useState(false);
+
   useEffect(() => {
-    if (profileData != null) {
-      setLoading(false);
+    const timer = setTimeout(() => {
+      setShowPublications(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      console.log(user, "a");
+      setPublications(user.shares)
     }
   });
+
+  useEffect(() => {
+    if (profileData) {
+      setProfileData(null)
+    }
+  }, [profileData]);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -77,24 +96,8 @@ export const Perfil = () => {
               </div>
             </div>
           </div>
-          <div className="user-actionsData">
-            <div className="popularidad">
-              <div>
-                <h3>100</h3>
-                <p>Publicaciones</p>
-              </div>
-              <div>
-                <h3>500</h3>
-                <p>Seguidores</p>
-              </div>
-              <div>
-                <h3>200</h3>
-                <p>Seguidos</p>
-              </div>
-            </div>
-          </div>
 
-          <Publications />
+          {/* <Publications /> */}
         </div>
       ) : (
         <div className={"general-container"}>
@@ -128,25 +131,11 @@ export const Perfil = () => {
               </div>
             </div>
             <div className="user-actionsData">
-              <div className="popularidad">
-                <div>
-                  <h3>100</h3>
-                  <p>Publicaciones</p>
-                </div>
-                <div>
-                  <h3>500</h3>
-                  <p>Seguidores</p>
-                </div>
-                <div>
-                  <h3>200</h3>
-                  <p>Seguidos</p>
-                </div>
-              </div>
             </div>
           </div>
 
           <Suspense fallback={<Loader />}>
-            <Publications />
+            {showPublications && <LazyLoadedPublications />}
           </Suspense>
         </div>
       )}

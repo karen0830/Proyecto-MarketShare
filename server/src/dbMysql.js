@@ -7,38 +7,31 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const caCertPath = join(__dirname, 'ssl', 'DigiCertGlobalRootCA.crt.pem');
+// const connection = mysql.createConnection({
+//     host: 'mydatamysql.mysql.database.azure.com',
+//     user: 'rooter',
+//     password: '#K12345678',
+//     port: 3306,
+//     database: 'MarketShare',
+//     ssl: {
+//         ca: fs.readFileSync(caCertPath)
+//     }
+// });
+
+
+// const connection = mysql.createConnection({
+//     host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
+//     user: 'uwzl1jw2ikcl4cvn',
+//     password: 'oTDqfYQYi0PCIkKTWvUi',
+//     database: 'bkotinfuaeft3kozxpjy'
+// });
+
 const connection = mysql.createConnection({
-    host: 'mydatamysql.mysql.database.azure.com',
-    user: 'rooter',
-    password: '#K12345678',
-    port: 3306,
-    database: 'MarketShare',
-    ssl: {
-        ca: fs.readFileSync(caCertPath)
-    }
+    host: 'localhost',
+    user: 'root',
+    password: '12345678',
+    database: 'MarketShare'
 });
-
-
-// const connection = mysql.createConnection({
-//     host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
-//     user: 'uwzl1jw2ikcl4cvn',
-//     password: 'oTDqfYQYi0PCIkKTWvUi',
-//     database: 'bkotinfuaeft3kozxpjy'
-// });
-
-// const connection = mysql.createConnection({
-//     host: 'bkotinfuaeft3kozxpjy-mysql.services.clever-cloud.com',
-//     user: 'uwzl1jw2ikcl4cvn',
-//     password: 'oTDqfYQYi0PCIkKTWvUi',
-//     database: 'bkotinfuaeft3kozxpjy'
-// });
-
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '12345678',
-//     database: 'MarketShare'
-// });
 
 
 // Establecer la conexión

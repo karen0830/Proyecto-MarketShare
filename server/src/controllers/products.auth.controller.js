@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
 import CompanyModel from "../models/company.models.js";
 import connection from "../dbMysql.js";
 import { eliminarProducto, getAllProducts, getCategoryAll, getIdP, typeCategory, updateProducts } from "../storedProcedures/storedProcedures.js";
+import { addPublications } from "./company.auth.controller.js";
 
 export const addProduct = async (req, res) => {
     const form = new IncomingForm(); // Changed this line
@@ -155,6 +156,23 @@ export const updateProduct = async (req, res) => {
         console.log(result);
         const response = await updateProducts(result.id, result.name, result.quantity, result.description, result.seller, result.ratings, result.ratingsCount, result.shipping, result.quantity, result.images[0].url, result.idCompany, result.idCategory, result.sku, result.width, result.height, result.depth, result.weight, 5, result.active,  result.priceTaxExcl, result.priceTaxIncl, result.taxRate, result.comparedPrice)
         console.log(response);
+        if (result.images[0].url || result.description) {
+            await CompanyModel.findOneAndUpdate(
+                {
+                    userNameCompany: userName,
+                    "publications.url": result.images[0].url,
+                },
+                {
+                    $push: {
+                        "publications.$": {
+                            url: result.images[0].url,
+                            contenido: result.description
+                        },
+                    },
+                },
+                { new: true }
+            );
+        }
         console.log("jeje");
         res.json(result);
     } catch (error) {

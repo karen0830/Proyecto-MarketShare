@@ -154,39 +154,48 @@ export const AuthProvider = ({ children }) => {
     }
   }, [errors]);
 
-  useEffect(() => {
-    async function checkLogin() {
-      const Token = localStorage.getItem("token");
-      if (!Token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return setUser(null);
-      } else {
-        try {
-          const res = await verityTokenRequest(Token);
-          console.log(res.data);
-          if (!res.data) {
-            setIsAuthenticated(false);
-            setLoading(false);
-            return;
-          } else {
-            const getShare = await getShareData();
-            console.log("Shareeee", getShare);
-            const getImageProfile = await getProfileImage();
-            setProfileImage(getImageProfile.data.profileImage);
-            setIsAuthenticated(true);
-            setPublications(getShare.data.shares.reverse())
-            setUser(res.data);
-            setLoading(false);
-          }
-        } catch (error) {
-          console.log(error);
+  async function checkLogin() {
+    const Token = localStorage.getItem("token");
+    if (!Token) {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return setUser(null);
+    } else {
+      try {
+        const res = await verityTokenRequest(Token);
+        console.log(res.data);
+        if (!res.data) {
           setIsAuthenticated(false);
-          setUser(null);
           setLoading(false);
+          return;
+        } else {
+          setUser(res.data);
+          setIsAuthenticated(true);
+          setLoading(false);
+          const getImageProfile = await getProfileImage();
+          setProfileImage(getImageProfile.data.profileImage);
+          setTimeout(async() => {
+            if (profileData) {
+              setPublications(profileData.publications)
+            }else {
+              // const getShare = await getShareData();
+              // console.log("Shareeee", getShare);
+              // const getImageProfile = await getProfileImage();
+              // setProfileImage(getImageProfile.data.profileImage);
+              // setPublications(getShare.data.shares.reverse())
+            }
+          }, 3000);
         }
+      } catch (error) {
+        console.log(error);
+        setIsAuthenticated(false);
+        setUser(null);
+        setLoading(false);
       }
     }
+  }
+
+  useEffect(() => {
     checkLogin();
   }, [isAuthenticated]);
 
@@ -244,6 +253,12 @@ export const AuthProvider = ({ children }) => {
     allPublis()
   }, [isAuthenticated, isAuthenticatedCompany])
 
+  useEffect(() => {
+    if (profileData) {
+      setPublications(profileData.publications)
+    }
+  }, [profileData])
+
   return (
     <AuthContext.Provider
       value={{
@@ -263,6 +278,7 @@ export const AuthProvider = ({ children }) => {
         setProfileData,
 
         // company
+        checkLogin,
         signupCompany,
         signInCompany,
         isAuthenticatedCompany,

@@ -4,7 +4,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(API_KEY_GEMINI);
 async function malasPalabras(frase) {
   try {
-    let prompt = `Evalúa si el siguiente comentario sobre un producto es relevante, respeta las normas de conducta sin utilizar malas palabras en esta parte evalua palabra por palabra. en ningún idioma, y está enfocado en la calidad, experiencia o características del producto, independientemente del idioma: "${frase}". Devuelve "true" en minúsculas si el comentario es apropiado y centrado en el producto, ya sea positivo o negativo, y "false" en minúsculas si el comentario es irrelevante, contiene malas palabras en cualquier idioma, no respeta las normas de conducta o no se centra en el producto.
+    let prompt = `Por favor, evalúa si el siguiente comentario sobre un producto es relevante y cumple con las normas de conducta, sin utilizar lenguaje ofensivo en ningún idioma. Verifica si el comentario se centra en la calidad, experiencia o características del producto, ya sea de manera positiva o negativa, independientemente del idioma en que esté escrito. 
+
+    El comentario a evaluar es: ‘${frase}’. Si el comentario es apropiado, relevante y se centra en el producto, ya sea de manera positiva o negativa, y cumple con las normas de conducta, devuelve ‘true’. Si el comentario es irrelevante, no proporciona información útil sobre el producto, no se centra en la calidad, experiencia o características del mismo, o contiene lenguaje ofensivo en cualquier idioma, devuelve ‘false’ y el porque.
     `;
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);

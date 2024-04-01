@@ -151,10 +151,6 @@
   display: none;
 }
 
-.profileUser {
-  padding-left: 25px;
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;

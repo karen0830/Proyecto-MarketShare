@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./Publications.css";
-import { NavLink, useLocation } from "react-router-dom";
-import { reactionLike, getAllPublications, getProfile, getPublications } from '../api/auth';
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { reactionLike, getAllPublications, getProfile, getPublications, commentAdd, commentDelete } from '../api/auth';
 import { useAuth } from "../context/AuthContext";
 import { getAllPublicationsCompany, reactionLikeCompany } from "../api/auth.company";
 import { ModalShare, Share } from "./Share/Share";
+
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-review">
+        <div className="modal-content-review">{children}</div>
+      </div>
+    </div>
+  );
+};
 
 export const Publications = () => {
   const location = useLocation();
@@ -35,6 +47,29 @@ export const Publications = () => {
   const [modalShareState, setModalShare] = useState(false)
   const [dataShare, setDataShare] = useState(false)
   const [typeShare, setTypeShare] = useState(null)
+  const [comment, setComment] = useState('');
+  const [isModalOpenDeleteComment, setIsModalOpenDeleteComment] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const closeModalDeleteComment = () => {
+    setIsModalOpenDeleteComment(false);
+  };
+
+  const OpenModalDeleteComment = () => {
+    setIsModalOpenDeleteComment(true);
+  };
+
+  const handleInputChange = (event) => {
+    setComment(event.target.value);
+  };
 
   const handleClose = (index) => {
     setTimeout(() => {
@@ -140,7 +175,48 @@ export const Publications = () => {
     }
   };
 
+  const addComment = async (comment, link, userName) => {
+    const res = await commentAdd(comment, link, userName);
+    console.log(res);
+    if (res.response) {
+      console.log("response");
+      openModal();
+    }
+    const updateReaction = allPublications.map((item) => {
+      if (item.url === res.data.publications.url) {
+        console.log("igual");
+        item.reactions.comments = res.data.publications.reactions.comments;
+      }
+      // No need to return anything here for the elements that don't need updating
+      return item; // Return the updated or unchanged item
+    });
+    setAllPublications(updateReaction);
+    setPublications(updateReaction);
+  }
 
+  const deleteComment = async () => {
+    try {
+      const dataDeleteComment = JSON.parse(localStorage.getItem("commentDelete"))
+      console.log(dataDeleteComment);
+
+      const res = await commentDelete(dataDeleteComment.id, dataDeleteComment.url, dataDeleteComment.user)
+      console.log(res);
+      if (res.data) {
+        const updateReaction = allPublications.map((item) => {
+          if (item.url === res.data.publications.url) {
+            console.log("igual");
+            item.reactions.comments = res.data.publications.reactions.comments;
+          }
+          // No need to return anything here for the elements that don't need updating
+          return item; // Return the updated or unchanged item
+        });
+        setAllPublications(updateReaction);
+      }
+      closeModalDeleteComment();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     console.log("AS", locationStart);
@@ -148,17 +224,29 @@ export const Publications = () => {
     console.log("All", allPublications);
   }, [locationStart]);
 
-  const getProfileUser = async (username) => {
-    console.log(username);
-    const response = await getProfile(username);
-    console.log("getPro", response);
-    setProfileData(response);
-    setPublications(response.shares);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+
+  const getProfileUser = (username) => {
+    // Simula la obtención del ID del usuario
+    setTimeout(async () => {
+      console.log(username);
+      const response = await getProfile(username, null);
+      console.log("getPro", response);
+      setProfileData(response);
+      setPublications(response.publications);
+      setUserId(response.id);
+    }, 1000);
   };
+
+  if (userId) {
+    // Redireccionar a la página de perfil del usuario cuando se obtenga el ID
+    navigate(`/profile/:${userId}`);
+  }
 
   return (
     <div className="publications">
-      {isAuthenticated === false && isAuthenticatedCompany === false ? (
+      {isAuthenticated === false ? (
         // Caso: Ningún usuario autenticado
         allPublications.map((element, index) => (
           <div key={index} className="publication">
@@ -182,17 +270,40 @@ export const Publications = () => {
             )}
           </div>
         ))
-      ) : isAuthenticated === true && isAuthenticatedCompany === false ? (
+      ) : isAuthenticated === true ? (
         // Caso: Solo el usuario autenticado
         location.pathname == "/start" ? (
           allPublications.map((element, index) => (
             <div key={index} data-key={index} className="publication">
+              <Modal isOpen={isModalOpenDeleteComment} onClose={closeModalDeleteComment}>
+                <h2 className="Tile-Review">Eliminar Comentario</h2>
+                <p className="P-content-Review">¿Estás seguro de que quieres eliminar este comentario?</p>
+                <div className="options-delete">
+                  <button onClick={closeModalDeleteComment}>Cancelar</button>
+                  <button onClick={deleteComment}>Eliminar</button>
+                </div>
+              </Modal>
+              <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <h2 className="Tile-Review">Contenido Inadecuado</h2>
+                <p className="P-content-Review">
+                  Lo siento, pero tu comentario parece no ser constructivo o adecuado para esta plataforma.
+                  Por favor, asegúrate de que tus comentarios sean relevantes, respetuosos y aporten valor a la conversación.
+                  Recuerda que los comentarios deben centrarse en la calidad, experiencia o características del producto,
+                  y evitar cualquier lenguaje ofensivo o inapropiado.
+                  ¡Gracias por tu comprensión y colaboración!
+                </p>
+                <button onClick={closeModal}>Cerrar</button>
+              </Modal>
               <div className="nombre-usuario">
                 <div className="post-profile">
                   <div className="post-img">
                     <img src={element.profileImage} alt="" />
                   </div>
-                  <h3>{element.user}</h3>
+                  <a onClick={() => {
+                    getProfileUser(element.user)
+                  }} href="#">
+                    <h3>{element.user}</h3>
+                  </a>
                 </div>
               </div>
               <div className="contenido">{element.contenido}</div>
@@ -272,18 +383,33 @@ export const Publications = () => {
                       </div>
                       {element.reactions.comments.map((userReaction, key) => (
                         <div key={key}>
-                          <div className="post-img">
-                            <img src={element.profileImage} alt="" />
+                          <div>
+                            <div className="post-img">
+                              <img src={userReaction.profileImage} alt="" />
+                            </div>
+                            <p>{userReaction.user}</p>
                           </div>
-                          <h3>{userReaction.comment}</h3>
+                          <p>{userReaction.comment}</p>
+                          {userReaction.user == user.username ? (
+                            <button onClick={() => {
+                              localStorage.setItem("commentDelete", JSON.stringify({ "id": userReaction._id, "url": element.url, "user": element.user }))
+                              OpenModalDeleteComment();
+                            }}>Eliminar</button>
+                          ) : null}
                         </div>
                       ))}
-                      <form action="">
-                        <input type="text" placeholder="comment" />
-                        <button>
-                          <i className="ri-send-plane-2-fill"></i>
-                        </button>
-                      </form>
+
+                      <input
+                        type="text"
+                        value={comment}
+                        onChange={handleInputChange}
+                        placeholder="Comment"
+                      />
+                      <button onClick={() => addComment(comment, element.url, element.user)}>
+                        <i className="ri-send-plane-2-fill"></i>
+                      </button>
+
+
                     </div>
                   )}
                   <button
@@ -306,13 +432,13 @@ export const Publications = () => {
                 </button>
                 {modalShareState ? (
                   <ModalShare onClose={closeModalShare} isOpen={modalShareState}>
-                    <Share link={sharedLink} type={typeShare}/>
+                    <Share link={sharedLink} type={typeShare} />
                   </ModalShare>
                 ) : null}
               </div>
             </div>
           ))
-        ) : location.pathname == "/ProfileUser" ? (
+        ) : location.pathname == "/ProfileUser" && Array.isArray(publications) ? (
           // Código adicional cuando locationStart no es verdadero
           publications.map((element, index) => (
             <div key={index} class="publication">
@@ -426,10 +552,19 @@ export const Publications = () => {
                       </div>
                       {element.Publication[0].reactions.comments.map((userReaction, key) => (
                         <div key={key}>
-                          {/* <div className="post-img">
-                                                                    <img src={userImage.profileImage} alt="" />
-                                                                </div> */}
-                          <h3>{userReaction.comment}</h3>
+                          <div>
+                            <div className="post-img">
+                              <img src={userReaction.profileImage} alt="" />
+                            </div>
+                            <p>{userReaction.user}</p>
+                          </div>
+                          <p>{userReaction.comment}</p>
+                          {userReaction.user == user.username ? (
+                            <button onClick={() => {
+                              localStorage.setItem("commentDelete", JSON.stringify({ "id": userReaction._id, "url": element.url, "user": element.user }))
+                              OpenModalDeleteComment();
+                            }}>Eliminar</button>
+                          ) : null}
                         </div>
                       ))}
 

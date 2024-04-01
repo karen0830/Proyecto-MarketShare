@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import "./LoginRegister.css";
 import { SignInForm } from '../../user/components/LoginRegister/SignInForm.jsx';
-import { SignInCompany } from '../../company/components/LoginCompany/SignInCompany .jsx';
 
 export const SignInUserorCompany = () => {
     const location = useLocation();

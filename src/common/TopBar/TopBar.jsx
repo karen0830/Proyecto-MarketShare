@@ -15,7 +15,7 @@ const TopBar = ({ toggleSidebar }) => {
       {!(location.pathname === "/HomeCompany") ? (
         <div className="top-bar">
           <NavLink to="/">
-            <img src="./img/2.png" alt="" className="img-top-bar" />
+            <img src="https://firebasestorage.googleapis.com/v0/b/marketshare-c5720.appspot.com/o/logo%2F2.png?alt=media&token=185dc8fe-2d51-4934-b199-ef325ce64022" alt="" className="img-top-bar" />
           </NavLink>
 
           <SearchBar></SearchBar>

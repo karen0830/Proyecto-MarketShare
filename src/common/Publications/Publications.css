@@ -27,7 +27,6 @@
   background-color: #1c1c1c;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   padding: 10px;
-  z-index: 999;
   width: 40%;
   display: flex;
   align-items: center;
@@ -253,4 +252,74 @@
     bottom: 5px;
     right: 5px;
   }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9%);
+  /* Fondo semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  /* Z-index alto para que se sobreponga a todo */
+}
+
+.modal-review {
+  position: absolute;
+  background-color: #1c1c1c;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 10%);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  width: 50%;
+  border-radius: 8px;
+  z-index: 10000;
+  margin-left: 49px
+  /* Asegúrate de que el modal esté por encima del overlay */
+}
+
+.modal-review button {
+  background-color: #242424;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.Tile-Review, .P-content-Review {
+  /* Estilos para el contenido del modal */
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.default-button {
+  background: #287bff;
+  color: #fff;
+}
+
+.options-delete{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }

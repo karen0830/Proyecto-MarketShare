@@ -7,7 +7,7 @@ import Loader from './user/components/Loaders/Loader';
 export const ProtectedRouter = () => {
     const { loading, user, isAuthenticated } = useAuth()
     if (loading) return <Loader />;
-    if (!loading && !isAuthenticated) return (<Navigate to="/loginUser" />)
+    if (!loading && !isAuthenticated) return (<Navigate to="/" />)
 
     return <Outlet />
 }

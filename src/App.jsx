@@ -7,10 +7,7 @@ import { PerfilUsuario } from "./user/pages/PerfilUsuario/PerfilUsuario.jsx";
 import { Start } from "./user/pages/Start/Start";
 import About from "./user/pages/About/About";
 
-// Company
-
-import HomeCompany from "./company/pages/HomeCompany/HomeCompany.jsx";
-import { PerfilCompany } from "./company/pages/PerfilCompany/PerfilCompany.jsx";
+import { PerfilIdUser } from "./user/pages/PerfilUsuario/PerfilIdUser.jsx";
 const App = () => {
   return (
     <AuthProvider>
@@ -18,10 +15,12 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/registerUser" element={<Home />}></Route>
+          <Route path="*" element={<Home />}></Route>
           <Route element={<ProtectedRouter />}>
             <Route path="/profileUser" element={<PerfilUsuario />}></Route>
             <Route path="/start" element={<Start />}></Route>
             {/* <Route path="/Publicar" element={<Publicar/>}></Route> */}
+            <Route path="/profile/:id" element={<PerfilIdUser/>}></Route>
           </Route>
           <Route path="/about" element={<About />}></Route>
         </Routes>

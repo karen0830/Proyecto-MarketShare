@@ -139,9 +139,10 @@ export const getAllPublications = async () => {
 }
 
 
-export const getProfile = async username => {
+export const getProfile = async (username, id) => {
   const postData = {
     username: username,
+    id: id
     // Otros datos que deseas enviar
   };
 
@@ -179,5 +180,38 @@ export const getShareData = async () => {
     console.error('Error en la solicitud:', error);
     // Puedes manejar el error según tus necesidades
     throw error; // Lanzar el error nuevamente o manejarlo de otra manera
+  }
+}
+
+export const commentAdd = async (comment, link, userName) => {
+  try {
+    const data = {
+      comment: comment,
+      link: link,
+      username: userName
+    }
+    const response = await ruta_protegida().post("/comment", data);
+    return response;
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    // Puedes manejar el error según tus necesidades
+    return error
+  }
+}
+
+
+export const commentDelete = async (idComment, link, userName) => {
+  try {
+    const data = {
+      idComment: idComment,
+      link: link,
+      username: userName
+    }
+    const response = await ruta_protegida().post("/deleteComment", data);
+    return response;
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    // Puedes manejar el error según tus necesidades
+    return error
   }
 }

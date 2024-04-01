@@ -154,7 +154,7 @@ export const logoutUser = (req, res) => {
             console.error("Error al eliminar el token:", err);
         }
     }
-    result();    
+    result();
     return res.sendStatus(200);
 };
 
@@ -596,19 +596,18 @@ export const reactionLove = async (req, res) => {
 
 export const comments = async (req, res) => {
     try {
-        const { comment, link, userName } = req.body;
-        let producto = "Gelatina"
-        let prompt = `verifica si el siguiente comentario: ${comment} esta relacionado con el producto: ${producto}, manda true en minuscula si esta relacionado y manda false en minuscula si no esta relacionado`
-        await classify_text(comment, prompt, req, res);
+        const { comment, link, username } = req.body;
+        console.log(req.body);
+        await classify_text(comment, req);
         console.log("MP", req.malasPalabras);
-        console.log("RN", req.relacion);
         console.log("TOTOTOKEN", req.Token);
-        if (req.malasPalabras != true && req.relacion != false && req.malasPalabras != undefined && req.relacion != undefined) {
+        if (req.malasPalabras) {
             const token = req.Token; // Obtén solo el token, omitiendo 'Bearer'
             const decodedToken = jwt.decode(token);
             let id = decodedToken.id;
             const user = await User.findOne({ _id: id });
-            const userLink = await CompanyModel.findOne({ username: userName });
+            const userLink = await CompanyModel.findOne({ userNameCompany: username });
+            console.log(userLink);
             await CompanyModel.findOneAndUpdate(
                 { email: userLink.email, "publications.url": link },
                 {
@@ -623,7 +622,7 @@ export const comments = async (req, res) => {
                 }
             );
             const publicationFound = await CompanyModel.findOne(
-                { username: userName, "publications.url": link },
+                { userNameCompany: username, "publications.url": link },
                 { "publications.$": 1 }
             );
 
@@ -640,37 +639,37 @@ export const comments = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
     try {
-        const { comment, link, idUser } = req.body;
-        const authorizationHeader = req.headers['authorization'];
-        console.log("header", req.headers);
-        const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-        if (token === 'null') {
-            return res.status(401).json({ message: "Unauthorized 1" });
-        }
-
+        const { link, username, idComment } = req.body;
+        console.log(req.body);
+        const token = req.Token;
         // const token = req.cookies.token;if (!token) return res.status(401).json({ message: "Unauthorized" });
         const decodedToken = jwt.decode(token);
         let email = decodedToken.email;
         const user = await User.findOne({ email });
-        console.log(user);
-        const result = await User.findOneAndUpdate(
-            { email: email, "publications.url": link },
+
+        const result = await CompanyModel.findOneAndUpdate(
             {
-                $pull: {
-                    "publications.$[pub].reactions.comments": {
-                        _id: mongoose.Types.ObjectId(idUser) // Cambia 'id' a '_id' para utilizar el identificador único (_id)
-                    }
-                }
+                userNameCompany: username,
+                "publications.url": link,
+                "publications.reactions.comments.user": user.username,
             },
             {
-                arrayFilters: [
-                    { "pub.url": link }
-                ]
+                $pull: {
+                    "publications.$.reactions.comments": { _id: new ObjectId(idComment) },
+                },
             }
         );
 
+        const publicationFound = await CompanyModel.findOne(
+            { userNameCompany: username, "publications.url": link },
+            { "publications.$": 1 }
+        );
 
-        return res.json(user);
+        // console.log(publicationFound.publications[0].reactions);
+
+        return res.json({
+            publications: publicationFound.publications[0]
+        });
     } catch (error) {
         console.log(error);
     }
@@ -774,34 +773,39 @@ export const followPerson = async (req, res) => {
 }
 
 export const getProfile = async (req, res) => {
-    const authorizationHeader = req.headers['authorization'];
-    console.log("header", req.headers);
-    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-
-    if (token === 'null') {
-        return res.status(401).json({ message: "Unauthorized 1" });
-    }
-
     // const token = req.cookies.token;
     // if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     // Obtén el username desde req.params o req.query dependiendo de cómo estás pasando el parámetro
-    const { username } = req.body; // o req.query según sea necesario
+    const { username, id } = req.body; // o req.query según sea necesario
 
     try {
-        const userFound = await User.findOne({ username: username });
+        const userFound = await CompanyModel.findOne({ userNameCompany: username });
+        let userFoundId = null;
+        if (id) {
+            const idConPuntos = ":65d1da9a00b4a1869f5815e5";
+            const idSinPuntos = idConPuntos.slice(1); // Elimina el primer caracter, que es el ":"
+            console.log(idSinPuntos); // Resultado: "65d1da9a00b4a1869f5815e5"
+
+            userFoundId = await CompanyModel.findOne({ _id: idSinPuntos });
+        }
         console.log(userFound);
 
         if (userFound !== null) {
             res.json({
-                id: userFound.hashedID,
-                username: userFound.username,
-                shares: userFound.shares,
+                id: userFound._id,
+                username: userFound.userNameCompany,
+                publications: userFound.publications,
                 profileImage: userFound.profileImage
             });
-        } else {
-            return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
-        }
+        } else if (userFoundId !== null) {
+            res.json({
+                id: userFoundId._id,
+                username: userFoundId.userNameCompany,
+                publications: userFoundId.publications,
+                profileImage: userFoundId.profileImage
+            });
+        } else return res.status(404).json({ message: "User not found" }); // Cambié el código de estado a 404 para indicar que no se encontró el usuario
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -1178,7 +1182,7 @@ export const commentsProducts = async (req, res) => {
         const { comment, start, idProduct } = req.body;
         console.log(comment, start, idProduct);
         const categoryId = await getCategory(idProduct);
-        console.log(categoryId[0].name , " juyu");
+        console.log(categoryId[0].name, " juyu");
         await classify_text(comment, req);
         console.log("MP", req.malasPalabras);
         if (req.malasPalabras === true) {

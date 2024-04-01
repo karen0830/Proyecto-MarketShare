@@ -60,9 +60,9 @@ router.get("/getAllPublications", getAllPublications);
 router.get("/getPublications", authRequired, getPublications)
 router.get("/getMessages", getMessage)
 router.get("/getAllShoppingCarts", authRequired, getAllShoppingCarts)
-router.post("/getProfile", getProfile);
+router.post("/getProfile",authRequired, getProfile);
 router.put("/deleteStories", deleteStories);
 router.put("/decrementQuantityCart", authRequired, decrementQuantityCart)
-router.delete("/deleteComment", deleteComment);
+router.post("/deleteComment",authRequired, deleteComment);
 router.post("/deleteShoppingCart", authRequired, deleteCart);
 export default router;

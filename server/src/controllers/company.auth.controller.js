@@ -14,7 +14,7 @@ import { promisify } from "util";
 import { storage, upload } from "../IA/deteccion-de-objetos/multer.js";
 import { run } from "../IA/deteccion-de-objetos/app.js";
 import connection from "../dbMysql.js";
-import { getAllProductsId, insertProduct, typeCategory, typeCategoryName } from "../storedProcedures/storedProcedures.js";
+import { getAllProducts, getAllProductsId, insertProduct, typeCategory, typeCategoryName } from "../storedProcedures/storedProcedures.js";
 import multer from "multer";
 
 
@@ -128,113 +128,57 @@ export const verifyTokenCompany = async (req, res) => {
 
 
 
-export const addPublications = async (req, res) => {
-    const form = new IncomingForm(); // Changed this line
-    form.parse(req, (err, fields, files) => {
-        const contenido = fields.Hola[0];
-        console.log(contenido);
-        const bucket = adminApp
-            .storage()
-            .bucket("gs://marketshare-c5720.appspot.com");
-        if (err) {
-            console.error("Error al procesar el formulario:", err);
-            res.status(500).send("Error al procesar el formulario");
-            return;
-        }
+export const addPublications = async (url, contenido, token) => {
+    // Obtén solo el token, omitiendo 'Bearer'
+    // const token = req.cookies.token;
+    console.log(token);
+    const decodedToken = jwt.decode(token);
+    console.log(decodedToken);
+    let id = decodedToken.id;
 
-        const archivo = files.publication; // Asegúrate de que el nombre coincida con el campo de tu formulario
-        if (!archivo) {
-            res.status(400).send("No se ha subido ningún archivo");
-            return;
-        }
-        console.log(archivo[0]);
-        const storagePath = "publications/" + archivo[0].newFilename + archivo[0].originalFilename; // Ruta en Firebase Storage donde se guardará el archivo
-        const file = bucket.file(storagePath);
-        const localReadStream = fs.createReadStream(archivo[0]._writeStream.path);
-        const stream = file.createWriteStream({
-            metadata: {
-                contentType: archivo.type,
-            },
-        });
 
-        stream.on("error", (err) => {
-            console.error("Error al subir el archivo a Firebase Storage:", err);
-            res.status(500).send("Error al subir el archivo a Firebase Storage");
-        });
-
-        stream.on("finish", () => {
-            console.log("Archivo subido exitosamente a Firebase Storage");
-            const config = {
-                action: "read",
-                expires: "03-01-2500",
-            };
-            file.getSignedUrl(config, (err, url) => {
-                if (err) {
-                    console.error("Error al obtener el enlace de la imagen:", err);
-                    res.status(500).send("Error al obtener el enlace de la imagen");
-                } else {
-                    const authorizationHeader = req.headers['authorization'];
-                    console.log("header", req.headers);
-
-                    if (!authorizationHeader) {
-                        return res.status(401).json({ message: "Unauthorized 1" });
-                    }
-
-                    const token = authorizationHeader.split(' ')[1]; // Obtén solo el token, omitiendo 'Bearer'
-                    // const token = req.cookies.token;
-                    console.log(token);
-                    const decodedToken = jwt.decode(token);
-
-                    if (token === 'null') return res.status(401).json({ message: "Unauthorized" });
-
-                    const result = async () => {
-                        const id = decodedToken.id;
-                        const userFound = await CompanyModel.findOne({ _id: id });
-                        console.log(userFound);
-                        try {
-                            await CompanyModel.updateOne(
-                                { _id: decodedToken.id },
-                                {
-                                    $push: {
-                                        publications: {
-                                            type: "img",
-                                            url: url,
-                                            contenido: contenido,
-                                            profileImage: userFound.profileImage,
-                                            user: userFound.userNameCompany,
-                                            reactions: {
-                                                comments: [],
-                                                share: [],
-                                                like: [],
-                                            },
-                                        },
-                                    },
-                                }
-                            );
-                            console.log("Nuevo campo agregado correctamente:", result);
-                        } catch (err) {
-                            console.error("Error al agregar el nuevo campo:", err);
-                        }
-                    }
-
-                    result();
-
-                    let id = decodedToken.id;
-                    const userFoundM = async () => {
-                        const userFound = await CompanyModel.findOne({ _id: id });
-
-                        return res.json({
-                            publications: userFound.publications.reverse(),
-                        });
-                    };
-
-                    userFoundM();
+    const result = async (url, contenido) => {
+        const userFound = await CompanyModel.findOne({ _id: id });
+        console.log(userFound);
+        try {
+            await CompanyModel.updateOne(
+                { _id: decodedToken.id },
+                {
+                    $push: {
+                        publications: {
+                            type: "img",
+                            url: url,
+                            contenido: contenido,
+                            profileImage: userFound.profileImage,
+                            user: userFound.userNameCompany,
+                            reactions: {
+                                comments: [],
+                                share: [],
+                                like: [],
+                            },
+                        },
+                    },
                 }
-            });
+            );
+            console.log("Nuevo campo agregado correctamente:", result);
+        } catch (err) {
+            console.error("Error al agregar el nuevo campo:", err);
+        }
+    }
+
+    result(url, contenido)
+
+    const userFoundM = async () => {
+        const userFound = await CompanyModel.findOne({ _id: id });
+
+        return res.json({
+            publications: userFound.publications.reverse(),
         });
-        localReadStream.pipe(stream);
-    });
+    };
+
+    userFoundM();
 };
+
 
 export const imageProfile = async (req, res) => {
     const authorizationHeader = req.headers['authorization'];
@@ -1025,10 +969,11 @@ export const addPublicationsVerify = async (req, res) => {
                                     console.log(req.Token);
                                     const id = decodedToken.id;
                                     console.log(id);
+                                    addPublications(url, info.description, req.Token)
                                     const result = async () => {
                                         const typeCategory = await typeCategoryName(info.categories)
                                         console.log(typeCategory);
-                                        const res = await insertProduct(info.name, info.quantity,info.description, info.seller, info.ratings, info.ratingsCount, info.shipping,info.quantity, url, id, typeCategory[0].idCategory, info.sku, info.width, info.height, info.depth, info.weight, info.extraShippingFee, info.active, info.priceTaxExcl, info.priceTaxIncl, info.taxRate, info.comparedPrice);
+                                        const res = await insertProduct(info.name, info.quantity, info.description, info.seller, info.ratings, info.ratingsCount, info.shipping, info.quantity, url, id, typeCategory[0].idCategory, info.sku, info.width, info.height, info.depth, info.weight, info.extraShippingFee, info.active, info.priceTaxExcl, info.priceTaxIncl, info.taxRate, info.comparedPrice);
                                         console.log(res);
                                         fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
                                             if (err) {
@@ -1037,7 +982,7 @@ export const addPublicationsVerify = async (req, res) => {
                                                 console.log('Archivo eliminado correctamente');
                                             }
                                         });
-                        
+
                                     }
                                     result();
                                     res.json("ok")
