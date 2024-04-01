@@ -131,6 +131,28 @@ export const Perfil = () => {
               </div>
             </div>
             <div className="user-actionsData">
+              <div className="popularidad">
+                <div>
+                  <h3>100</h3>
+                  <p>publicaciones</p>
+                </div>
+                <div>
+                  <h3>500</h3>
+                  <p>seguidores</p>
+                </div>
+                <div>
+                  <h3>200</h3>
+                  <p>seguidos</p>
+                </div>
+              </div>
+              <div className="form-container">
+                <form
+                  action="/perfil"
+                  method="post"
+                  encType="multipart/form-data"
+                ></form>
+                <div></div>
+              </div>
             </div>
           </div>
 
