@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./common/home/home.jsx";
+import Home from "./common/Home/Home.jsx";
 import "./App.css";
 import { AuthProvider } from "./common/context/AuthContext.jsx";
 import { ProtectedRouter, ProtectedRouterCompany} from "./ProtectedRouter.jsx";

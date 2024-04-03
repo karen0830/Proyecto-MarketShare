@@ -783,7 +783,7 @@ export const getProfile = async (req, res) => {
         const userFound = await CompanyModel.findOne({ userNameCompany: username });
         let userFoundId = null;
         if (id) {
-            const idConPuntos = ":65d1da9a00b4a1869f5815e5";
+            const idConPuntos = id;
             const idSinPuntos = idConPuntos.slice(1); // Elimina el primer caracter, que es el ":"
             console.log(idSinPuntos); // Resultado: "65d1da9a00b4a1869f5815e5"
 
