@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
 import mongoose from 'mongoose'
 import CompanyModel from "../models/company.models.js";
 import connection from "../dbMysql.js";
-import { eliminarProducto, getAllProducts, getCategoryAll, getIdP, typeCategory, updateProducts } from "../storedProcedures/storedProcedures.js";
+import { addPurchase, deleteCart, eliminarProducto, getAllProducts, getCart, getCategoryAll, getIdP, typeCategory, updateProducts } from "../storedProcedures/storedProcedures.js";
 import { addPublications } from "./company.auth.controller.js";
 
 export const addProduct = async (req, res) => {
@@ -135,7 +135,7 @@ export const addProduct = async (req, res) => {
 export const getAllProductCompany = async (req, res) => {
     try {
         const response = await getAllProducts();
-        for(let data = 0; data < response.length; data++){
+        for (let data = 0; data < response.length; data++) {
             const category = await typeCategory(response[data].idCategory)
             console.log(category);
             console.log(response[data]);
@@ -154,7 +154,7 @@ export const updateProduct = async (req, res) => {
     try {
         const result = req.body;
         console.log(result);
-        const response = await updateProducts(result.id, result.name, result.quantity, result.description, result.seller, result.ratings, result.ratingsCount, result.shipping, result.quantity, result.images[0].url, result.idCompany, result.idCategory, result.sku, result.width, result.height, result.depth, result.weight, 5, result.active,  result.priceTaxExcl, result.priceTaxIncl, result.taxRate, result.comparedPrice)
+        const response = await updateProducts(result.id, result.name, result.quantity, result.description, result.seller, result.ratings, result.ratingsCount, result.shipping, result.quantity, result.images[0].url, result.idCompany, result.idCategory, result.sku, result.width, result.height, result.depth, result.weight, 5, result.active, result.priceTaxExcl, result.priceTaxIncl, result.taxRate, result.comparedPrice, result.priceTaxIncl)
         console.log(response);
         console.log("jeje");
         res.json(result);
@@ -174,7 +174,7 @@ export const getAllCategory = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
     try {
-        const {id} = req.body;
+        const { id } = req.body;
         const resolve = await eliminarProducto(id)
         console.log(id);
         res.json("ok")
@@ -185,10 +185,31 @@ export const deleteProduct = async (req, res) => {
 
 export const getIdProduct = async (req, res) => {
     try {
-        const {id} = req.body;
+        const { id } = req.body;
         const response = await getIdP(id);
         // console.log("response", response);
         return res.json(response[0])
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const addCompra = async (req, res) => {
+    try {
+        const { cartItemId, cantidad, total} = req.body;
+        const fechaCompra = new Date();
+        console.log(fechaCompra);
+        const getCartOne = await getCart(cartItemId);
+        console.log(getCartOne);
+        const findUser = await User.findById(getCartOne[0].idUser)
+        console.log(findUser);
+        const Product = await getIdP(getCartOne[0].idProduct);
+        const response = await addPurchase(getCartOne[0].idProduct, cantidad, Product[0].price, fechaCompra, getCartOne[0].idUser, total, findUser.username, findUser.email, Product[0].idCompany)
+        const DeleteCart = await deleteCart(cartItemId);
+        // console.log("response", response);
+        // return res.json(response)
+        console.log(Product);
+        res.json(response)
     } catch (error) {
         console.log(error);
     }

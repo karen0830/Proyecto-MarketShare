@@ -37,6 +37,7 @@ import {
     registerSchema,
     loginSchema
 } from "../schemas/auth.schemas.js";
+import { addCompra } from "../controllers/products.auth.controller.js";
 
 router.post("/msg", postMessage);
 router.post("/registerUser", validateSchema(registerSchema), registerUser);
@@ -65,4 +66,5 @@ router.put("/deleteStories", deleteStories);
 router.put("/decrementQuantityCart", authRequired, decrementQuantityCart)
 router.post("/deleteComment",authRequired, deleteComment);
 router.post("/deleteShoppingCart", authRequired, deleteCart);
+router.post("/addPurchase", authRequired, addCompra)
 export default router;

@@ -38,10 +38,11 @@ export const insertProduct = (
     p_priceTaxExcl,
     p_priceTaxIncl,
     p_taxRate,
-    p_comparedPrice
+    p_comparedPrice,
+    p_price
 ) => {
     return new Promise((resolve, reject) => {
-        const query = 'CALL sp_save_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+        const query = 'CALL sp_save_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
         connection.query(query, [
             p_name,
             p_stock,
@@ -64,7 +65,8 @@ export const insertProduct = (
             p_priceTaxExcl,
             p_priceTaxIncl,
             p_taxRate,
-            p_comparedPrice
+            p_comparedPrice,
+            p_price
         ], (error, results) => {
             if (error) {
                 console.error('Error al insertar el Producto:', error);
@@ -101,18 +103,19 @@ export const updateProducts = (
     p_priceTaxExcl,
     p_priceTaxIncl,
     p_taxRate,
-    p_comparedPrice
+    p_comparedPrice,
+    p_price
 ) => {
     return new Promise((resolve, reject) => {
-        const query = 'CALL sp_edit_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
-        connection.query(query, [p_id, p_name, p_stock, p_description, p_seller, p_ratings, p_ratingsCount, p_shipping, p_quantity, p_img, p_idCompany, p_idCategory, p_sku, p_width, p_height, p_depth, p_weight, p_extraShippingFee, p_active, p_priceTaxExcl, p_priceTaxIncl, p_taxRate, p_comparedPrice], (error, results) => {
+        const query = 'CALL sp_edit_PRODUCT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+        connection.query(query, [p_id, p_name, p_stock, p_description, p_seller, p_ratings, p_ratingsCount, p_shipping, p_quantity, p_img, p_idCompany, p_idCategory, p_sku, p_width, p_height, p_depth, p_weight, p_extraShippingFee, p_active, p_priceTaxExcl, p_priceTaxIncl, p_taxRate, p_comparedPrice, p_price], (error, results) => {
             if (error) {
                 console.error('Error al editar producto:', error);
                 reject('Error al editar producto:', error)
             }
             console.log('producto editado correctamente', results);
             resolve(results);
-        });        
+        });
     });
 }
 
@@ -316,7 +319,7 @@ export const insertImg = (imgProduct) => {
 };
 
 // Función para eliminar un producto por su ID
-export const eliminarProducto= (idProducto) => {
+export const eliminarProducto =async (idProducto) => {
     connection.query(
         'DELETE FROM Products WHERE id = ?', [idProducto],
         (error, results) => {
@@ -329,7 +332,7 @@ export const eliminarProducto= (idProducto) => {
     );
 }
 
-export const getIdP =async (idP) => {
+export const getIdP = async (idP) => {
     return await new Promise((resolve, reject) => {
         connection.query('select * from Products where id = ?', [idP], (error, results) => {
             if (error) {
@@ -337,6 +340,83 @@ export const getIdP =async (idP) => {
                 reject(error);
             } else {
                 console.log('review eliminada corretamente', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+
+export const addPurchase = async (
+    p_idProduct,
+    p_quantity,
+    p_unitPrice,
+    p_purchaseDate,
+    p_idUser,
+    p_total,
+    p_userName,
+    p_email,
+    p_idCompany
+) => {
+    return new Promise((resolve, reject) => {
+        const query = 'CALL sp_insert_purchase(?,?,?,?,?,?,?,?,?)';
+        connection.query(query, [
+            p_idProduct,
+            p_quantity,
+            p_unitPrice,
+            p_purchaseDate,
+            p_idUser,
+            p_total,
+            p_userName,
+            p_email,
+            p_idCompany
+        ], (error, results) => {
+            if (error) {
+                console.error('Error al insertar Compra:', error);
+                reject('Error al insertar Compra:', error)
+            }
+            console.log('insertada Compra', results);
+            resolve(results);
+        });
+    });
+}
+
+
+export const deleteCart= async (cartItemId) => {
+    connection.query(
+        'CALL sp_deleteCart(?)',
+        [cartItemId],
+        (error, results) => {
+            if (error) {
+                console.error('Error al eliminar la car:', error);
+                return;
+            }
+            console.log('cart eliminada:', results);
+        }
+    );
+};
+
+export const getCart = async (idCart) => {
+    return await new Promise((resolve, reject) => {
+        connection.query('select * from ShoppingCart where idCartItem = ?', [idCart], (error, results) => {
+            if (error) {
+                console.error('Error al consultar la cart:', error);
+                reject(error);
+            } else {
+                console.log('carrr:', results);
+                resolve(results);
+            }
+        });
+    });
+}
+
+export const getAllPurchasesId = (idCompany) => {
+    return new Promise((resolve, reject) => {
+        connection.query('select * from Purchases where  idCompany=?', [idCompany], (error, results) => {
+            if (error) {
+                console.error('Error al seleccionar las ordenes:', error);
+                reject('Error al seleccionar las ordenes:', error);
+            } else {
                 resolve(results);
             }
         });

@@ -14,7 +14,7 @@ import { promisify } from "util";
 import { storage, upload } from "../IA/deteccion-de-objetos/multer.js";
 import { run } from "../IA/deteccion-de-objetos/app.js";
 import connection from "../dbMysql.js";
-import { getAllProducts, getAllProductsId, insertProduct, typeCategory, typeCategoryName } from "../storedProcedures/storedProcedures.js";
+import { getAllProducts, getAllProductsId, getAllPurchasesId, getIdP, insertProduct, typeCategory, typeCategoryName } from "../storedProcedures/storedProcedures.js";
 import multer from "multer";
 
 
@@ -168,15 +168,15 @@ export const addPublications = async (url, contenido, token) => {
 
     result(url, contenido)
 
-    const userFoundM = async () => {
-        const userFound = await CompanyModel.findOne({ _id: id });
+    // const userFoundM = async () => {
+    //     const userFound = await CompanyModel.findOne({ _id: id });
 
-        return res.json({
-            publications: userFound.publications.reverse(),
-        });
-    };
+    //     return res.json({
+    //         publications: userFound.publications.reverse(),
+    //     });
+    // };
 
-    userFoundM();
+    // userFoundM();
 };
 
 
@@ -973,7 +973,7 @@ export const addPublicationsVerify = async (req, res) => {
                                     const result = async () => {
                                         const typeCategory = await typeCategoryName(info.categories)
                                         console.log(typeCategory);
-                                        const res = await insertProduct(info.name, info.quantity, info.description, info.seller, info.ratings, info.ratingsCount, info.shipping, info.quantity, url, id, typeCategory[0].idCategory, info.sku, info.width, info.height, info.depth, info.weight, info.extraShippingFee, info.active, info.priceTaxExcl, info.priceTaxIncl, info.taxRate, info.comparedPrice);
+                                        const res = await insertProduct(info.name, info.quantity, info.description, info.seller, info.ratings, info.ratingsCount, info.shipping, info.quantity, url, id, typeCategory[0].idCategory, info.sku, info.width, info.height, info.depth, info.weight, info.extraShippingFee, info.active, info.priceTaxExcl, info.priceTaxIncl, info.taxRate, info.comparedPrice, info.priceTaxIncl);
                                         console.log(res);
                                         fs.unlink(`./src/IA/deteccion-de-objetos/images/${req.nameFile}`, (err) => {
                                             if (err) {
@@ -1052,6 +1052,25 @@ export const getProductsId = async (req, res) => {
             const category = await typeCategory(response[data].idCategory)
             console.log(category);
             response[data].nameCategory = category[0].nameCategory
+        }
+        console.log(response);
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getOrdersId = async (req, res) => {
+    try {
+        const { Token } = req;
+        const decodedToken = jwt.decode(Token);
+        const response = await getAllPurchasesId(decodedToken.id);
+        for (let data = 0; data < response.length; data++) {
+            const findUser = await User.findById(response[data].idUser)
+            const Product = await getIdP(response[data].idProduct);
+            response[data].img = Product[0].img
+            response[data].imgProfileUser = findUser.profileImage;
+            response[data].nameProduct = Product[0].name
         }
         console.log(response);
         res.json(response)

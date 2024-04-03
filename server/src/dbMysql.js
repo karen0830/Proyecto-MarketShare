@@ -7,16 +7,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const caCertPath = join(__dirname, 'ssl', 'DigiCertGlobalRootCA.crt.pem');
-const connection = mysql.createConnection({
-    host: 'mydatamysql.mysql.database.azure.com',
-    user: 'rooter',
-    password: '#K12345678',
-    port: 3306,
-    database: 'MarketShare',
-    ssl: {
-        ca: fs.readFileSync(caCertPath)
-    }
-});
+// const connection = mysql.createConnection({
+//     host: 'mydatamysql.mysql.database.azure.com',
+//     user: 'rooter',
+//     password: '#K12345678',
+//     port: 3306,
+//     database: 'MarketShare',
+//     ssl: {
+//         ca: fs.readFileSync(caCertPath)
+//     }
+// });
 
 
 // const connection = mysql.createConnection({
@@ -26,12 +26,12 @@ const connection = mysql.createConnection({
 //     database: 'bkotinfuaeft3kozxpjy'
 // });
 
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '12345678',
-//     database: 'MarketShare'
-// });
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '12345678',
+    database: 'MarketShare'
+});
 
 
 // Establecer la conexión

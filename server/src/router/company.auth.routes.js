@@ -15,7 +15,8 @@ import {
     reactionLoveCompany,
     getPublicationsCompany,
     verifyProduct, 
-    addPublicationsVerify
+    addPublicationsVerify,
+    getOrdersId
 } from "../controllers/company.auth.controller.js";
 import { validateSchemaCompany } from "../middlewares/validator.js";
 import { CompanyShema, loginCompanyShema } from "../schemas/auth.schemas.js";
@@ -30,6 +31,7 @@ routerCompany.post("/loginCompany", validateSchemaCompany(loginCompanyShema), lo
 routerCompany.post("/logoutCompany", logoutCompany);
 routerCompany.get("/verifyCompany", authRequiredCompany, verifyTokenCompany);
 routerCompany.get("/getPublicationsCompany", authRequiredCompany, getPublicationsCompany);
+routerCompany.get("/getOrders", authRequiredCompany, getOrdersId);
 routerCompany.get("/getAllPublicationsCompany", getAllPublicationsCompany);
 routerCompany.put("/archivedStory", authRequiredCompany, archivedStories);
 routerCompany.put("/UpdateimageProfile", authRequiredCompany, imageProfile);

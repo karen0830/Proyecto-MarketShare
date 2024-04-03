@@ -377,9 +377,7 @@ export const Publications = () => {
                         >
                           <i className="ri-chat-delete-line"></i>
                         </button>
-                        <button>
-                          <i className="ri-heart-line"></i>
-                        </button>
+                        
                       </div>
                       {element.reactions.comments.map((userReaction, key) => (
                         <div key={key}>
@@ -394,20 +392,25 @@ export const Publications = () => {
                             <button onClick={() => {
                               localStorage.setItem("commentDelete", JSON.stringify({ "id": userReaction._id, "url": element.url, "user": element.user }))
                               OpenModalDeleteComment();
-                            }}>Eliminar</button>
+                            }} className="eliminar">Eliminar</button>
                           ) : null}
+                          <button>
+                          <i className="ri-heart-line"></i>
+                        </button>
                         </div>
                       ))}
 
-                      <input
-                        type="text"
-                        value={comment}
-                        onChange={handleInputChange}
-                        placeholder="Comment"
-                      />
-                      <button onClick={() => addComment(comment, element.url, element.user)}>
-                        <i className="ri-send-plane-2-fill"></i>
-                      </button>
+                      <div className="comments">
+                        <input
+                          type="text"
+                          value={comment}
+                          onChange={handleInputChange}
+                          placeholder="Comment"
+                        />
+                        <button onClick={() => addComment(comment, element.url, element.user)}>
+                          <i className="ri-send-plane-2-fill"></i>
+                        </button>
+                      </div>
 
 
                     </div>

@@ -84,12 +84,28 @@
   border-right: 10px solid transparent;
   border-bottom: 10px solid #1c1c1c;
   top: -10px;
-  left: 50%;
   transform: translateX(-50%);
 }
 
+
 .open {
   animation: growFromButton 0.3s ease-out forwards;
+  font-size: .75rem;
+  padding: 1rem;
+}
+
+.eliminar{
+  margin: 5% 42% 5% 12%;
+}
+
+.comments{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+input{
+  width: 90%;
 }
 
 .closed {
